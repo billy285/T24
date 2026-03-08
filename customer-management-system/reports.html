@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客户管理系统 - 报表中心</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#3b82f6',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                        light: '#f3f4f6',
+                        dark: '#1f2937'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-gradient-primary {
+                background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            }
+            .card-shadow {
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+            .sidebar-active {
+                border-left: 4px solid #1e40af;
+                background-color: rgba(30, 64, 175, 0.1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="bg-white w-64 shadow-lg hidden md:block transition-all-300">
+            <div class="p-4 border-b">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white">
+                        <i class="fa fa-users"></i>
+                    </div>
+                    <h1 class="ml-3 text-lg font-bold text-gray-800">客户管理系统</h1>
+                </div>
+            </div>
+            
+            <div class="py-4">
+                <div class="px-4 py-2 text-xs text-gray-600 uppercase tracking-wider">
+                    主菜单
+                </div>
+                <nav>
+                    <a href="dashboard.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-dashboard w-6 text-gray-500"></i>
+                        <span>仪表盘</span>
+                    </a>
+                    <a href="customers.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-user-circle w-6 text-gray-500"></i>
+                        <span>客户管理</span>
+                    </a>
+                    <a href="sales.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-handshake-o w-6 text-gray-500"></i>
+                        <span>销售管理</span>
+                    </a>
+                    <a href="delivery.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-tasks w-6 text-gray-500"></i>
+                        <span>交付管理</span>
+                    </a>
+                    <a href="renewal.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-refresh w-6 text-gray-500"></i>
+                        <span>续费管理</span>
+                    </a>
+                    <a href="finance.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-money w-6 text-gray-500"></i>
+                        <span>财务管理</span>
+                    </a>
+                    <a href="tasks.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-calendar-check-o w-6 text-gray-500"></i>
+                        <span>任务协作</span>
+                    </a>
+                    <a href="reports.html" class="flex items-center px-4 py-3 text-gray-700 sidebar-active">
+                        <i class="fa fa-bar-chart w-6 text-gray-500"></i>
+                        <span>报表中心</span>
+                    </a>
+                </nav>
+                
+                <div class="px-4 py-2 mt-4 text-xs text-gray-600 uppercase tracking-wider">
+                    系统
+                </div>
+                <nav>
+                    <a href="settings.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-cog w-6 text-gray-500"></i>
+                        <span>系统设置</span>
+                    </a>
+                    <a href="#" id="logout-btn" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-sign-out w-6 text-gray-500"></i>
+                        <span>退出登录</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between p-4">
+                    <div class="flex items-center">
+                        <button id="sidebar-toggle" class="text-gray-500 focus:outline-none md:hidden">
+                            <i class="fa fa-bars text-xl"></i>
+                        </button>
+                        <h2 class="ml-2 text-xl font-semibold text-gray-800">报表中心</h2>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="relative mr-4">
+                            <button class="text-gray-500 focus:outline-none">
+                                <i class="fa fa-bell text-xl"></i>
+                                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                            </button>
+                        </div>
+                        
+                        <div class="relative">
+                            <button id="user-menu-button" class="flex items-center text-gray-700 focus:outline-none">
+                                <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                                    <span id="user-initial">管</span>
+                                </div>
+                                <span class="ml-2 text-sm font-medium" id="user-name">管理员</span>
+                                <i class="fa fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            
+                            <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fa fa-user mr-2"></i> 个人资料
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fa fa-cog mr-2"></i> 账户设置
+                                </a>
+                                <div class="border-t border-gray-200"></div>
+                                <a href="#" id="user-menu-logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fa fa-sign-out mr-2"></i> 退出登录
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto p-4 bg-gray-100">
+                <!-- Report Filters -->
+                <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 md:mb-0">报表筛选</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">时间范围</label>
+                                <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option>最近7天</option>
+                                    <option>最近30天</option>
+                                    <option>最近90天</option>
+                                    <option>本月</option>
+                                    <option>上月</option>
+                                    <option>本季度</option>
+                                    <option>上季度</option>
+                                    <option>今年</option>
+                                    <option>去年</option>
+                                    <option>自定义</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">客户类型</label>
+                                <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option>全部客户</option>
+                                    <option>新客户</option>
+                                    <option>老客户</option>
+                                    <option>高价值客户</option>
+                                    <option>潜在客户</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">业务类型</label>
+                                <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option>全部业务</option>
+                                    <option>网站设计</option>
+                                    <option>营销推广</option>
+                                    <option>品牌设计</option>
+                                    <option>其他服务</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <button class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                                    <i class="fa fa-filter mr-2"></i> 应用筛选
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sales Report -->
+                <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">销售报表</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Sales Trend Chart -->
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-3">销售趋势</h4>
+                            <div class="h-64">
+                                <canvas id="sales-trend-chart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Sales Funnel Chart -->
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-3">销售漏斗</h4>
+                            <div class="h-64">
+                                <canvas id="sales-funnel-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Customer Report -->
+                <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">客户报表</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Customer Growth Chart -->
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-3">客户增长</h4>
+                            <div class="h-64">
+                                <canvas id="customer-growth-chart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Customer Distribution Chart -->
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-3">客户分布</h4>
+                            <div class="h-64">
+                                <canvas id="customer-distribution-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Financial Report -->
+                <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">财务报表</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Revenue Chart -->
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-3">收入分析</h4>
+                            <div class="h-64">
+                                <canvas id="revenue-chart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Expense Chart -->
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-3">支出分析</h4>
+                            <div class="h-64">
+                                <canvas id="expense-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Task Report -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">任务报表</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Task Completion Chart -->
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-3">任务完成率</h4>
+                            <div class="h-64">
+                                <canvas id="task-completion-chart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Task Distribution Chart -->
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-3">任务分布</h4>
+                            <div class="h-64">
+                                <canvas id="task-distribution-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // 检查登录状态
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLogin = localStorage.getItem('userLogin') || sessionStorage.getItem('userLogin');
+            
+            if (!savedLogin) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(savedLogin);
+                
+                // 更新用户信息
+                document.getElementById('user-name').textContent = userData.name;
+                document.getElementById('user-initial').textContent = userData.name.charAt(0);
+                
+                // 根据角色调整导航菜单
+                adjustNavigationByRole(userData.role);
+                
+                // 初始化报表数据
+                initializeReportData();
+                
+            } catch (e) {
+                console.error('登录信息解析错误', e);
+                window.location.href = 'index.html';
+            }
+        });
+        
+        // 根据角色调整导航菜单
+        function adjustNavigationByRole(role) {
+            const navLinks = document.querySelectorAll('aside nav a');
+            
+            // 管理员可以看到所有菜单
+            if (role !== 'admin') {
+                // 销售看不到财务、设置等
+                if (role === 'sales') {
+                    hideNavItem('finance.html');
+                    hideNavItem('settings.html');
+                }
+                
+                // 运营看不到销售、财务等
+                if (role === 'operation') {
+                    hideNavItem('sales.html');
+                    hideNavItem('finance.html');
+                    hideNavItem('settings.html');
+                }
+                
+                // 设计只看到交付和任务
+                if (role === 'design') {
+                    hideNavItem('sales.html');
+                    hideNavItem('finance.html');
+                    hideNavItem('renewal.html');
+                    hideNavItem('settings.html');
+                    hideNavItem('reports.html');
+                }
+                
+                // 财务看不到销售、交付等
+                if (role === 'finance') {
+                    hideNavItem('sales.html');
+                    hideNavItem('delivery.html');
+                    hideNavItem('renewal.html');
+                    hideNavItem('settings.html');
+                }
+            }
+        }
+        
+        // 隐藏导航项
+        function hideNavItem(url) {
+            const navItem = document.querySelector(`aside nav a[href="${url}"]`);
+            if (navItem) {
+                navItem.style.display = 'none';
+            }
+        }
+        
+        // 初始化报表数据
+        function initializeReportData() {
+            // 销售趋势图表
+            initSalesTrendChart();
+            // 销售漏斗图表
+            initSalesFunnelChart();
+            // 客户增长图表
+            initCustomerGrowthChart();
+            // 客户分布图表
+            initCustomerDistributionChart();
+            // 收入分析图表
+            initRevenueChart();
+            // 支出分析图表
+            initExpenseChart();
+            // 任务完成率图表
+            initTaskCompletionChart();
+            // 任务分布图表
+            initTaskDistributionChart();
+        }
+        
+        // 销售趋势图表
+        function initSalesTrendChart() {
+            const ctx = document.getElementById('sales-trend-chart').getContext('2d');
+            
+            const salesTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                    datasets: [{
+                        label: '销售额',
+                        data: [12000, 19000, 28500, 32000, 35000, 40000],
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderColor: '#3b82f6',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `销售额: $${context.raw.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 销售漏斗图表
+        function initSalesFunnelChart() {
+            const ctx = document.getElementById('sales-funnel-chart').getContext('2d');
+            
+            const salesFunnelChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['线索', '初步接触', '方案制定', '商务谈判', '成交'],
+                    datasets: [{
+                        label: '数量',
+                        data: [100, 60, 30, 15, 8],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.6)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(59, 130, 246, 0.9)',
+                            'rgba(59, 130, 246, 1.0)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 客户增长图表
+        function initCustomerGrowthChart() {
+            const ctx = document.getElementById('customer-growth-chart').getContext('2d');
+            
+            const customerGrowthChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                    datasets: [{
+                        label: '新增客户',
+                        data: [12, 15, 18, 22, 25, 30],
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderColor: '#10b981',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 客户分布图表
+        function initCustomerDistributionChart() {
+            const ctx = document.getElementById('customer-distribution-chart').getContext('2d');
+            
+            const customerDistributionChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['中餐馆', '西餐厅', '快餐店', '咖啡店', '其他'],
+                    datasets: [{
+                        data: [45, 20, 15, 12, 8],
+                        backgroundColor: [
+                            '#3b82f6',
+                            '#10b981',
+                            '#f59e0b',
+                            '#8b5cf6',
+                            '#6b7280'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 收入分析图表
+        function initRevenueChart() {
+            const ctx = document.getElementById('revenue-chart').getContext('2d');
+            
+            const revenueChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                    datasets: [{
+                        label: '收入',
+                        data: [22000, 25000, 28500, 30000, 32000, 35000],
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 支出分析图表
+        function initExpenseChart() {
+            const ctx = document.getElementById('expense-chart').getContext('2d');
+            
+            const expenseChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                    datasets: [{
+                        label: '支出',
+                        data: [8000, 9500, 10000, 11000, 12000, 12500],
+                        backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 任务完成率图表
+        function initTaskCompletionChart() {
+            const ctx = document.getElementById('task-completion-chart').getContext('2d');
+            
+            const taskCompletionChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['已完成', '进行中', '待处理', '已逾期'],
+                    datasets: [{
+                        data: [65, 20, 10, 5],
+                        backgroundColor: [
+                            '#10b981',
+                            '#3b82f6',
+                            '#f59e0b',
+                            '#ef4444'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+        
+        // 任务分布图表
+        function initTaskDistributionChart() {
+            const ctx = document.getElementById('task-distribution-chart').getContext('2d');
+            
+            const taskDistributionChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['销售', '设计', '运营', '财务', '续费'],
+                    datasets: [{
+                        label: '任务数量',
+                        data: [25, 18, 22, 10, 15],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: '#3b82f6',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#3b82f6'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        r: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 侧边栏切换
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        });
+        
+        // 用户菜单切换
+        document.getElementById('user-menu-button').addEventListener('click', function() {
+            const userMenu = document.getElementById('user-menu');
+            userMenu.classList.toggle('hidden');
+        });
+        
+        // 点击其他地方关闭用户菜单
+        document.addEventListener('click', function(event) {
+            const userMenu = document.getElementById('user-menu');
+            const userMenuButton = document.getElementById('user-menu-button');
+            
+            if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                userMenu.classList.add('hidden');
+            }
+        });
+        
+        // 退出登录
+        document.getElementById('logout-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+        });
+        
+        document.getElementById('user-menu-logout').addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+        });
+        
+        function logout() {
+            localStorage.removeItem('userLogin');
+            sessionStorage.removeItem('userLogin');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

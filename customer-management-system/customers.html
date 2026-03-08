@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>客户管理系统 - 销售管理</title>
+    <title>客户管理系统 - 客户管理</title>
     <!-- Tailwind CSS v3 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -46,32 +46,32 @@
             .status-badge {
                 @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
             }
-            .stage-new {
+            .status-high {
                 @apply bg-blue-100 text-blue-800;
             }
-            .stage-contact {
+            .status-normal {
                 @apply bg-green-100 text-green-800;
             }
-            .stage-communicate {
+            .status-low {
                 @apply bg-yellow-100 text-yellow-800;
             }
-            .stage-quote {
+            .status-vip {
                 @apply bg-purple-100 text-purple-800;
             }
-            .stage-consider {
-                @apply bg-indigo-100 text-indigo-800;
+            .customer-status-unclosed {
+                @apply bg-yellow-100 text-yellow-800;
             }
-            .stage-pending {
-                @apply bg-pink-100 text-pink-800;
+            .customer-status-following {
+                @apply bg-blue-100 text-blue-800;
             }
-            .stage-closed {
+            .customer-status-closed {
                 @apply bg-green-100 text-green-800;
             }
-            .stage-lost {
-                @apply bg-red-100 text-red-800;
-            }
-            .stage-followup {
+            .customer-status-paused {
                 @apply bg-gray-100 text-gray-800;
+            }
+            .customer-status-lost {
+                @apply bg-red-100 text-red-800;
             }
         }
     </style>
@@ -98,11 +98,11 @@
                         <i class="fa fa-dashboard w-6 text-gray-500"></i>
                         <span>仪表盘</span>
                     </a>
-                    <a href="customers.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                    <a href="customers.html" class="flex items-center px-4 py-3 text-gray-700 sidebar-active">
                         <i class="fa fa-user-circle w-6 text-gray-500"></i>
                         <span>客户管理</span>
                     </a>
-                    <a href="sales.html" class="flex items-center px-4 py-3 text-gray-700 sidebar-active">
+                    <a href="sales.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-handshake-o w-6 text-gray-500"></i>
                         <span>销售管理</span>
                     </a>
@@ -153,7 +153,7 @@
                         <button id="sidebar-toggle" class="text-gray-500 focus:outline-none md:hidden">
                             <i class="fa fa-bars text-xl"></i>
                         </button>
-                        <h2 class="ml-2 text-xl font-semibold text-gray-800">销售管理</h2>
+                        <h2 class="ml-2 text-xl font-semibold text-gray-800">客户管理</h2>
                     </div>
                     
                     <div class="flex items-center">
@@ -188,24 +188,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Sales Management Tabs -->
-                <div class="border-b border-gray-200">
-                    <nav class="flex -mb-px">
-                        <a href="#" class="sales-tab-active border-primary text-primary whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
-                            销售线索
-                        </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
-                            跟进记录
-                        </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
-                            成交管理
-                        </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
-                            销售漏斗
-                        </a>
-                    </nav>
-                </div>
             </header>
             
             <!-- Main Content Area -->
@@ -214,8 +196,8 @@
                 <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                         <div class="flex items-center mb-4 md:mb-0">
-                            <button id="add-lead-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
-                                <i class="fa fa-plus mr-2"></i> 添加线索
+                            <button id="add-customer-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                <i class="fa fa-plus mr-2"></i> 添加客户
                             </button>
                             <div class="ml-3 relative">
                                 <button id="batch-actions-btn" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
@@ -239,7 +221,7 @@
                         
                         <div class="flex items-center">
                             <div class="relative">
-                                <input type="text" id="search-input" placeholder="搜索线索..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <input type="text" id="search-input" placeholder="搜索客户名称、联系人..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fa fa-search text-gray-400"></i>
                                 </div>
@@ -255,18 +237,14 @@
                 <div id="filter-panel" class="bg-white rounded-lg shadow-sm p-4 mb-6 hidden">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">跟进阶段</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">客户状态</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部阶段</option>
-                                <option value="new">新线索</option>
-                                <option value="contact">已联系</option>
-                                <option value="communicate">沟通中</option>
-                                <option value="quote">已报价</option>
-                                <option value="consider">考虑中</option>
-                                <option value="pending">待成交</option>
+                                <option value="">全部状态</option>
+                                <option value="unclosed">未成交</option>
+                                <option value="following">跟进中</option>
                                 <option value="closed">已成交</option>
-                                <option value="lost">未成交</option>
-                                <option value="followup">后续再跟进</option>
+                                <option value="paused">暂停</option>
+                                <option value="lost">流失</option>
                             </select>
                         </div>
                         
@@ -281,34 +259,37 @@
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">客户来源</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">行业类型</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部来源</option>
-                                <option value="call">电话销售</option>
-                                <option value="referral">转介绍</option>
-                                <option value="ad">广告</option>
-                                <option value="private">私域</option>
-                                <option value="old">老客户</option>
-                                <option value="other">其他</option>
+                                <option value="">全部行业</option>
+                                <option value="restaurant">餐厅</option>
+                                <option value="nail">美甲</option>
+                                <option value="massage">按摩</option>
+                                <option value="beauty">美容</option>
+                                <option value="supermarket">超市</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">成交概率</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="number" min="0" max="100" placeholder="最低" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <span>至</span>
-                                <input type="number" min="0" max="100" placeholder="最高" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            </div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">客户等级</label>
+                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="">全部等级</option>
+                                <option value="high">高意向</option>
+                                <option value="normal">普通</option>
+                                <option value="low">低意向</option>
+                                <option value="vip">VIP</option>
+                            </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">下次跟进时间</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <span>至</span>
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            </div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">城市</label>
+                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="">全部城市</option>
+                                <option value="ny">纽约</option>
+                                <option value="la">洛杉矶</option>
+                                <option value="sf">旧金山</option>
+                                <option value="chicago">芝加哥</option>
+                            </select>
                         </div>
                         
                         <div>
@@ -331,7 +312,7 @@
                     </div>
                 </div>
                 
-                <!-- Sales Lead List -->
+                <!-- Customer List -->
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
@@ -343,7 +324,10 @@
                                         </div>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        客户名称
+                                        客户编号
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        商家名称
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         联系人
@@ -352,27 +336,27 @@
                                         电话
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        行业
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         负责人
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        跟进阶段
+                                        等级
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        成交概率
+                                        状态
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        最近跟进
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        下次跟进
+                                        创建时间
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         操作
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200" id="leads-table-body">
-                                <!-- Lead rows will be inserted here by JavaScript -->
+                            <tbody class="bg-white divide-y divide-gray-200" id="customer-table-body">
+                                <!-- Customer rows will be inserted here by JavaScript -->
                             </tbody>
                         </table>
                     </div>
@@ -390,7 +374,7 @@
                         <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                             <div>
                                 <p class="text-sm text-gray-700">
-                                    显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">28</span> 条记录
+                                    显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">42</span> 条记录
                                 </p>
                             </div>
                             <div>
@@ -412,7 +396,7 @@
                                         ...
                                     </span>
                                     <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        3
+                                        5
                                     </a>
                                     <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                                         <span class="sr-only">下一页</span>
@@ -427,21 +411,21 @@
         </div>
     </div>
     
-    <!-- Add Lead Modal (Hidden by default) -->
-    <div id="add-lead-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+    <!-- Add Customer Modal (Hidden by default) -->
+    <div id="add-customer-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between p-6 border-b">
-                <h3 class="text-lg font-semibold text-gray-800">添加新线索</h3>
+                <h3 class="text-lg font-semibold text-gray-800">添加新客户</h3>
                 <button id="close-modal-btn" class="text-gray-400 hover:text-gray-500 focus:outline-none">
                     <i class="fa fa-times text-xl"></i>
                 </button>
             </div>
             
             <div class="p-6">
-                <form id="add-lead-form">
+                <form id="add-customer-form">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">客户名称 <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">商家名称 <span class="text-red-500">*</span></label>
                             <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                         </div>
                         
@@ -456,8 +440,48 @@
                         </div>
                         
                         <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">微信/WhatsApp</label>
+                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
                             <input type="email" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">行业类型 <span class="text-red-500">*</span></label>
+                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                                <option value="">请选择行业</option>
+                                <option value="restaurant">餐厅</option>
+                                <option value="nail">美甲</option>
+                                <option value="massage">按摩</option>
+                                <option value="beauty">美容</option>
+                                <option value="supermarket">超市</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">商家地址</label>
+                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">城市</label>
+                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">州</label>
+                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="">请选择州</option>
+                                <option value="NY">纽约州 (NY)</option>
+                                <option value="CA">加利福尼亚州 (CA)</option>
+                                <option value="IL">伊利诺伊州 (IL)</option>
+                                <option value="TX">德克萨斯州 (TX)</option>
+                                <option value="FL">佛罗里达州 (FL)</option>
+                            </select>
                         </div>
                         
                         <div>
@@ -484,48 +508,70 @@
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">跟进阶段</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">客户等级</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="new">新线索</option>
-                                <option value="contact">已联系</option>
-                                <option value="communicate">沟通中</option>
-                                <option value="quote">已报价</option>
-                                <option value="consider">考虑中</option>
-                                <option value="pending">待成交</option>
-                                <option value="closed">已成交</option>
-                                <option value="lost">未成交</option>
-                                <option value="followup">后续再跟进</option>
+                                <option value="normal">普通</option>
+                                <option value="high">高意向</option>
+                                <option value="low">低意向</option>
+                                <option value="vip">VIP</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">成交概率 (%)</label>
-                            <input type="number" min="0" max="100" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">当前是否已有线上点餐系统</label>
+                            <div class="flex items-center space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="hasOrderingSystem" value="true" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <span class="ml-2 text-sm text-gray-700">是</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="hasOrderingSystem" value="false" checked class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <span class="ml-2 text-sm text-gray-700">否</span>
+                                </label>
+                            </div>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">下次跟进时间</label>
-                            <input type="datetime-local" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">跟进方式</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">当前使用的平台</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="phone">电话</option>
-                                <option value="wechat">微信</option>
-                                <option value="sms">短信</option>
-                                <option value="email">邮件</option>
+                                <option value="">请选择平台</option>
+                                <option value="beyondmenu">BeyondMenu</option>
+                                <option value="menusifu">MenuSifu</option>
+                                <option value="qmenu">QMenu</option>
+                                <option value="honorpos">HonorPOS</option>
+                                <option value="custom">自建站</option>
+                                <option value="none">无</option>
                             </select>
                         </div>
                         
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">客户需求</label>
-                            <textarea rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">月订单量（可填写预估）</label>
+                            <input type="number" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">客户痛点</label>
-                            <textarea rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">商家官网</label>
+                            <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Google Business 链接</label>
+                            <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Facebook 链接</label>
+                            <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Instagram 链接</label>
+                            <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Yelp 链接</label>
+                            <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div class="md:col-span-2">
@@ -535,11 +581,11 @@
                     </div>
                     
                     <div class="mt-6 flex justify-end space-x-3">
-                        <button type="button" id="cancel-add-lead" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
+                        <button type="button" id="cancel-add-customer" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
                             取消
                         </button>
                         <button type="submit" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
-                            保存线索
+                            保存客户
                         </button>
                     </div>
                 </form>
@@ -564,8 +610,8 @@
                 document.getElementById('user-name').textContent = userData.name;
                 document.getElementById('user-initial').textContent = userData.name.charAt(0);
                 
-                // 加载销售线索数据
-                loadSalesLeads();
+                // 加载客户数据
+                loadCustomers();
                 
             } catch (e) {
                 console.error('登录信息解析错误', e);
@@ -573,139 +619,163 @@
             }
         });
         
-        // 模拟销售线索数据
-        const mockSalesLeads = [
+        // 模拟客户数据
+        const mockCustomers = [
             {
                 id: '1',
-                customerName: '金龙餐厅',
+                customerNumber: 'C20260001',
+                businessName: '金龙餐厅',
                 contactPerson: '张老板',
                 phone: '+1 (212) 555-1234',
+                industry: 'restaurant',
                 salesPerson: '张三',
-                stage: 'new',
-                probability: 30,
-                lastFollowup: '2026-03-01',
-                nextFollowup: '2026-03-08'
+                level: 'high',
+                status: 'following',
+                createdAt: '2026-01-15'
             },
             {
                 id: '2',
-                customerName: '美丽人生美甲',
-                contactPerson: '王女士',
-                phone: '+1 (310) 555-9012',
+                customerNumber: 'C20260002',
+                businessName: '星光餐厅',
+                contactPerson: '李经理',
+                phone: '+1 (212) 555-5678',
+                industry: 'restaurant',
                 salesPerson: '李四',
-                stage: 'contact',
-                probability: 40,
-                lastFollowup: '2026-03-02',
-                nextFollowup: '2026-03-09'
+                level: 'vip',
+                status: 'closed',
+                createdAt: '2026-01-18'
             },
             {
                 id: '3',
-                customerName: '东方按摩SPA',
-                contactPerson: '赵总',
-                phone: '+1 (415) 555-3456',
-                salesPerson: '张三',
-                stage: 'communicate',
-                probability: 60,
-                lastFollowup: '2026-03-03',
-                nextFollowup: '2026-03-10'
+                customerNumber: 'C20260003',
+                businessName: '美丽人生美甲',
+                contactPerson: '王女士',
+                phone: '+1 (310) 555-9012',
+                industry: 'nail',
+                salesPerson: '王五',
+                level: 'normal',
+                status: 'closed',
+                createdAt: '2026-01-20'
             },
             {
                 id: '4',
-                customerName: '时尚美容沙龙',
-                contactPerson: '刘小姐',
-                phone: '+1 (312) 555-7890',
-                salesPerson: '王五',
-                stage: 'quote',
-                probability: 70,
-                lastFollowup: '2026-03-04',
-                nextFollowup: '2026-03-11'
+                customerNumber: 'C20260004',
+                businessName: '东方按摩SPA',
+                contactPerson: '赵总',
+                phone: '+1 (415) 555-3456',
+                industry: 'massage',
+                salesPerson: '张三',
+                level: 'high',
+                status: 'unclosed',
+                createdAt: '2026-01-22'
             },
             {
                 id: '5',
-                customerName: '亚洲超市',
-                contactPerson: '陈老板',
-                phone: '+1 (718) 555-2345',
+                customerNumber: 'C20260005',
+                businessName: '时尚美容沙龙',
+                contactPerson: '刘小姐',
+                phone: '+1 (312) 555-7890',
+                industry: 'beauty',
                 salesPerson: '李四',
-                stage: 'consider',
-                probability: 50,
-                lastFollowup: '2026-03-05',
-                nextFollowup: '2026-03-12'
+                level: 'normal',
+                status: 'following',
+                createdAt: '2026-01-25'
             },
             {
                 id: '6',
-                customerName: '金色年华KTV',
-                contactPerson: '黄总',
-                phone: '+1 (626) 555-1234',
-                salesPerson: '张三',
-                stage: 'pending',
-                probability: 80,
-                lastFollowup: '2026-03-06',
-                nextFollowup: '2026-03-13'
+                customerNumber: 'C20260006',
+                businessName: '亚洲超市',
+                contactPerson: '陈老板',
+                phone: '+1 (718) 555-2345',
+                industry: 'supermarket',
+                salesPerson: '王五',
+                level: 'low',
+                status: 'lost',
+                createdAt: '2026-01-28'
             },
             {
                 id: '7',
-                customerName: '健康生活瑜伽馆',
-                contactPerson: '周教练',
-                phone: '+1 (408) 555-5678',
-                salesPerson: '王五',
-                stage: 'closed',
-                probability: 100,
-                lastFollowup: '2026-03-07',
-                nextFollowup: null
+                customerNumber: 'C20260007',
+                businessName: '海洋餐厅',
+                contactPerson: '杨经理',
+                phone: '+1 (213) 555-6789',
+                industry: 'restaurant',
+                salesPerson: '张三',
+                level: 'normal',
+                status: 'paused',
+                createdAt: '2026-02-01'
             },
             {
                 id: '8',
-                customerName: '米兰西餐厅',
-                contactPerson: '吴老板',
-                phone: '+1 (202) 555-9012',
+                customerNumber: 'C20260008',
+                businessName: '金色年华KTV',
+                contactPerson: '黄总',
+                phone: '+1 (626) 555-1234',
+                industry: 'other',
                 salesPerson: '李四',
-                stage: 'lost',
-                probability: 0,
-                lastFollowup: '2026-03-01',
-                nextFollowup: null
+                level: 'high',
+                status: 'following',
+                createdAt: '2026-02-05'
             },
             {
                 id: '9',
-                customerName: '北京烤鸭',
-                contactPerson: '郑总',
-                phone: '+1 (703) 555-3456',
-                salesPerson: '张三',
-                stage: 'followup',
-                probability: 20,
-                lastFollowup: '2026-02-28',
-                nextFollowup: '2026-04-01'
+                customerNumber: 'C20260009',
+                businessName: '健康生活瑜伽馆',
+                contactPerson: '周教练',
+                phone: '+1 (408) 555-5678',
+                industry: 'other',
+                salesPerson: '王五',
+                level: 'normal',
+                status: 'closed',
+                createdAt: '2026-02-10'
             },
             {
                 id: '10',
-                customerName: '上海小笼包',
-                contactPerson: '孙老板',
-                phone: '+1 (510) 555-7890',
-                salesPerson: '王五',
-                stage: 'new',
-                probability: 10,
-                lastFollowup: null,
-                nextFollowup: '2026-03-15'
+                customerNumber: 'C20260010',
+                businessName: '米兰西餐厅',
+                contactPerson: '吴老板',
+                phone: '+1 (202) 555-9012',
+                industry: 'restaurant',
+                salesPerson: '张三',
+                level: 'vip',
+                status: 'closed',
+                createdAt: '2026-02-15'
             }
         ];
         
-        // 加载销售线索数据
-        function loadSalesLeads() {
-            const tableBody = document.getElementById('leads-table-body');
+        // 加载客户数据
+        function loadCustomers() {
+            const tableBody = document.getElementById('customer-table-body');
             tableBody.innerHTML = '';
             
-            mockSalesLeads.forEach(lead => {
+            mockCustomers.forEach(customer => {
                 const row = document.createElement('tr');
                 
-                // 阶段映射
-                const stageMap = {
-                    'new': '新线索',
-                    'contact': '已联系',
-                    'communicate': '沟通中',
-                    'quote': '已报价',
-                    'consider': '考虑中',
-                    'pending': '待成交',
+                // 行业类型映射
+                const industryMap = {
+                    'restaurant': '餐厅',
+                    'nail': '美甲',
+                    'massage': '按摩',
+                    'beauty': '美容',
+                    'supermarket': '超市',
+                    'other': '其他'
+                };
+                
+                // 等级映射
+                const levelMap = {
+                    'high': '高意向',
+                    'normal': '普通',
+                    'low': '低意向',
+                    'vip': 'VIP'
+                };
+                
+                // 状态映射
+                const statusMap = {
+                    'unclosed': '未成交',
+                    'following': '跟进中',
                     'closed': '已成交',
-                    'lost': '未成交',
-                    'followup': '后续再跟进'
+                    'paused': '暂停',
+                    'lost': '流失'
                 };
                 
                 row.innerHTML = `
@@ -714,51 +784,42 @@
                             <input type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
                         </div>
                     </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${customer.customerNumber}</div>
+                    </td>
                     <td class="px-6 py-4">
-                        <div class="text-sm text-gray-900 font-medium">${lead.customerName}</div>
+                        <div class="text-sm text-gray-900 font-medium">${customer.businessName}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${lead.contactPerson}</div>
+                        <div class="text-sm text-gray-900">${customer.contactPerson}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${lead.phone}</div>
+                        <div class="text-sm text-gray-900">${customer.phone}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${lead.salesPerson}</div>
+                        <div class="text-sm text-gray-900">${industryMap[customer.industry] || customer.industry}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="status-badge stage-${lead.stage}">${stageMap[lead.stage] || lead.stage}</span>
+                        <div class="text-sm text-gray-900">${customer.salesPerson}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${lead.probability}%</div>
-                        <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
-                            <div class="bg-primary h-1.5 rounded-full" style="width: ${lead.probability}%"></div>
-                        </div>
+                        <span class="status-badge status-${customer.level}">${levelMap[customer.level] || customer.level}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="status-badge customer-status-${customer.status}">${statusMap[customer.status] || customer.status}</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${lead.lastFollowup || '-'}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${lead.nextFollowup ? `<span class="text-${isDateApproaching(lead.nextFollowup) ? 'red' : 'gray'}-500">${lead.nextFollowup}</span>` : '-'}
+                        ${customer.createdAt}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <a href="#" class="text-primary hover:text-secondary mr-3">查看</a>
                         <a href="#" class="text-gray-600 hover:text-gray-900 mr-3">编辑</a>
-                        <a href="#" class="text-green-600 hover:text-green-900">跟进</a>
+                        <a href="#" class="text-red-600 hover:text-red-900">删除</a>
                     </td>
                 `;
                 
                 tableBody.appendChild(row);
             });
-        }
-        
-        // 检查日期是否临近（7天内）
-        function isDateApproaching(dateString) {
-            const today = new Date();
-            const targetDate = new Date(dateString);
-            const diffTime = targetDate - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays >= 0 && diffDays <= 7;
         }
         
         // 侧边栏切换
@@ -805,67 +866,40 @@
             filterPanel.classList.toggle('hidden');
         });
         
-        // 添加线索模态框
-        document.getElementById('add-lead-btn').addEventListener('click', function() {
-            const modal = document.getElementById('add-lead-modal');
+        // 添加客户模态框
+        document.getElementById('add-customer-btn').addEventListener('click', function() {
+            const modal = document.getElementById('add-customer-modal');
             modal.classList.remove('hidden');
         });
         
         document.getElementById('close-modal-btn').addEventListener('click', function() {
-            const modal = document.getElementById('add-lead-modal');
+            const modal = document.getElementById('add-customer-modal');
             modal.classList.add('hidden');
         });
         
-        document.getElementById('cancel-add-lead').addEventListener('click', function() {
-            const modal = document.getElementById('add-lead-modal');
+        document.getElementById('cancel-add-customer').addEventListener('click', function() {
+            const modal = document.getElementById('add-customer-modal');
             modal.classList.add('hidden');
         });
         
         // 点击模态框外部关闭
-        document.getElementById('add-lead-modal').addEventListener('click', function(event) {
+        document.getElementById('add-customer-modal').addEventListener('click', function(event) {
             if (event.target === this) {
                 this.classList.add('hidden');
             }
         });
         
-        // 添加线索表单提交
-        document.getElementById('add-lead-form').addEventListener('submit', function(event) {
+        // 添加客户表单提交
+        document.getElementById('add-customer-form').addEventListener('submit', function(event) {
             event.preventDefault();
             
-            // 获取表单数据
-            const formData = new FormData(this);
-            const customerName = this.querySelector('input[required]:nth-child(2)').value;
-            const contactPerson = this.querySelector('input[required]:nth-child(4)').value;
-            const phone = this.querySelector('input[required]:nth-child(6)').value;
-            const salesPerson = this.querySelector('select:nth-child(14)').value;
-            const stage = this.querySelector('select:nth-child(16)').value;
-            const probability = this.querySelector('input[type="number"]').value;
-            const nextFollowup = this.querySelector('input[type="datetime-local"]').value;
-            
-            // 创建新线索对象
-            const newLead = {
-                id: (mockSalesLeads.length + 1).toString(),
-                customerName: customerName,
-                contactPerson: contactPerson,
-                phone: phone,
-                salesPerson: salesPerson === '1' ? '张三' : salesPerson === '2' ? '李四' : salesPerson === '3' ? '王五' : '未分配',
-                stage: stage || 'new',
-                probability: parseInt(probability) || 10,
-                lastFollowup: null,
-                nextFollowup: nextFollowup ? nextFollowup.split('T')[0] : null
-            };
-            
-            // 添加到模拟数据中
-            mockSalesLeads.unshift(newLead);
-            
-            // 重新加载线索列表
-            loadSalesLeads();
+            // 这里可以添加表单验证和数据处理逻辑
             
             // 显示成功消息
-            alert('线索添加成功！');
+            alert('客户添加成功！');
             
             // 关闭模态框
-            document.getElementById('add-lead-modal').classList.add('hidden');
+            document.getElementById('add-customer-modal').classList.add('hidden');
             
             // 重置表单
             this.reset();

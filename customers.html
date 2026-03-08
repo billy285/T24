@@ -13,13 +13,14 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1e40af',
-                        secondary: '#3b82f6',
+                        primary: '#f9a8d4',
+                        secondary: '#f472b6',
+                        accent: '#ec4899',
                         success: '#10b981',
                         warning: '#f59e0b',
                         danger: '#ef4444',
-                        light: '#f3f4f6',
-                        dark: '#1f2937'
+                        light: '#fdf2f8',
+                        dark: '#7e22ce'
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif']
@@ -30,8 +31,8 @@
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
-            .bg-gradient-primary {
-                background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            .bg-gradient-beauty {
+                background: linear-gradient(135deg, #f9a8d4 0%, #f472b6 100%);
             }
             .card-shadow {
                 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -40,8 +41,8 @@
                 transition: all 0.3s ease;
             }
             .sidebar-active {
-                border-left: 4px solid #1e40af;
-                background-color: rgba(30, 64, 175, 0.1);
+                border-left: 4px solid #ec4899;
+                background-color: rgba(236, 72, 153, 0.1);
             }
             .status-badge {
                 @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
@@ -82,63 +83,59 @@
         <aside id="sidebar" class="bg-white w-64 shadow-lg hidden md:block transition-all-300">
             <div class="p-4 border-b">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white">
+                    <div class="w-10 h-10 rounded-full bg-gradient-beauty flex items-center justify-center text-white">
                         <i class="fa fa-users"></i>
                     </div>
-                    <h1 class="ml-3 text-lg font-bold text-gray-800">客户管理系统</h1>
+                    <h1 class="ml-3 text-lg font-bold text-gray-800" data-lang="systemTitle">美业预约系统</h1>
                 </div>
             </div>
             
             <div class="py-4">
-                <div class="px-4 py-2 text-xs text-gray-600 uppercase tracking-wider">
+                <div class="px-4 py-2 text-xs text-gray-600 uppercase tracking-wider" data-lang="mainMenu">
                     主菜单
                 </div>
                 <nav>
                     <a href="dashboard.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-dashboard w-6 text-gray-500"></i>
-                        <span>仪表盘</span>
+                        <span data-lang="dashboard">仪表盘</span>
+                    </a>
+                    <a href="appointments.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-calendar w-6 text-gray-500"></i>
+                        <span data-lang="appointmentManagement">预约管理</span>
+                    </a>
+                    <a href="services.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-scissors w-6 text-gray-500"></i>
+                        <span data-lang="serviceManagement">服务管理</span>
+                    </a>
+                    <a href="employees.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-user-md w-6 text-gray-500"></i>
+                        <span data-lang="employeeManagement">员工管理</span>
                     </a>
                     <a href="customers.html" class="flex items-center px-4 py-3 text-gray-700 sidebar-active">
-                        <i class="fa fa-user-circle w-6 text-gray-500"></i>
-                        <span>客户管理</span>
-                    </a>
-                    <a href="sales.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
-                        <i class="fa fa-handshake-o w-6 text-gray-500"></i>
-                        <span>销售管理</span>
-                    </a>
-                    <a href="delivery.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
-                        <i class="fa fa-tasks w-6 text-gray-500"></i>
-                        <span>交付管理</span>
-                    </a>
-                    <a href="renewal.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
-                        <i class="fa fa-refresh w-6 text-gray-500"></i>
-                        <span>续费管理</span>
+                        <i class="fa fa-users w-6 text-gray-500"></i>
+                        <span data-lang="customerManagement">客户管理</span>
                     </a>
                     <a href="finance.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-money w-6 text-gray-500"></i>
-                        <span>财务管理</span>
-                    </a>
-                    <a href="tasks.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
-                        <i class="fa fa-calendar-check-o w-6 text-gray-500"></i>
-                        <span>任务协作</span>
+                        <span data-lang="financeManagement">财务管理</span>
                     </a>
                     <a href="reports.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-bar-chart w-6 text-gray-500"></i>
-                        <span>报表中心</span>
+                        <span data-lang="dataReports">数据报表</span>
                     </a>
                 </nav>
                 
-                <div class="px-4 py-2 mt-4 text-xs text-gray-600 uppercase tracking-wider">
+                <div class="px-4 py-2 mt-4 text-xs text-gray-600 uppercase tracking-wider" data-lang="system">
                     系统
                 </div>
                 <nav>
                     <a href="settings.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-cog w-6 text-gray-500"></i>
-                        <span>系统设置</span>
+                        <span data-lang="systemSettings">系统设置</span>
                     </a>
                     <a href="#" id="logout-btn" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-sign-out w-6 text-gray-500"></i>
-                        <span>退出登录</span>
+                        <span data-lang="logout">退出登录</span>
                     </a>
                 </nav>
             </div>
@@ -150,11 +147,16 @@
             <header class="bg-white shadow-sm z-10">
                 <div class="flex items-center justify-between p-4">
                     <div class="flex items-center">
-                        <button id="sidebar-toggle" class="text-gray-500 focus:outline-none md:hidden">
-                            <i class="fa fa-bars text-xl"></i>
-                        </button>
-                        <h2 class="ml-2 text-xl font-semibold text-gray-800">客户管理</h2>
-                    </div>
+                            <button id="sidebar-toggle" class="text-gray-500 focus:outline-none md:hidden">
+                                <i class="fa fa-bars text-xl"></i>
+                            </button>
+                            <h2 class="ml-2 text-xl font-semibold text-gray-800" data-lang="customerManagement">客户管理</h2>
+                        </div>
+                        
+                        <div class="flex items-center ml-4">
+                            <button id="lang-zh" class="px-3 py-1 rounded-l-md bg-primary text-white">中文</button>
+                            <button id="lang-en" class="px-3 py-1 rounded-r-md bg-gray-200 text-gray-700">English</button>
+                        </div>
                     
                     <div class="flex items-center">
                         <div class="relative mr-4">
@@ -175,14 +177,14 @@
                             
                             <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fa fa-user mr-2"></i> 个人资料
+                                    <i class="fa fa-user mr-2"></i> <span data-lang="personalProfile">个人资料</span>
                                 </a>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fa fa-cog mr-2"></i> 账户设置
+                                    <i class="fa fa-cog mr-2"></i> <span data-lang="accountSettings">账户设置</span>
                                 </a>
                                 <div class="border-t border-gray-200"></div>
                                 <a href="#" id="user-menu-logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fa fa-sign-out mr-2"></i> 退出登录
+                                    <i class="fa fa-sign-out mr-2"></i> <span data-lang="logout">退出登录</span>
                                 </a>
                             </div>
                         </div>
@@ -197,23 +199,23 @@
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                         <div class="flex items-center mb-4 md:mb-0">
                             <button id="add-customer-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
-                                <i class="fa fa-plus mr-2"></i> 添加客户
+                                <i class="fa fa-plus mr-2"></i> <span data-lang="addCustomer">添加客户</span>
                             </button>
                             <div class="ml-3 relative">
                                 <button id="batch-actions-btn" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
-                                    <i class="fa fa-cog mr-2"></i> 批量操作
+                                    <i class="fa fa-cog mr-2"></i> <span data-lang="batchActions">批量操作</span>
                                     <i class="fa fa-chevron-down ml-2 text-xs"></i>
                                 </button>
                                 <div id="batch-actions-menu" class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-10">
                                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fa fa-download mr-2"></i> 导出选中
+                                        <i class="fa fa-download mr-2"></i> <span data-lang="exportSelected">导出选中</span>
                                     </a>
                                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fa fa-print mr-2"></i> 打印选中
+                                        <i class="fa fa-print mr-2"></i> <span data-lang="printSelected">打印选中</span>
                                     </a>
                                     <div class="border-t border-gray-200"></div>
                                     <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                                        <i class="fa fa-trash mr-2"></i> 删除选中
+                                        <i class="fa fa-trash mr-2"></i> <span data-lang="deleteSelected">删除选中</span>
                                     </a>
                                 </div>
                             </div>
@@ -221,13 +223,13 @@
                         
                         <div class="flex items-center">
                             <div class="relative">
-                                <input type="text" id="search-input" placeholder="搜索客户名称、联系人..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <input type="text" id="search-input" data-lang="searchPlaceholder" placeholder="搜索客户名称、联系人..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fa fa-search text-gray-400"></i>
                                 </div>
                             </div>
                             <button id="filter-btn" class="ml-3 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
-                                <i class="fa fa-filter mr-2"></i> 筛选
+                                <i class="fa fa-filter mr-2"></i> <span data-lang="filter">筛选</span>
                             </button>
                         </div>
                     </div>
@@ -237,21 +239,21 @@
                 <div id="filter-panel" class="bg-white rounded-lg shadow-sm p-4 mb-6 hidden">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">客户状态</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="customerStatus">客户状态</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部状态</option>
-                                <option value="unclosed">未成交</option>
-                                <option value="following">跟进中</option>
-                                <option value="closed">已成交</option>
-                                <option value="paused">暂停</option>
-                                <option value="lost">流失</option>
+                                <option value="" data-lang="allStatus">全部状态</option>
+                                <option value="unclosed" data-lang="unclosed">未成交</option>
+                                <option value="following" data-lang="following">跟进中</option>
+                                <option value="closed" data-lang="closed">已成交</option>
+                                <option value="paused" data-lang="paused">暂停</option>
+                                <option value="lost" data-lang="lost">流失</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">负责人</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="salesPerson">负责人</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部负责人</option>
+                                <option value="" data-lang="allSalesPersons">全部负责人</option>
                                 <option value="1">张三</option>
                                 <option value="2">李四</option>
                                 <option value="3">王五</option>
@@ -259,32 +261,32 @@
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">行业类型</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="industryType">行业类型</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部行业</option>
-                                <option value="restaurant">餐厅</option>
-                                <option value="nail">美甲</option>
-                                <option value="massage">按摩</option>
-                                <option value="beauty">美容</option>
-                                <option value="supermarket">超市</option>
+                                <option value="" data-lang="allIndustries">全部行业</option>
+                                <option value="restaurant" data-lang="restaurant">餐厅</option>
+                                <option value="nail" data-lang="nail">美甲</option>
+                                <option value="massage" data-lang="massage">按摩</option>
+                                <option value="beauty" data-lang="beauty">美容</option>
+                                <option value="supermarket" data-lang="supermarket">超市</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">客户等级</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="customerLevel">客户等级</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部等级</option>
-                                <option value="high">高意向</option>
-                                <option value="normal">普通</option>
-                                <option value="low">低意向</option>
-                                <option value="vip">VIP</option>
+                                <option value="" data-lang="allLevels">全部等级</option>
+                                <option value="high" data-lang="high">高意向</option>
+                                <option value="normal" data-lang="normal">普通</option>
+                                <option value="low" data-lang="low">低意向</option>
+                                <option value="vip" data-lang="vip">VIP</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">城市</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="city">城市</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部城市</option>
+                                <option value="" data-lang="allCities">全部城市</option>
                                 <option value="ny">纽约</option>
                                 <option value="la">洛杉矶</option>
                                 <option value="sf">旧金山</option>
@@ -293,7 +295,7 @@
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">创建时间</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="createdAt">创建时间</label>
                             <div class="flex items-center space-x-2">
                                 <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <span>至</span>
@@ -303,10 +305,10 @@
                     </div>
                     
                     <div class="mt-4 flex justify-end space-x-3">
-                        <button class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
+                        <button class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300" data-lang="reset">
                             重置
                         </button>
-                        <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
+                        <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300" data-lang="applyFilter">
                             应用筛选
                         </button>
                     </div>
@@ -323,34 +325,34 @@
                                             <input id="select-all" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
                                         </div>
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="customerNumber">
                                         客户编号
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="businessName">
                                         商家名称
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="contactPerson">
                                         联系人
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="phone">
                                         电话
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="industry">
                                         行业
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="salesPerson">
                                         负责人
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="level">
                                         等级
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="status">
                                         状态
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="createdAt">
                                         创建时间
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="action">
                                         操作
                                     </th>
                                 </tr>
@@ -364,23 +366,23 @@
                     <!-- Pagination -->
                     <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
                         <div class="flex-1 flex justify-between sm:hidden">
-                            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" data-lang="previousPage">
                                 上一页
                             </a>
-                            <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" data-lang="nextPage">
                                 下一页
                             </a>
                         </div>
                         <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                             <div>
-                                <p class="text-sm text-gray-700">
+                                <p class="text-sm text-gray-700" data-lang="showingRecords">
                                     显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">42</span> 条记录
                                 </p>
                             </div>
                             <div>
                                 <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
                                     <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        <span class="sr-only">上一页</span>
+                                        <span class="sr-only" data-lang="previousPage">上一页</span>
                                         <i class="fa fa-chevron-left"></i>
                                     </a>
                                     <a href="#" aria-current="page" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
@@ -399,7 +401,7 @@
                                         5
                                     </a>
                                     <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        <span class="sr-only">下一页</span>
+                                        <span class="sr-only" data-lang="nextPage">下一页</span>
                                         <i class="fa fa-chevron-right"></i>
                                     </a>
                                 </nav>
@@ -415,7 +417,7 @@
     <div id="add-customer-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between p-6 border-b">
-                <h3 class="text-lg font-semibold text-gray-800">添加新客户</h3>
+                <h3 class="text-lg font-semibold text-gray-800" data-lang="addNewCustomer">添加新客户</h3>
                 <button id="close-modal-btn" class="text-gray-400 hover:text-gray-500 focus:outline-none">
                     <i class="fa fa-times text-xl"></i>
                 </button>
@@ -425,57 +427,57 @@
                 <form id="add-customer-form">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">商家名称 <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="businessNameRequired">商家名称 <span class="text-red-500">*</span></label>
                             <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">联系人 <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="contactPersonRequired">联系人 <span class="text-red-500">*</span></label>
                             <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">联系电话 <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="phoneRequired">联系电话 <span class="text-red-500">*</span></label>
                             <input type="tel" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">微信/WhatsApp</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="wechatWhatsapp">微信/WhatsApp</label>
                             <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="email">邮箱</label>
                             <input type="email" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">行业类型 <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="industryTypeRequired">行业类型 <span class="text-red-500">*</span></label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                                <option value="">请选择行业</option>
-                                <option value="restaurant">餐厅</option>
-                                <option value="nail">美甲</option>
-                                <option value="massage">按摩</option>
-                                <option value="beauty">美容</option>
-                                <option value="supermarket">超市</option>
-                                <option value="other">其他</option>
+                                <option value="" data-lang="selectIndustry">请选择行业</option>
+                                <option value="restaurant" data-lang="restaurant">餐厅</option>
+                                <option value="nail" data-lang="nail">美甲</option>
+                                <option value="massage" data-lang="massage">按摩</option>
+                                <option value="beauty" data-lang="beauty">美容</option>
+                                <option value="supermarket" data-lang="supermarket">超市</option>
+                                <option value="other" data-lang="other">其他</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">商家地址</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="businessAddress">商家地址</label>
                             <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">城市</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="cityLabel">城市</label>
                             <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">州</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="state">州</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">请选择州</option>
+                                <option value="" data-lang="selectState">请选择州</option>
                                 <option value="NY">纽约州 (NY)</option>
                                 <option value="CA">加利福尼亚州 (CA)</option>
                                 <option value="IL">伊利诺伊州 (IL)</option>
@@ -485,22 +487,22 @@
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">客户来源</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="customerSource">客户来源</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">请选择来源</option>
-                                <option value="call">电话销售</option>
-                                <option value="referral">转介绍</option>
-                                <option value="ad">广告</option>
-                                <option value="private">私域</option>
-                                <option value="old">老客户</option>
-                                <option value="other">其他</option>
+                                <option value="" data-lang="selectSource">请选择来源</option>
+                                <option value="call" data-lang="call">电话销售</option>
+                                <option value="referral" data-lang="referral">转介绍</option>
+                                <option value="ad" data-lang="ad">广告</option>
+                                <option value="private" data-lang="private">私域</option>
+                                <option value="old" data-lang="old">老客户</option>
+                                <option value="other" data-lang="other">其他</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">负责人</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="salesPersonLabel">负责人</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">请选择负责人</option>
+                                <option value="" data-lang="selectSalesPerson">请选择负责人</option>
                                 <option value="1">张三</option>
                                 <option value="2">李四</option>
                                 <option value="3">王五</option>
@@ -508,83 +510,83 @@
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">客户等级</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="customerLevelLabel">客户等级</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="normal">普通</option>
-                                <option value="high">高意向</option>
-                                <option value="low">低意向</option>
-                                <option value="vip">VIP</option>
+                                <option value="normal" data-lang="normal">普通</option>
+                                <option value="high" data-lang="high">高意向</option>
+                                <option value="low" data-lang="low">低意向</option>
+                                <option value="vip" data-lang="vip">VIP</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">当前是否已有线上点餐系统</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="hasOrderingSystem">当前是否已有线上点餐系统</label>
                             <div class="flex items-center space-x-4">
                                 <label class="inline-flex items-center">
                                     <input type="radio" name="hasOrderingSystem" value="true" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
-                                    <span class="ml-2 text-sm text-gray-700">是</span>
+                                    <span class="ml-2 text-sm text-gray-700" data-lang="yes">是</span>
                                 </label>
                                 <label class="inline-flex items-center">
                                     <input type="radio" name="hasOrderingSystem" value="false" checked class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
-                                    <span class="ml-2 text-sm text-gray-700">否</span>
+                                    <span class="ml-2 text-sm text-gray-700" data-lang="no">否</span>
                                 </label>
                             </div>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">当前使用的平台</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="currentPlatform">当前使用的平台</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">请选择平台</option>
-                                <option value="beyondmenu">BeyondMenu</option>
-                                <option value="menusifu">MenuSifu</option>
-                                <option value="qmenu">QMenu</option>
-                                <option value="honorpos">HonorPOS</option>
-                                <option value="custom">自建站</option>
-                                <option value="none">无</option>
+                                <option value="" data-lang="selectPlatform">请选择平台</option>
+                                <option value="beyondmenu" data-lang="beyondmenu">BeyondMenu</option>
+                                <option value="menusifu" data-lang="menusifu">MenuSifu</option>
+                                <option value="qmenu" data-lang="qmenu">QMenu</option>
+                                <option value="honorpos" data-lang="honorpos">HonorPOS</option>
+                                <option value="custom" data-lang="custom">自建站</option>
+                                <option value="none" data-lang="none">无</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">月订单量（可填写预估）</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="monthlyOrders">月订单量（可填写预估）</label>
                             <input type="number" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">商家官网</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="website">商家官网</label>
                             <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Google Business 链接</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="googleBusiness">Google Business 链接</label>
                             <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Facebook 链接</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="facebook">Facebook 链接</label>
                             <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Instagram 链接</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="instagram">Instagram 链接</label>
                             <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Yelp 链接</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="yelp">Yelp 链接</label>
                             <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">备注</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="notes">备注</label>
                             <textarea rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
                         </div>
                     </div>
                     
                     <div class="mt-6 flex justify-end space-x-3">
-                        <button type="button" id="cancel-add-customer" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
+                        <button type="button" id="cancel-add-customer" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300" data-lang="cancel">
                             取消
                         </button>
-                        <button type="submit" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
+                        <button type="submit" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300" data-lang="saveCustomer">
                             保存客户
                         </button>
                     </div>
@@ -594,6 +596,249 @@
     </div>
 
     <script>
+        // 语言配置
+        const langConfig = {
+            zh: {
+                systemTitle: '美业预约系统',
+                mainMenu: '主菜单',
+                dashboard: '仪表盘',
+                appointmentManagement: '预约管理',
+                serviceManagement: '服务管理',
+                employeeManagement: '员工管理',
+                customerManagement: '客户管理',
+                financeManagement: '财务管理',
+                dataReports: '数据报表',
+                system: '系统',
+                systemSettings: '系统设置',
+                logout: '退出登录',
+                addCustomer: '添加客户',
+                batchActions: '批量操作',
+                exportSelected: '导出选中',
+                printSelected: '打印选中',
+                deleteSelected: '删除选中',
+                searchPlaceholder: '搜索客户名称、联系人...',
+                filter: '筛选',
+                customerStatus: '客户状态',
+                allStatus: '全部状态',
+                unclosed: '未成交',
+                following: '跟进中',
+                closed: '已成交',
+                paused: '暂停',
+                lost: '流失',
+                salesPerson: '负责人',
+                allSalesPersons: '全部负责人',
+                industryType: '行业类型',
+                allIndustries: '全部行业',
+                restaurant: '餐厅',
+                nail: '美甲',
+                massage: '按摩',
+                beauty: '美容',
+                supermarket: '超市',
+                customerLevel: '客户等级',
+                allLevels: '全部等级',
+                high: '高意向',
+                normal: '普通',
+                low: '低意向',
+                vip: 'VIP',
+                city: '城市',
+                allCities: '全部城市',
+                createdAt: '创建时间',
+                reset: '重置',
+                applyFilter: '应用筛选',
+                customerNumber: '客户编号',
+                businessName: '商家名称',
+                contactPerson: '联系人',
+                phone: '电话',
+                industry: '行业',
+                level: '等级',
+                status: '状态',
+                action: '操作',
+                view: '查看',
+                edit: '编辑',
+                delete: '删除',
+                previousPage: '上一页',
+                nextPage: '下一页',
+                showingRecords: '显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">42</span> 条记录',
+                addNewCustomer: '添加新客户',
+                businessNameRequired: '商家名称 <span class="text-red-500">*</span>',
+                contactPersonRequired: '联系人 <span class="text-red-500">*</span>',
+                phoneRequired: '联系电话 <span class="text-red-500">*</span>',
+                wechatWhatsapp: '微信/WhatsApp',
+                email: '邮箱',
+                industryTypeRequired: '行业类型 <span class="text-red-500">*</span>',
+                selectIndustry: '请选择行业',
+                businessAddress: '商家地址',
+                cityLabel: '城市',
+                state: '州',
+                selectState: '请选择州',
+                customerSource: '客户来源',
+                selectSource: '请选择来源',
+                call: '电话销售',
+                referral: '转介绍',
+                ad: '广告',
+                private: '私域',
+                old: '老客户',
+                other: '其他',
+                salesPersonLabel: '负责人',
+                selectSalesPerson: '请选择负责人',
+                customerLevelLabel: '客户等级',
+                hasOrderingSystem: '当前是否已有线上点餐系统',
+                yes: '是',
+                no: '否',
+                currentPlatform: '当前使用的平台',
+                selectPlatform: '请选择平台',
+                beyondmenu: 'BeyondMenu',
+                menusifu: 'MenuSifu',
+                qmenu: 'QMenu',
+                honorpos: 'HonorPOS',
+                custom: '自建站',
+                none: '无',
+                monthlyOrders: '月订单量（可填写预估）',
+                website: '商家官网',
+                googleBusiness: 'Google Business 链接',
+                facebook: 'Facebook 链接',
+                instagram: 'Instagram 链接',
+                yelp: 'Yelp 链接',
+                notes: '备注',
+                cancel: '取消',
+                saveCustomer: '保存客户',
+                personalProfile: '个人资料',
+                accountSettings: '账户设置',
+                logout: '退出登录'
+            },
+            en: {
+                systemTitle: 'Beauty Salon Booking System',
+                mainMenu: 'Main Menu',
+                dashboard: 'Dashboard',
+                appointmentManagement: 'Appointment Management',
+                serviceManagement: 'Service Management',
+                employeeManagement: 'Employee Management',
+                customerManagement: 'Customer Management',
+                financeManagement: 'Finance Management',
+                dataReports: 'Data Reports',
+                system: 'System',
+                systemSettings: 'System Settings',
+                logout: 'Logout',
+                addCustomer: 'Add Customer',
+                batchActions: 'Batch Actions',
+                exportSelected: 'Export Selected',
+                printSelected: 'Print Selected',
+                deleteSelected: 'Delete Selected',
+                searchPlaceholder: 'Search customer name, contact...',
+                filter: 'Filter',
+                customerStatus: 'Customer Status',
+                allStatus: 'All Status',
+                unclosed: 'Unclosed',
+                following: 'Following',
+                closed: 'Closed',
+                paused: 'Paused',
+                lost: 'Lost',
+                salesPerson: 'Sales Person',
+                allSalesPersons: 'All Sales Persons',
+                industryType: 'Industry Type',
+                allIndustries: 'All Industries',
+                restaurant: 'Restaurant',
+                nail: 'Nail Salon',
+                massage: 'Massage',
+                beauty: 'Beauty',
+                supermarket: 'Supermarket',
+                customerLevel: 'Customer Level',
+                allLevels: 'All Levels',
+                high: 'High Intent',
+                normal: 'Normal',
+                low: 'Low Intent',
+                vip: 'VIP',
+                city: 'City',
+                allCities: 'All Cities',
+                createdAt: 'Created At',
+                reset: 'Reset',
+                applyFilter: 'Apply Filter',
+                customerNumber: 'Customer Number',
+                businessName: 'Business Name',
+                contactPerson: 'Contact Person',
+                phone: 'Phone',
+                industry: 'Industry',
+                level: 'Level',
+                status: 'Status',
+                action: 'Action',
+                view: 'View',
+                edit: 'Edit',
+                delete: 'Delete',
+                previousPage: 'Previous Page',
+                nextPage: 'Next Page',
+                showingRecords: 'Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">42</span> records',
+                addNewCustomer: 'Add New Customer',
+                businessNameRequired: 'Business Name <span class="text-red-500">*</span>',
+                contactPersonRequired: 'Contact Person <span class="text-red-500">*</span>',
+                phoneRequired: 'Phone <span class="text-red-500">*</span>',
+                wechatWhatsapp: 'WeChat/WhatsApp',
+                email: 'Email',
+                industryTypeRequired: 'Industry Type <span class="text-red-500">*</span>',
+                selectIndustry: 'Select Industry',
+                businessAddress: 'Business Address',
+                cityLabel: 'City',
+                state: 'State',
+                selectState: 'Select State',
+                customerSource: 'Customer Source',
+                selectSource: 'Select Source',
+                call: 'Phone Sales',
+                referral: 'Referral',
+                ad: 'Advertisement',
+                private: 'Private Domain',
+                old: 'Existing Customer',
+                other: 'Other',
+                salesPersonLabel: 'Sales Person',
+                selectSalesPerson: 'Select Sales Person',
+                customerLevelLabel: 'Customer Level',
+                hasOrderingSystem: 'Do you currently have an online ordering system?',
+                yes: 'Yes',
+                no: 'No',
+                currentPlatform: 'Current Platform',
+                selectPlatform: 'Select Platform',
+                beyondmenu: 'BeyondMenu',
+                menusifu: 'MenuSifu',
+                qmenu: 'QMenu',
+                honorpos: 'HonorPOS',
+                custom: 'Custom Website',
+                none: 'None',
+                monthlyOrders: 'Monthly Orders (estimated)',
+                website: 'Business Website',
+                googleBusiness: 'Google Business Link',
+                facebook: 'Facebook Link',
+                instagram: 'Instagram Link',
+                yelp: 'Yelp Link',
+                notes: 'Notes',
+                cancel: 'Cancel',
+                saveCustomer: 'Save Customer',
+                personalProfile: 'Personal Profile',
+                accountSettings: 'Account Settings',
+                logout: 'Logout'
+            }
+        };
+        
+        // 切换语言
+        function changeLanguage(lang) {
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.getAttribute('data-lang');
+                if (langConfig[lang][key]) {
+                    if (key === 'searchPlaceholder') {
+                        el.placeholder = langConfig[lang][key];
+                    } else if (el.tagName === 'OPTION') {
+                        el.textContent = langConfig[lang][key];
+                    } else {
+                        el.innerHTML = langConfig[lang][key];
+                    }
+                }
+            });
+            
+            // 更新语言按钮状态
+            document.getElementById('lang-zh').className = lang === 'zh' ? 'px-3 py-1 rounded-l-md bg-primary text-white' : 'px-3 py-1 rounded-l-md bg-gray-200 text-gray-700';
+            document.getElementById('lang-en').className = lang === 'en' ? 'px-3 py-1 rounded-r-md bg-primary text-white' : 'px-3 py-1 rounded-r-md bg-gray-200 text-gray-700';
+            
+            // 保存语言偏好
+            localStorage.setItem('preferredLanguage', lang);
+        }
+        
         // 检查登录状态
         document.addEventListener('DOMContentLoaded', function() {
             const savedLogin = localStorage.getItem('userLogin') || sessionStorage.getItem('userLogin');
@@ -612,6 +857,14 @@
                 
                 // 加载客户数据
                 loadCustomers();
+                
+                // 加载语言偏好
+                const savedLang = localStorage.getItem('preferredLanguage') || 'zh';
+                changeLanguage(savedLang);
+                
+                // 语言切换事件
+                document.getElementById('lang-zh').addEventListener('click', () => changeLanguage('zh'));
+                document.getElementById('lang-en').addEventListener('click', () => changeLanguage('en'));
                 
             } catch (e) {
                 console.error('登录信息解析错误', e);

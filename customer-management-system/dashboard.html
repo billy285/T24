@@ -17,7 +17,6 @@
                     colors: {
                         primary: '#1e40af',
                         secondary: '#3b82f6',
-                        accent: '#60a5fa',
                         success: '#10b981',
                         warning: '#f59e0b',
                         danger: '#ef4444',
@@ -43,8 +42,8 @@
                 transition: all 0.3s ease;
             }
             .sidebar-active {
-                border-left: 4px solid #3b82f6;
-                background-color: rgba(59, 130, 246, 0.1);
+                border-left: 4px solid #1e40af;
+                background-color: rgba(30, 64, 175, 0.1);
             }
         }
     </style>
@@ -58,60 +57,60 @@
                     <div class="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white">
                         <i class="fa fa-users"></i>
                     </div>
-                    <h1 class="ml-3 text-lg font-bold text-gray-800" data-lang="systemTitle">客户管理系统</h1>
+                    <h1 class="ml-3 text-lg font-bold text-gray-800">客户管理系统</h1>
                 </div>
             </div>
             
             <div class="py-4">
-                <div class="px-4 py-2 text-xs text-gray-600 uppercase tracking-wider" data-lang="mainMenu">
+                <div class="px-4 py-2 text-xs text-gray-600 uppercase tracking-wider">
                     主菜单
                 </div>
                 <nav>
                     <a href="dashboard.html" class="flex items-center px-4 py-3 text-gray-700 sidebar-active">
                         <i class="fa fa-dashboard w-6 text-gray-500"></i>
-                        <span data-lang="dashboard">仪表盘</span>
+                        <span>仪表盘</span>
                     </a>
                     <a href="customers.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
-                        <i class="fa fa-users w-6 text-gray-500"></i>
-                        <span data-lang="customerManagement">客户管理</span>
+                        <i class="fa fa-user-circle w-6 text-gray-500"></i>
+                        <span>客户管理</span>
                     </a>
                     <a href="sales.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
-                        <i class="fa fa-shopping-cart w-6 text-gray-500"></i>
-                        <span data-lang="salesManagement">销售管理</span>
+                        <i class="fa fa-handshake-o w-6 text-gray-500"></i>
+                        <span>销售管理</span>
                     </a>
                     <a href="delivery.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
-                        <i class="fa fa-truck w-6 text-gray-500"></i>
-                        <span data-lang="deliveryManagement">交付管理</span>
+                        <i class="fa fa-tasks w-6 text-gray-500"></i>
+                        <span>交付管理</span>
                     </a>
                     <a href="renewal.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-refresh w-6 text-gray-500"></i>
-                        <span data-lang="renewalManagement">续费管理</span>
+                        <span>续费管理</span>
                     </a>
                     <a href="finance.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-money w-6 text-gray-500"></i>
-                        <span data-lang="financeManagement">财务管理</span>
+                        <span>财务管理</span>
                     </a>
                     <a href="tasks.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
-                        <i class="fa fa-tasks w-6 text-gray-500"></i>
-                        <span data-lang="taskCollaboration">任务协作</span>
+                        <i class="fa fa-calendar-check-o w-6 text-gray-500"></i>
+                        <span>任务协作</span>
                     </a>
                     <a href="reports.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-bar-chart w-6 text-gray-500"></i>
-                        <span data-lang="reportCenter">报表中心</span>
+                        <span>报表中心</span>
                     </a>
                 </nav>
                 
-                <div class="px-4 py-2 mt-4 text-xs text-gray-600 uppercase tracking-wider" data-lang="system">
+                <div class="px-4 py-2 mt-4 text-xs text-gray-600 uppercase tracking-wider">
                     系统
                 </div>
                 <nav>
                     <a href="settings.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-cog w-6 text-gray-500"></i>
-                        <span data-lang="systemSettings">系统设置</span>
+                        <span>系统设置</span>
                     </a>
                     <a href="#" id="logout-btn" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-sign-out w-6 text-gray-500"></i>
-                        <span data-lang="logout">退出登录</span>
+                        <span>退出登录</span>
                     </a>
                 </nav>
             </div>
@@ -126,12 +125,7 @@
                         <button id="sidebar-toggle" class="text-gray-500 focus:outline-none md:hidden">
                             <i class="fa fa-bars text-xl"></i>
                         </button>
-                        <h2 class="ml-2 text-xl font-semibold text-gray-800" data-lang="dashboard">仪表盘</h2>
-                    </div>
-                    
-                    <div class="flex items-center mr-4">
-                        <button id="lang-zh" class="px-2 py-1 text-sm bg-primary text-white rounded-l-md">中文</button>
-                        <button id="lang-en" class="px-2 py-1 text-sm bg-gray-200 text-gray-700 rounded-r-md">English</button>
+                        <h2 class="ml-2 text-xl font-semibold text-gray-800">仪表盘</h2>
                     </div>
                     
                     <div class="flex items-center">
@@ -153,14 +147,14 @@
                             
                             <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fa fa-user mr-2"></i> <span data-lang="profile">个人资料</span>
+                                    <i class="fa fa-user mr-2"></i> 个人资料
                                 </a>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fa fa-cog mr-2"></i> <span data-lang="accountSettings">账户设置</span>
+                                    <i class="fa fa-cog mr-2"></i> 账户设置
                                 </a>
                                 <div class="border-t border-gray-200"></div>
                                 <a href="#" id="user-menu-logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fa fa-sign-out mr-2"></i> <span data-lang="logout">退出登录</span>
+                                    <i class="fa fa-sign-out mr-2"></i> 退出登录
                                 </a>
                             </div>
                         </div>
@@ -174,12 +168,12 @@
                 <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-800" data-lang="welcomeBack">欢迎回来，<span id="welcome-name">管理员</span>！</h3>
-                            <p class="text-gray-600 mt-1" data-lang="todayInfo">今天是 <span id="current-date">2026年3月8日</span>，您有 <span class="text-primary font-medium">5</span> 个待办任务需要处理。</p>
+                            <h3 class="text-lg font-semibold text-gray-800">欢迎回来，<span id="welcome-name">管理员</span>！</h3>
+                            <p class="text-gray-600 mt-1">今天是 <span id="current-date">2026年3月8日</span>，您有 <span class="text-primary font-medium">5</span> 个待办任务需要处理。</p>
                         </div>
                         <div class="mt-4 md:mt-0">
                             <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
-                                <i class="fa fa-plus mr-2"></i> <span data-lang="addNewCustomer">添加新客户</span>
+                                <i class="fa fa-plus mr-2"></i> 添加新客户
                             </button>
                         </div>
                     </div>
@@ -191,14 +185,14 @@
                     <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-sm font-medium text-gray-600" data-lang="totalCustomers">总客户数</p>
-                                <p class="text-2xl font-bold text-gray-800 mt-1" id="total-customers">256</p>
-                                <p class="text-xs text-green-500 mt-1" data-lang="comparedToLastMonth">
+                                <p class="text-sm font-medium text-gray-600">客户总数</p>
+                                <p class="text-2xl font-bold text-gray-800 mt-1" id="total-customers">128</p>
+                                <p class="text-xs text-green-500 mt-1">
                                     <i class="fa fa-arrow-up"></i> 12% 较上月
                                 </p>
                             </div>
-                            <div class="w-12 h-12 rounded-full bg-primary bg-opacity-20 flex items-center justify-center">
-                                <i class="fa fa-users text-accent text-xl"></i>
+                            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                <i class="fa fa-users text-primary text-xl"></i>
                             </div>
                         </div>
                     </div>
@@ -207,9 +201,9 @@
                     <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-sm font-medium text-gray-600" data-lang="newCustomers">新增客户</p>
+                                <p class="text-sm font-medium text-gray-600">本月新增客户</p>
                                 <p class="text-2xl font-bold text-gray-800 mt-1" id="new-customers">18</p>
-                                <p class="text-xs text-green-500 mt-1" data-lang="comparedToLastMonth">
+                                <p class="text-xs text-green-500 mt-1">
                                     <i class="fa fa-arrow-up"></i> 8% 较上月
                                 </p>
                             </div>
@@ -223,9 +217,9 @@
                     <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-sm font-medium text-gray-600" data-lang="totalRevenue">总收入</p>
-                                <p class="text-2xl font-bold text-gray-800 mt-1" id="total-revenue">¥28,500</p>
-                                <p class="text-xs text-green-500 mt-1" data-lang="comparedToLastMonth">
+                                <p class="text-sm font-medium text-gray-600">本月总收入</p>
+                                <p class="text-2xl font-bold text-gray-800 mt-1" id="total-revenue">$28,500</p>
+                                <p class="text-xs text-green-500 mt-1">
                                     <i class="fa fa-arrow-up"></i> 5% 较上月
                                 </p>
                             </div>
@@ -235,18 +229,18 @@
                         </div>
                     </div>
                     
-                    <!-- Task Completion Rate -->
+                    <!-- Renewal Rate -->
                     <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-sm font-medium text-gray-600" data-lang="taskCompletionRate">任务完成率</p>
-                                <p class="text-2xl font-bold text-gray-800 mt-1" id="task-completion-rate">92%</p>
-                                <p class="text-xs text-green-500 mt-1" data-lang="comparedToLastMonth">
-                                    <i class="fa fa-arrow-up"></i> 2% 较上月
+                                <p class="text-sm font-medium text-gray-600">续费率</p>
+                                <p class="text-2xl font-bold text-gray-800 mt-1" id="renewal-rate">85%</p>
+                                <p class="text-xs text-red-500 mt-1">
+                                    <i class="fa fa-arrow-down"></i> 3% 较上月
                                 </p>
                             </div>
-                            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                                <i class="fa fa-check-circle text-primary text-xl"></i>
+                            <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                                <i class="fa fa-refresh text-purple-600 text-xl"></i>
                             </div>
                         </div>
                     </div>
@@ -257,11 +251,11 @@
                     <!-- Revenue Chart -->
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-semibold text-gray-800" data-lang="revenueTrend">收入趋势</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">收入趋势</h3>
                             <div class="flex space-x-2">
-                                <button class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 py-1 px-2 rounded transition-all-300" data-lang="month">月</button>
-                                <button class="text-xs bg-primary text-white py-1 px-2 rounded transition-all-300" data-lang="quarter">季</button>
-                                <button class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 py-1 px-2 rounded transition-all-300" data-lang="year">年</button>
+                                <button class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 py-1 px-2 rounded transition-all-300">月</button>
+                                <button class="text-xs bg-primary text-white py-1 px-2 rounded transition-all-300">季</button>
+                                <button class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 py-1 px-2 rounded transition-all-300">年</button>
                             </div>
                         </div>
                         <div class="h-64">
@@ -272,7 +266,7 @@
                     <!-- Customer Status Chart -->
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-semibold text-gray-800" data-lang="customerStatusDistribution">客户状态分布</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">客户状态分布</h3>
                             <div>
                                 <button class="text-xs text-gray-500 hover:text-gray-700">
                                     <i class="fa fa-ellipsis-v"></i>
@@ -290,8 +284,8 @@
                     <!-- Recent Activity -->
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-semibold text-gray-800" data-lang="recentActivity">最近活动</h3>
-                            <a href="#" class="text-sm text-primary hover:text-secondary transition-all-300" data-lang="viewAll">查看全部</a>
+                            <h3 class="text-lg font-semibold text-gray-800">最近活动</h3>
+                            <a href="#" class="text-sm text-primary hover:text-secondary transition-all-300">查看全部</a>
                         </div>
                         <div class="space-y-4">
                             <div class="flex items-start">
@@ -299,7 +293,7 @@
                                     <i class="fa fa-user-plus text-primary"></i>
                                 </div>
                                 <div class="ml-3">
-                                    <p class="text-sm font-medium text-gray-800" data-lang="newCustomer">新增客户</p>
+                                    <p class="text-sm font-medium text-gray-800">新增客户</p>
                                     <p class="text-xs text-gray-600">张三添加了新客户 "金龙餐厅"</p>
                                     <p class="text-xs text-gray-500 mt-1">2小时前</p>
                                 </div>
@@ -310,7 +304,7 @@
                                     <i class="fa fa-check-circle text-success"></i>
                                 </div>
                                 <div class="ml-3">
-                                    <p class="text-sm font-medium text-gray-800" data-lang="taskCompleted">任务完成</p>
+                                    <p class="text-sm font-medium text-gray-800">任务完成</p>
                                     <p class="text-xs text-gray-600">李四完成了 "设计菜单页面" 任务</p>
                                     <p class="text-xs text-gray-500 mt-1">4小时前</p>
                                 </div>
@@ -321,7 +315,7 @@
                                     <i class="fa fa-money text-warning"></i>
                                 </div>
                                 <div class="ml-3">
-                                    <p class="text-sm font-medium text-gray-800" data-lang="paymentRecord">收款记录</p>
+                                    <p class="text-sm font-medium text-gray-800">收款记录</p>
                                     <p class="text-xs text-gray-600">王五记录了 "星光餐厅" 的季度付款</p>
                                     <p class="text-xs text-gray-500 mt-1">昨天</p>
                                 </div>
@@ -332,7 +326,7 @@
                                     <i class="fa fa-exclamation-circle text-danger"></i>
                                 </div>
                                 <div class="ml-3">
-                                    <p class="text-sm font-medium text-gray-800" data-lang="customerComplaint">客户投诉</p>
+                                    <p class="text-sm font-medium text-gray-800">客户投诉</p>
                                     <p class="text-xs text-gray-600">"海洋餐厅" 反馈网站加载速度慢</p>
                                     <p class="text-xs text-gray-500 mt-1">昨天</p>
                                 </div>
@@ -343,8 +337,8 @@
                     <!-- Upcoming Tasks -->
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-semibold text-gray-800" data-lang="upcomingTasks">待办任务</h3>
-                            <a href="#" class="text-sm text-primary hover:text-secondary transition-all-300" data-lang="viewAll">查看全部</a>
+                            <h3 class="text-lg font-semibold text-gray-800">待办任务</h3>
+                            <a href="#" class="text-sm text-primary hover:text-secondary transition-all-300">查看全部</a>
                         </div>
                         <div class="space-y-3">
                             <div class="flex items-center p-3 bg-gray-50 rounded-lg">
@@ -353,7 +347,7 @@
                                     <p class="text-sm font-medium text-gray-800">跟进新客户 "北京烤鸭"</p>
                                     <p class="text-xs text-gray-600">负责人: 张三</p>
                                 </div>
-                                <span class="text-xs bg-red-100 text-red-800 py-1 px-2 rounded" data-lang="today">今天</span>
+                                <span class="text-xs bg-red-100 text-red-800 py-1 px-2 rounded">今天</span>
                             </div>
                             
                             <div class="flex items-center p-3 bg-gray-50 rounded-lg">
@@ -362,7 +356,7 @@
                                     <p class="text-sm font-medium text-gray-800">完成 "米兰西餐厅" 网站设计</p>
                                     <p class="text-xs text-gray-600">负责人: 李四</p>
                                 </div>
-                                <span class="text-xs bg-yellow-100 text-yellow-800 py-1 px-2 rounded" data-lang="tomorrow">明天</span>
+                                <span class="text-xs bg-yellow-100 text-yellow-800 py-1 px-2 rounded">明天</span>
                             </div>
                             
                             <div class="flex items-center p-3 bg-gray-50 rounded-lg">
@@ -380,7 +374,7 @@
                                     <p class="text-sm font-medium text-gray-800">准备月度财务报表</p>
                                     <p class="text-xs text-gray-600">负责人: 赵六</p>
                                 </div>
-                                <span class="text-xs bg-gray-200 text-gray-800 py-1 px-2 rounded" data-lang="nextWeek">下周</span>
+                                <span class="text-xs bg-gray-200 text-gray-800 py-1 px-2 rounded">下周</span>
                             </div>
                         </div>
                     </div>
@@ -390,113 +384,6 @@
     </div>
 
     <script>
-        // 语言配置
-        const langConfig = {
-            zh: {
-                systemTitle: '客户管理系统',
-                mainMenu: '主菜单',
-                dashboard: '仪表盘',
-                customerManagement: '客户管理',
-                salesManagement: '销售管理',
-                deliveryManagement: '交付管理',
-                renewalManagement: '续费管理',
-                financeManagement: '财务管理',
-                taskCollaboration: '任务协作',
-                reportCenter: '报表中心',
-                system: '系统',
-                systemSettings: '系统设置',
-                logout: '退出登录',
-                profile: '个人资料',
-                accountSettings: '账户设置',
-                welcomeBack: '欢迎回来，',
-                todayInfo: '今天是 ',
-                addNewCustomer: '添加新客户',
-                totalCustomers: '总客户数',
-                newCustomers: '新增客户',
-                totalRevenue: '总收入',
-                taskCompletionRate: '任务完成率',
-                comparedToLastMonth: '较上月',
-                revenueTrend: '收入趋势',
-                month: '月',
-                quarter: '季',
-                year: '年',
-                customerStatusDistribution: '客户状态分布',
-                recentActivity: '最近活动',
-                viewAll: '查看全部',
-                newCustomer: '新增客户',
-                taskCompleted: '任务完成',
-                paymentRecord: '收款记录',
-                customerComplaint: '客户投诉',
-                upcomingTasks: '待办任务',
-                today: '今天',
-                tomorrow: '明天',
-                nextWeek: '下周'
-            },
-            en: {
-                systemTitle: 'Customer Management System',
-                mainMenu: 'Main Menu',
-                dashboard: 'Dashboard',
-                customerManagement: 'Customer Management',
-                salesManagement: 'Sales Management',
-                deliveryManagement: 'Delivery Management',
-                renewalManagement: 'Renewal Management',
-                financeManagement: 'Finance Management',
-                taskCollaboration: 'Task Collaboration',
-                reportCenter: 'Report Center',
-                system: 'System',
-                systemSettings: 'System Settings',
-                logout: 'Logout',
-                profile: 'Profile',
-                accountSettings: 'Account Settings',
-                welcomeBack: 'Welcome back, ',
-                todayInfo: 'Today is ',
-                addNewCustomer: 'Add New Customer',
-                totalCustomers: 'Total Customers',
-                newCustomers: 'New Customers',
-                totalRevenue: 'Total Revenue',
-                taskCompletionRate: 'Task Completion Rate',
-                comparedToLastMonth: 'vs last month',
-                revenueTrend: 'Revenue Trend',
-                month: 'Month',
-                quarter: 'Quarter',
-                year: 'Year',
-                customerStatusDistribution: 'Customer Status Distribution',
-                recentActivity: 'Recent Activity',
-                viewAll: 'View All',
-                newCustomer: 'New Customer',
-                taskCompleted: 'Task Completed',
-                paymentRecord: 'Payment Record',
-                customerComplaint: 'Customer Complaint',
-                upcomingTasks: 'Upcoming Tasks',
-                today: 'Today',
-                tomorrow: 'Tomorrow',
-                nextWeek: 'Next Week'
-            }
-        };
-
-        // 当前语言
-        let currentLang = 'zh';
-
-        // 切换语言
-        function changeLanguage(lang) {
-            currentLang = lang;
-            
-            // 更新语言按钮样式
-            document.getElementById('lang-zh').className = lang === 'zh' ? 'px-2 py-1 text-sm bg-primary text-white rounded-l-md' : 'px-2 py-1 text-sm bg-gray-200 text-gray-700 rounded-l-md';
-            document.getElementById('lang-en').className = lang === 'en' ? 'px-2 py-1 text-sm bg-primary text-white rounded-r-md' : 'px-2 py-1 text-sm bg-gray-200 text-gray-700 rounded-r-md';
-            
-            // 更新页面内容
-            document.querySelectorAll('[data-lang]').forEach(element => {
-                const key = element.getAttribute('data-lang');
-                if (langConfig[lang][key]) {
-                    element.textContent = langConfig[lang][key];
-                }
-            });
-            
-            // 保存语言设置
-            localStorage.setItem('language', lang);
-        }
-
         // 检查登录状态
         document.addEventListener('DOMContentLoaded', function() {
             const savedLogin = localStorage.getItem('userLogin') || sessionStorage.getItem('userLogin');
@@ -519,14 +406,6 @@
                 
                 // 初始化仪表盘数据
                 initializeDashboardData(userData.role);
-                
-                // 加载保存的语言
-                const savedLang = localStorage.getItem('language') || 'zh';
-                changeLanguage(savedLang);
-                
-                // 绑定语言切换事件
-                document.getElementById('lang-zh').addEventListener('click', () => changeLanguage('zh'));
-                document.getElementById('lang-en').addEventListener('click', () => changeLanguage('en'));
                 
             } catch (e) {
                 console.error('登录信息解析错误', e);
@@ -593,50 +472,50 @@
             switch(role) {
                 case 'admin':
                     dashboardData = {
-                        totalCustomers: 256,
+                        totalCustomers: 128,
                         newCustomers: 18,
-                        totalRevenue: '¥28,500',
-                        taskCompletionRate: '92%'
+                        totalRevenue: '$28,500',
+                        renewalRate: '85%'
                     };
                     break;
                 case 'sales':
                     dashboardData = {
-                        totalCustomers: 150,
-                        newCustomers: 12,
-                        totalRevenue: '¥15,200',
-                        taskCompletionRate: '88%'
+                        totalCustomers: 42,
+                        newCustomers: 8,
+                        totalRevenue: '$12,300',
+                        renewalRate: '80%'
                     };
                     break;
                 case 'operation':
                     dashboardData = {
-                        totalCustomers: 200,
-                        newCustomers: 10,
-                        totalRevenue: '¥20,100',
-                        taskCompletionRate: '95%'
+                        totalCustomers: 65,
+                        newCustomers: 5,
+                        totalRevenue: '$0',
+                        renewalRate: '88%'
                     };
                     break;
                 case 'design':
                     dashboardData = {
-                        totalCustomers: 80,
-                        newCustomers: 5,
-                        totalRevenue: '¥8,500',
-                        taskCompletionRate: '90%'
+                        totalCustomers: 38,
+                        newCustomers: 3,
+                        totalRevenue: '$0',
+                        renewalRate: '0%'
                     };
                     break;
                 case 'finance':
                     dashboardData = {
-                        totalCustomers: 256,
+                        totalCustomers: 128,
                         newCustomers: 18,
-                        totalRevenue: '¥28,500',
-                        taskCompletionRate: '98%'
+                        totalRevenue: '$28,500',
+                        renewalRate: '85%'
                     };
                     break;
                 default:
                     dashboardData = {
-                        totalCustomers: 256,
+                        totalCustomers: 128,
                         newCustomers: 18,
-                        totalRevenue: '¥28,500',
-                        taskCompletionRate: '92%'
+                        totalRevenue: '$28,500',
+                        renewalRate: '85%'
                     };
             }
             
@@ -644,7 +523,7 @@
             document.getElementById('total-customers').textContent = dashboardData.totalCustomers;
             document.getElementById('new-customers').textContent = dashboardData.newCustomers;
             document.getElementById('total-revenue').textContent = dashboardData.totalRevenue;
-            document.getElementById('task-completion-rate').textContent = dashboardData.taskCompletionRate;
+            document.getElementById('renewal-rate').textContent = dashboardData.renewalRate;
             
             // 初始化图表
             initRevenueChart();
@@ -660,10 +539,10 @@
                 data: {
                     labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
                     datasets: [{
-                        label: '月度收入',
+                        label: '季度收入',
                         data: [22000, 25000, 28500, 30000, 32000, 35000],
-                        backgroundColor: 'rgba(236, 72, 153, 0.1)',
-                        borderColor: '#ec4899',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderColor: '#3b82f6',
                         borderWidth: 2,
                         tension: 0.3,
                         fill: true
@@ -681,7 +560,7 @@
                             intersect: false,
                             callbacks: {
                                 label: function(context) {
-                                    return `收入: ¥${context.raw.toLocaleString()}`;
+                                    return `收入: $${context.raw.toLocaleString()}`;
                                 }
                             }
                         }
@@ -696,7 +575,7 @@
                             beginAtZero: true,
                             ticks: {
                                 callback: function(value) {
-                                    return '¥' + value.toLocaleString();
+                                    return '$' + value.toLocaleString();
                                 }
                             }
                         }
@@ -712,15 +591,15 @@
             const customerStatusChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['活跃', '潜在', '休眠', '流失', '新客户'],
+                    labels: ['已成交', '跟进中', '新线索', '已流失', '暂停服务'],
                     datasets: [{
-                        data: [45, 25, 15, 8, 7],
+                        data: [65, 35, 18, 8, 2],
                         backgroundColor: [
-                            '#10b981', // 绿色 - 活跃
-                            '#3b82f6', // 蓝色 - 潜在
-                            '#f59e0b', // 黄色 - 休眠
-                            '#ef4444', // 红色 - 流失
-                            '#6b7280'  // 灰色 - 新客户
+                            '#10b981', // 绿色 - 已成交
+                            '#3b82f6', // 蓝色 - 跟进中
+                            '#f59e0b', // 黄色 - 新线索
+                            '#ef4444', // 红色 - 已流失
+                            '#6b7280'  // 灰色 - 暂停服务
                         ],
                         borderWidth: 0,
                         hoverOffset: 4

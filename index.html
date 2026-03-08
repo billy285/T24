@@ -44,50 +44,56 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md">
+        <!-- Language Switch -->
+        <div class="flex justify-end mb-4">
+            <button id="lang-zh" class="px-3 py-1 bg-primary text-white rounded-l-md">中文</button>
+            <button id="lang-en" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-r-md">English</button>
+        </div>
+        
         <!-- Logo and Title -->
         <div class="text-center mb-8">
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-primary text-white text-2xl mb-4">
                 <i class="fa fa-users"></i>
             </div>
-            <h1 class="text-3xl font-bold text-gray-800 text-shadow">客户管理系统</h1>
-            <p class="text-gray-600 mt-2">适合美国华人餐厅/实体商家服务行业</p>
+            <h1 class="text-3xl font-bold text-gray-800 text-shadow" data-lang="title">客户管理系统</h1>
+            <p class="text-gray-600 mt-2" data-lang="subtitle">专为美国中餐馆和实体企业设计</p>
         </div>
         
         <!-- Login Form -->
         <div class="bg-white rounded-lg shadow-lg p-8">
             <div class="mb-6">
-                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">用户名</label>
+                <label for="username" class="block text-gray-700 text-sm font-bold mb-2" data-lang="username">用户名</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fa fa-user text-gray-400"></i>
                     </div>
-                    <input id="username" type="text" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入用户名" required>
+                    <input id="username" type="text" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入用户名" data-placeholder="请输入用户名" required>
                 </div>
             </div>
             
             <div class="mb-6">
-                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">密码</label>
+                <label for="password" class="block text-gray-700 text-sm font-bold mb-2" data-lang="password">密码</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fa fa-lock text-gray-400"></i>
                     </div>
-                    <input id="password" type="password" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入密码" required>
+                    <input id="password" type="password" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入密码" data-placeholder="请输入密码" required>
                 </div>
             </div>
             
             <div class="mb-6">
-                <label for="role" class="block text-gray-700 text-sm font-bold mb-2">角色</label>
+                <label for="role" class="block text-gray-700 text-sm font-bold mb-2" data-lang="role">角色</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fa fa-id-card text-gray-400"></i>
                     </div>
                     <select id="role" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                        <option value="">请选择角色</option>
-                        <option value="admin">老板/管理员</option>
-                        <option value="sales">销售</option>
-                        <option value="operation">运营</option>
-                        <option value="design">设计</option>
-                        <option value="finance">财务</option>
+                        <option value="" data-lang="selectRole">请选择角色</option>
+                        <option value="admin" data-lang="admin">管理员</option>
+                        <option value="sales" data-lang="sales">销售</option>
+                        <option value="operation" data-lang="operation">运营</option>
+                        <option value="design" data-lang="design">设计</option>
+                        <option value="finance" data-lang="finance">财务</option>
                     </select>
                 </div>
             </div>
@@ -95,39 +101,154 @@
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center">
                     <input id="remember" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
-                    <label for="remember" class="ml-2 block text-sm text-gray-700">记住我</label>
+                    <label for="remember" class="ml-2 block text-sm text-gray-700" data-lang="remember">记住我</label>
                 </div>
-                <a href="#" class="text-sm text-primary hover:text-secondary transition-all-300">忘记密码?</a>
+                <a href="#" class="text-sm text-primary hover:text-secondary transition-all-300" data-lang="forgotPassword">忘记密码?</a>
             </div>
             
             <button id="login-btn" class="w-full bg-gradient-primary text-white font-bold py-3 px-4 rounded-md hover:opacity-90 transition-all-300 flex items-center justify-center">
-                <i class="fa fa-sign-in mr-2"></i> 登录系统
+                <i class="fa fa-sign-in mr-2"></i> <span data-lang="login">登录系统</span>
             </button>
             
             <div class="mt-6 text-center text-sm text-gray-600">
-                <p>演示账号：</p>
-                <p class="mt-1">管理员: admin / 123456</p>
-                <p>销售: sales / 123456</p>
-                <p>运营: operation / 123456</p>
-                <p>设计: design / 123456</p>
-                <p>财务: finance / 123456</p>
+                <p data-lang="demoAccounts">演示账号：</p>
+                <p class="mt-1" data-lang="adminAccount">管理员: admin / password</p>
+                <p data-lang="salesAccount">销售: sales / password</p>
+                <p data-lang="operationAccount">运营: operation / password</p>
+                <p data-lang="designAccount">设计: design / password</p>
+                <p data-lang="financeAccount">财务: finance / password</p>
             </div>
         </div>
         
         <!-- Footer -->
         <div class="text-center mt-6 text-gray-600 text-sm">
-            <p>© 2026 客户管理系统 - 适合 T24 行业</p>
+            <p data-lang="copyright">© 2026 客户管理系统 - 专为美国中餐馆和实体企业设计</p>
         </div>
     </div>
 
     <script>
+        // 语言配置
+        const langConfig = {
+            zh: {
+                title: '客户管理系统',
+                subtitle: '专为美国中餐馆和实体企业设计',
+                username: '用户名',
+                password: '密码',
+                role: '角色',
+                selectRole: '请选择角色',
+                admin: '管理员',
+                sales: '销售',
+                operation: '运营',
+                design: '设计',
+                finance: '财务',
+                remember: '记住我',
+                forgotPassword: '忘记密码?',
+                login: '登录系统',
+                demoAccounts: '演示账号：',
+                adminAccount: '管理员: admin / password',
+                salesAccount: '销售: sales / password',
+                operationAccount: '运营: operation / password',
+                designAccount: '设计: design / password',
+                financeAccount: '财务: finance / password',
+                copyright: '© 2026 客户管理系统 - 专为美国中餐馆和实体企业设计',
+                placeholder: {
+                    username: '请输入用户名',
+                    password: '请输入密码'
+                },
+                alert: {
+                    fillAll: '请填写完整登录信息',
+                    loginError: '用户名、密码或角色选择错误'
+                }
+            },
+            en: {
+                title: 'Customer Management System',
+                subtitle: 'Designed for Chinese restaurants and physical businesses in the US',
+                username: 'Username',
+                password: 'Password',
+                role: 'Role',
+                selectRole: 'Please select role',
+                admin: 'Admin',
+                sales: 'Sales',
+                operation: 'Operation',
+                design: 'Design',
+                finance: 'Finance',
+                remember: 'Remember me',
+                forgotPassword: 'Forgot password?',
+                login: 'Login',
+                demoAccounts: 'Demo Accounts:',
+                adminAccount: 'Admin: admin / password',
+                salesAccount: 'Sales: sales / password',
+                operationAccount: 'Operation: operation / password',
+                designAccount: 'Design: design / password',
+                financeAccount: 'Finance: finance / password',
+                copyright: '© 2026 Customer Management System - Designed for Chinese restaurants and physical businesses in the US',
+                placeholder: {
+                    username: 'Please enter username',
+                    password: 'Please enter password'
+                },
+                alert: {
+                    fillAll: 'Please fill in all login information',
+                    loginError: 'Username, password or role selection is incorrect'
+                }
+            }
+        };
+
+        // 当前语言
+        let currentLang = 'zh';
+
+        // 切换语言
+        function changeLanguage(lang) {
+            currentLang = lang;
+            
+            // 更新语言按钮样式
+            document.getElementById('lang-zh').className = lang === 'zh' ? 'px-3 py-1 bg-primary text-white rounded-l-md' : 'px-3 py-1 bg-gray-200 text-gray-700 rounded-l-md';
+            document.getElementById('lang-en').className = lang === 'en' ? 'px-3 py-1 bg-primary text-white rounded-r-md' : 'px-3 py-1 bg-gray-200 text-gray-700 rounded-r-md';
+            
+            // 更新页面内容
+            document.querySelectorAll('[data-lang]').forEach(element => {
+                const key = element.getAttribute('data-lang');
+                if (langConfig[lang][key]) {
+                    element.textContent = langConfig[lang][key];
+                }
+            });
+            
+            // 更新占位符
+            document.querySelectorAll('[data-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-placeholder');
+                if (langConfig[lang].placeholder) {
+                    element.placeholder = langConfig[lang].placeholder[key.replace('请输入', '').toLowerCase()] || key;
+                }
+            });
+            
+            // 更新选项
+            document.querySelectorAll('option[data-lang]').forEach(option => {
+                const key = option.getAttribute('data-lang');
+                if (langConfig[lang][key]) {
+                    option.textContent = langConfig[lang][key];
+                }
+            });
+            
+            // 保存语言设置
+            localStorage.setItem('language', lang);
+        }
+
+        // 加载保存的语言
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('language') || 'zh';
+            changeLanguage(savedLang);
+            
+            // 绑定语言切换事件
+            document.getElementById('lang-zh').addEventListener('click', () => changeLanguage('zh'));
+            document.getElementById('lang-en').addEventListener('click', () => changeLanguage('en'));
+        });
+
         // 模拟用户数据
         const users = [
-            { username: 'admin', password: '123456', role: 'admin', name: '管理员' },
-            { username: 'sales', password: '123456', role: 'sales', name: '销售专员' },
-            { username: 'operation', password: '123456', role: 'operation', name: '运营专员' },
-            { username: 'design', password: '123456', role: 'design', name: '设计师' },
-            { username: 'finance', password: '123456', role: 'finance', name: '财务专员' }
+            { username: 'admin', password: 'password', role: 'admin', name: '管理员' },
+            { username: 'sales', password: 'password', role: 'sales', name: '销售' },
+            { username: 'operation', password: 'password', role: 'operation', name: '运营' },
+            { username: 'design', password: 'password', role: 'design', name: '设计' },
+            { username: 'finance', password: 'password', role: 'finance', name: '财务' }
         ];
 
         // 登录功能
@@ -139,7 +260,7 @@
             
             // 验证输入
             if (!username || !password || !role) {
-                alert('请填写完整登录信息');
+                alert(langConfig[currentLang].alert.fillAll);
                 return;
             }
             
@@ -149,10 +270,11 @@
             if (user) {
                 // 保存登录状态
                 const loginData = {
-                    userId: username,
+                    username: username,
                     name: user.name,
                     role: user.role,
-                    loginTime: new Date().toISOString()
+                    loginTime: new Date().toISOString(),
+                    language: currentLang
                 };
                 
                 if (remember) {
@@ -164,7 +286,7 @@
                 // 跳转到仪表盘
                 window.location.href = 'dashboard.html';
             } else {
-                alert('用户名、密码或角色选择错误');
+                alert(langConfig[currentLang].alert.loginError);
             }
         });
 
@@ -175,7 +297,13 @@
             if (savedLogin) {
                 try {
                     const userData = JSON.parse(savedLogin);
-                    if (userData.userId && userData.role) {
+                    if (userData.username && userData.role) {
+                        // 恢复语言设置
+                        if (userData.language) {
+                            changeLanguage(userData.language);
+                        }
+                        
+                        // 跳转到仪表盘
                         window.location.href = 'dashboard.html';
                     }
                 } catch (e) {

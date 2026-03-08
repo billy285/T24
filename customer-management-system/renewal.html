@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>客户管理系统 - 销售管理</title>
+    <title>客户管理系统 - 续费管理</title>
     <!-- Tailwind CSS v3 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -46,32 +46,38 @@
             .status-badge {
                 @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
             }
-            .stage-new {
-                @apply bg-blue-100 text-blue-800;
-            }
-            .stage-contact {
+            .status-active {
                 @apply bg-green-100 text-green-800;
             }
-            .stage-communicate {
+            .status-expiring {
                 @apply bg-yellow-100 text-yellow-800;
             }
-            .stage-quote {
-                @apply bg-purple-100 text-purple-800;
-            }
-            .stage-consider {
-                @apply bg-indigo-100 text-indigo-800;
-            }
-            .stage-pending {
-                @apply bg-pink-100 text-pink-800;
-            }
-            .stage-closed {
-                @apply bg-green-100 text-green-800;
-            }
-            .stage-lost {
+            .status-expired {
                 @apply bg-red-100 text-red-800;
             }
-            .stage-followup {
+            .status-paused {
                 @apply bg-gray-100 text-gray-800;
+            }
+            .status-lost {
+                @apply bg-red-100 text-red-800;
+            }
+            .renewal-result-success {
+                @apply bg-green-100 text-green-800;
+            }
+            .renewal-result-rejected {
+                @apply bg-red-100 text-red-800;
+            }
+            .renewal-result-delayed {
+                @apply bg-yellow-100 text-yellow-800;
+            }
+            .renewal-result-uncontactable {
+                @apply bg-gray-100 text-gray-800;
+            }
+            .renewal-result-downgrade {
+                @apply bg-blue-100 text-blue-800;
+            }
+            .renewal-result-upgrade {
+                @apply bg-purple-100 text-purple-800;
             }
         }
     </style>
@@ -102,7 +108,7 @@
                         <i class="fa fa-user-circle w-6 text-gray-500"></i>
                         <span>客户管理</span>
                     </a>
-                    <a href="sales.html" class="flex items-center px-4 py-3 text-gray-700 sidebar-active">
+                    <a href="sales.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-handshake-o w-6 text-gray-500"></i>
                         <span>销售管理</span>
                     </a>
@@ -110,7 +116,7 @@
                         <i class="fa fa-tasks w-6 text-gray-500"></i>
                         <span>交付管理</span>
                     </a>
-                    <a href="renewal.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                    <a href="renewal.html" class="flex items-center px-4 py-3 text-gray-700 sidebar-active">
                         <i class="fa fa-refresh w-6 text-gray-500"></i>
                         <span>续费管理</span>
                     </a>
@@ -153,7 +159,7 @@
                         <button id="sidebar-toggle" class="text-gray-500 focus:outline-none md:hidden">
                             <i class="fa fa-bars text-xl"></i>
                         </button>
-                        <h2 class="ml-2 text-xl font-semibold text-gray-800">销售管理</h2>
+                        <h2 class="ml-2 text-xl font-semibold text-gray-800">续费管理</h2>
                     </div>
                     
                     <div class="flex items-center">
@@ -189,20 +195,20 @@
                     </div>
                 </div>
                 
-                <!-- Sales Management Tabs -->
+                <!-- Renewal Management Tabs -->
                 <div class="border-b border-gray-200">
                     <nav class="flex -mb-px">
-                        <a href="#" class="sales-tab-active border-primary text-primary whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
-                            销售线索
+                        <a href="#" class="renewal-tab-active border-primary text-primary whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+                            续费管理
                         </a>
                         <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
-                            跟进记录
+                            到期提醒
                         </a>
                         <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
-                            成交管理
+                            续费记录
                         </a>
                         <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
-                            销售漏斗
+                            套餐管理
                         </a>
                     </nav>
                 </div>
@@ -214,8 +220,8 @@
                 <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                         <div class="flex items-center mb-4 md:mb-0">
-                            <button id="add-lead-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
-                                <i class="fa fa-plus mr-2"></i> 添加线索
+                            <button id="add-renewal-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                <i class="fa fa-plus mr-2"></i> 记录续费
                             </button>
                             <div class="ml-3 relative">
                                 <button id="batch-actions-btn" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
@@ -239,7 +245,7 @@
                         
                         <div class="flex items-center">
                             <div class="relative">
-                                <input type="text" id="search-input" placeholder="搜索线索..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <input type="text" id="search-input" placeholder="搜索客户名称..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fa fa-search text-gray-400"></i>
                                 </div>
@@ -255,23 +261,19 @@
                 <div id="filter-panel" class="bg-white rounded-lg shadow-sm p-4 mb-6 hidden">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">跟进阶段</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">续费状态</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部阶段</option>
-                                <option value="new">新线索</option>
-                                <option value="contact">已联系</option>
-                                <option value="communicate">沟通中</option>
-                                <option value="quote">已报价</option>
-                                <option value="consider">考虑中</option>
-                                <option value="pending">待成交</option>
-                                <option value="closed">已成交</option>
-                                <option value="lost">未成交</option>
-                                <option value="followup">后续再跟进</option>
+                                <option value="">全部状态</option>
+                                <option value="active">正常</option>
+                                <option value="expiring">即将到期</option>
+                                <option value="expired">已到期</option>
+                                <option value="paused">暂停</option>
+                                <option value="lost">流失</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">负责人</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">续费负责人</label>
                             <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <option value="">全部负责人</option>
                                 <option value="1">张三</option>
@@ -281,38 +283,7 @@
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">客户来源</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部来源</option>
-                                <option value="call">电话销售</option>
-                                <option value="referral">转介绍</option>
-                                <option value="ad">广告</option>
-                                <option value="private">私域</option>
-                                <option value="old">老客户</option>
-                                <option value="other">其他</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">成交概率</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="number" min="0" max="100" placeholder="最低" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <span>至</span>
-                                <input type="number" min="0" max="100" placeholder="最高" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">下次跟进时间</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <span>至</span>
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">创建时间</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">到期时间</label>
                             <div class="flex items-center space-x-2">
                                 <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <span>至</span>
@@ -331,7 +302,7 @@
                     </div>
                 </div>
                 
-                <!-- Sales Lead List -->
+                <!-- Renewal List -->
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
@@ -346,33 +317,33 @@
                                         客户名称
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        联系人
+                                        当前套餐
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        电话
+                                        套餐价格
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        负责人
+                                        付款周期
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        跟进阶段
+                                        开始日期
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        成交概率
+                                        到期日期
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        最近跟进
+                                        状态
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        下次跟进
+                                        续费负责人
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         操作
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200" id="leads-table-body">
-                                <!-- Lead rows will be inserted here by JavaScript -->
+                            <tbody class="bg-white divide-y divide-gray-200" id="renewal-table-body">
+                                <!-- Renewal rows will be inserted here by JavaScript -->
                             </tbody>
                         </table>
                     </div>
@@ -390,7 +361,7 @@
                         <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                             <div>
                                 <p class="text-sm text-gray-700">
-                                    显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">28</span> 条记录
+                                    显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">22</span> 条记录
                                 </p>
                             </div>
                             <div>
@@ -408,12 +379,6 @@
                                     <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
                                         3
                                     </a>
-                                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                                        ...
-                                    </span>
-                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        3
-                                    </a>
                                     <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                                         <span class="sr-only">下一页</span>
                                         <i class="fa fa-chevron-right"></i>
@@ -427,55 +392,65 @@
         </div>
     </div>
     
-    <!-- Add Lead Modal (Hidden by default) -->
-    <div id="add-lead-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <!-- Add Renewal Modal (Hidden by default) -->
+    <div id="add-renewal-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl">
             <div class="flex items-center justify-between p-6 border-b">
-                <h3 class="text-lg font-semibold text-gray-800">添加新线索</h3>
+                <h3 class="text-lg font-semibold text-gray-800">记录续费</h3>
                 <button id="close-modal-btn" class="text-gray-400 hover:text-gray-500 focus:outline-none">
                     <i class="fa fa-times text-xl"></i>
                 </button>
             </div>
             
             <div class="p-6">
-                <form id="add-lead-form">
+                <form id="add-renewal-form">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">客户名称 <span class="text-red-500">*</span></label>
-                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">联系人 <span class="text-red-500">*</span></label>
-                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">联系电话 <span class="text-red-500">*</span></label>
-                            <input type="tel" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
-                            <input type="email" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">客户来源</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">请选择来源</option>
-                                <option value="call">电话销售</option>
-                                <option value="referral">转介绍</option>
-                                <option value="ad">广告</option>
-                                <option value="private">私域</option>
-                                <option value="old">老客户</option>
-                                <option value="other">其他</option>
+                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                                <option value="">请选择客户</option>
+                                <option value="1">金龙餐厅</option>
+                                <option value="2">星光餐厅</option>
+                                <option value="3">美丽人生美甲</option>
+                                <option value="4">东方按摩SPA</option>
+                                <option value="5">时尚美容沙龙</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">负责人</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">套餐名称 <span class="text-red-500">*</span></label>
+                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">套餐价格 <span class="text-red-500">*</span></label>
+                            <input type="number" step="0.01" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">付款周期 <span class="text-red-500">*</span></label>
+                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                                <option value="">请选择付款周期</option>
+                                <option value="monthly">月付</option>
+                                <option value="quarterly">季付</option>
+                                <option value="semi_annual">半年</option>
+                                <option value="annual">年付</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">开始日期 <span class="text-red-500">*</span></label>
+                            <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">到期日期 <span class="text-red-500">*</span></label>
+                            <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">续费负责人 <span class="text-red-500">*</span></label>
+                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                                 <option value="">请选择负责人</option>
                                 <option value="1">张三</option>
                                 <option value="2">李四</option>
@@ -484,48 +459,16 @@
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">跟进阶段</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="new">新线索</option>
-                                <option value="contact">已联系</option>
-                                <option value="communicate">沟通中</option>
-                                <option value="quote">已报价</option>
-                                <option value="consider">考虑中</option>
-                                <option value="pending">待成交</option>
-                                <option value="closed">已成交</option>
-                                <option value="lost">未成交</option>
-                                <option value="followup">后续再跟进</option>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">续费结果 <span class="text-red-500">*</span></label>
+                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                                <option value="">请选择续费结果</option>
+                                <option value="success">已续费</option>
+                                <option value="rejected">拒绝续费</option>
+                                <option value="delayed">暂缓续费</option>
+                                <option value="uncontactable">联系不上</option>
+                                <option value="downgrade">降级续费</option>
+                                <option value="upgrade">升级套餐</option>
                             </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">成交概率 (%)</label>
-                            <input type="number" min="0" max="100" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">下次跟进时间</label>
-                            <input type="datetime-local" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">跟进方式</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="phone">电话</option>
-                                <option value="wechat">微信</option>
-                                <option value="sms">短信</option>
-                                <option value="email">邮件</option>
-                            </select>
-                        </div>
-                        
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">客户需求</label>
-                            <textarea rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
-                        </div>
-                        
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">客户痛点</label>
-                            <textarea rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
                         </div>
                         
                         <div class="md:col-span-2">
@@ -535,11 +478,11 @@
                     </div>
                     
                     <div class="mt-6 flex justify-end space-x-3">
-                        <button type="button" id="cancel-add-lead" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
+                        <button type="button" id="cancel-add-renewal" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
                             取消
                         </button>
                         <button type="submit" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
-                            保存线索
+                            保存续费记录
                         </button>
                     </div>
                 </form>
@@ -564,8 +507,8 @@
                 document.getElementById('user-name').textContent = userData.name;
                 document.getElementById('user-initial').textContent = userData.name.charAt(0);
                 
-                // 加载销售线索数据
-                loadSalesLeads();
+                // 加载续费数据
+                loadRenewalData();
                 
             } catch (e) {
                 console.error('登录信息解析错误', e);
@@ -573,139 +516,143 @@
             }
         });
         
-        // 模拟销售线索数据
-        const mockSalesLeads = [
+        // 模拟续费数据
+        const mockRenewalData = [
             {
                 id: '1',
                 customerName: '金龙餐厅',
-                contactPerson: '张老板',
-                phone: '+1 (212) 555-1234',
-                salesPerson: '张三',
-                stage: 'new',
-                probability: 30,
-                lastFollowup: '2026-03-01',
-                nextFollowup: '2026-03-08'
+                packageName: '线上点餐系统基础版',
+                price: 299,
+                billingCycle: 'monthly',
+                startDate: '2026-01-01',
+                endDate: '2026-04-01',
+                status: 'active',
+                renewalPerson: '张三'
             },
             {
                 id: '2',
-                customerName: '美丽人生美甲',
-                contactPerson: '王女士',
-                phone: '+1 (310) 555-9012',
-                salesPerson: '李四',
-                stage: 'contact',
-                probability: 40,
-                lastFollowup: '2026-03-02',
-                nextFollowup: '2026-03-09'
+                customerName: '星光餐厅',
+                packageName: '新媒体代运营高级版',
+                price: 499,
+                billingCycle: 'monthly',
+                startDate: '2026-01-15',
+                endDate: '2026-03-15',
+                status: 'expiring',
+                renewalPerson: '李四'
             },
             {
                 id: '3',
-                customerName: '东方按摩SPA',
-                contactPerson: '赵总',
-                phone: '+1 (415) 555-3456',
-                salesPerson: '张三',
-                stage: 'communicate',
-                probability: 60,
-                lastFollowup: '2026-03-03',
-                nextFollowup: '2026-03-10'
+                customerName: '美丽人生美甲',
+                packageName: '网站设计套餐',
+                price: 1999,
+                billingCycle: 'annual',
+                startDate: '2025-03-10',
+                endDate: '2026-03-10',
+                status: 'expired',
+                renewalPerson: '王五'
             },
             {
                 id: '4',
-                customerName: '时尚美容沙龙',
-                contactPerson: '刘小姐',
-                phone: '+1 (312) 555-7890',
-                salesPerson: '王五',
-                stage: 'quote',
-                probability: 70,
-                lastFollowup: '2026-03-04',
-                nextFollowup: '2026-03-11'
+                customerName: '东方按摩SPA',
+                packageName: '组合套餐',
+                price: 799,
+                billingCycle: 'monthly',
+                startDate: '2026-02-01',
+                endDate: '2026-05-01',
+                status: 'active',
+                renewalPerson: '张三'
             },
             {
                 id: '5',
-                customerName: '亚洲超市',
-                contactPerson: '陈老板',
-                phone: '+1 (718) 555-2345',
-                salesPerson: '李四',
-                stage: 'consider',
-                probability: 50,
-                lastFollowup: '2026-03-05',
-                nextFollowup: '2026-03-12'
+                customerName: '时尚美容沙龙',
+                packageName: '新媒体代运营基础版',
+                price: 299,
+                billingCycle: 'monthly',
+                startDate: '2026-01-20',
+                endDate: '2026-03-20',
+                status: 'expiring',
+                renewalPerson: '李四'
             },
             {
                 id: '6',
-                customerName: '金色年华KTV',
-                contactPerson: '黄总',
-                phone: '+1 (626) 555-1234',
-                salesPerson: '张三',
-                stage: 'pending',
-                probability: 80,
-                lastFollowup: '2026-03-06',
-                nextFollowup: '2026-03-13'
+                customerName: '亚洲超市',
+                packageName: '线上点餐系统高级版',
+                price: 499,
+                billingCycle: 'monthly',
+                startDate: '2026-02-15',
+                endDate: '2026-03-15',
+                status: 'expiring',
+                renewalPerson: '王五'
             },
             {
                 id: '7',
-                customerName: '健康生活瑜伽馆',
-                contactPerson: '周教练',
-                phone: '+1 (408) 555-5678',
-                salesPerson: '王五',
-                stage: 'closed',
-                probability: 100,
-                lastFollowup: '2026-03-07',
-                nextFollowup: null
+                customerName: '金色年华KTV',
+                packageName: '广告投放代运营',
+                price: 599,
+                billingCycle: 'monthly',
+                startDate: '2026-02-10',
+                endDate: '2026-05-10',
+                status: 'active',
+                renewalPerson: '张三'
             },
             {
                 id: '8',
-                customerName: '米兰西餐厅',
-                contactPerson: '吴老板',
-                phone: '+1 (202) 555-9012',
-                salesPerson: '李四',
-                stage: 'lost',
-                probability: 0,
-                lastFollowup: '2026-03-01',
-                nextFollowup: null
+                customerName: '健康生活瑜伽馆',
+                packageName: '网站设计套餐',
+                price: 1499,
+                billingCycle: 'annual',
+                startDate: '2025-02-28',
+                endDate: '2026-02-28',
+                status: 'expired',
+                renewalPerson: '李四'
             },
             {
                 id: '9',
-                customerName: '北京烤鸭',
-                contactPerson: '郑总',
-                phone: '+1 (703) 555-3456',
-                salesPerson: '张三',
-                stage: 'followup',
-                probability: 20,
-                lastFollowup: '2026-02-28',
-                nextFollowup: '2026-04-01'
+                customerName: '米兰西餐厅',
+                packageName: '线上点餐系统高级版',
+                price: 499,
+                billingCycle: 'monthly',
+                startDate: '2026-02-05',
+                endDate: '2026-03-05',
+                status: 'expired',
+                renewalPerson: '王五'
             },
             {
                 id: '10',
-                customerName: '上海小笼包',
-                contactPerson: '孙老板',
-                phone: '+1 (510) 555-7890',
-                salesPerson: '王五',
-                stage: 'new',
-                probability: 10,
-                lastFollowup: null,
-                nextFollowup: '2026-03-15'
+                customerName: '北京烤鸭',
+                packageName: '新媒体代运营高级版',
+                price: 499,
+                billingCycle: 'monthly',
+                startDate: '2026-02-20',
+                endDate: '2026-05-20',
+                status: 'active',
+                renewalPerson: '张三'
             }
         ];
         
-        // 加载销售线索数据
-        function loadSalesLeads() {
-            const tableBody = document.getElementById('leads-table-body');
+        // 加载续费数据
+        function loadRenewalData() {
+            const tableBody = document.getElementById('renewal-table-body');
             tableBody.innerHTML = '';
             
-            mockSalesLeads.forEach(lead => {
+            mockRenewalData.forEach(item => {
                 const row = document.createElement('tr');
                 
-                // 阶段映射
-                const stageMap = {
-                    'new': '新线索',
-                    'contact': '已联系',
-                    'communicate': '沟通中',
-                    'quote': '已报价',
-                    'consider': '考虑中',
-                    'pending': '待成交',
-                    'closed': '已成交',
-                    'lost': '未成交',
-                    'followup': '后续再跟进'
+                // 付款周期映射
+                const billingCycleMap = {
+                    'monthly': '月付',
+                    'quarterly': '季付',
+                    'semi_annual': '半年',
+                    'annual': '年付'
+                };
+                
+                // 状态映射
+                const statusMap = {
+                    'active': '正常',
+                    'expiring': '即将到期',
+                    'expired': '已到期',
+                    'paused': '暂停',
+                    'lost': '流失'
                 };
                 
                 row.innerHTML = `
@@ -715,50 +662,38 @@
                         </div>
                     </td>
                     <td class="px-6 py-4">
-                        <div class="text-sm text-gray-900 font-medium">${lead.customerName}</div>
+                        <div class="text-sm text-gray-900 font-medium">${item.customerName}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${lead.contactPerson}</div>
+                        <div class="text-sm text-gray-900">${item.packageName}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${lead.phone}</div>
+                        <div class="text-sm text-gray-900">$${item.price.toFixed(2)}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${lead.salesPerson}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="status-badge stage-${lead.stage}">${stageMap[lead.stage] || lead.stage}</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${lead.probability}%</div>
-                        <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
-                            <div class="bg-primary h-1.5 rounded-full" style="width: ${lead.probability}%"></div>
-                        </div>
+                        <div class="text-sm text-gray-900">${billingCycleMap[item.billingCycle] || item.billingCycle}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${lead.lastFollowup || '-'}
+                        ${item.startDate}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${lead.nextFollowup ? `<span class="text-${isDateApproaching(lead.nextFollowup) ? 'red' : 'gray'}-500">${lead.nextFollowup}</span>` : '-'}
+                        ${item.endDate}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="status-badge status-${item.status}">${statusMap[item.status] || item.status}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${item.renewalPerson}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <a href="#" class="text-primary hover:text-secondary mr-3">查看</a>
                         <a href="#" class="text-gray-600 hover:text-gray-900 mr-3">编辑</a>
-                        <a href="#" class="text-green-600 hover:text-green-900">跟进</a>
+                        <a href="#" class="text-green-600 hover:text-green-900">续费</a>
                     </td>
                 `;
                 
                 tableBody.appendChild(row);
             });
-        }
-        
-        // 检查日期是否临近（7天内）
-        function isDateApproaching(dateString) {
-            const today = new Date();
-            const targetDate = new Date(dateString);
-            const diffTime = targetDate - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays >= 0 && diffDays <= 7;
         }
         
         // 侧边栏切换
@@ -805,67 +740,40 @@
             filterPanel.classList.toggle('hidden');
         });
         
-        // 添加线索模态框
-        document.getElementById('add-lead-btn').addEventListener('click', function() {
-            const modal = document.getElementById('add-lead-modal');
+        // 添加续费记录模态框
+        document.getElementById('add-renewal-btn').addEventListener('click', function() {
+            const modal = document.getElementById('add-renewal-modal');
             modal.classList.remove('hidden');
         });
         
         document.getElementById('close-modal-btn').addEventListener('click', function() {
-            const modal = document.getElementById('add-lead-modal');
+            const modal = document.getElementById('add-renewal-modal');
             modal.classList.add('hidden');
         });
         
-        document.getElementById('cancel-add-lead').addEventListener('click', function() {
-            const modal = document.getElementById('add-lead-modal');
+        document.getElementById('cancel-add-renewal').addEventListener('click', function() {
+            const modal = document.getElementById('add-renewal-modal');
             modal.classList.add('hidden');
         });
         
         // 点击模态框外部关闭
-        document.getElementById('add-lead-modal').addEventListener('click', function(event) {
+        document.getElementById('add-renewal-modal').addEventListener('click', function(event) {
             if (event.target === this) {
                 this.classList.add('hidden');
             }
         });
         
-        // 添加线索表单提交
-        document.getElementById('add-lead-form').addEventListener('submit', function(event) {
+        // 添加续费记录表单提交
+        document.getElementById('add-renewal-form').addEventListener('submit', function(event) {
             event.preventDefault();
             
-            // 获取表单数据
-            const formData = new FormData(this);
-            const customerName = this.querySelector('input[required]:nth-child(2)').value;
-            const contactPerson = this.querySelector('input[required]:nth-child(4)').value;
-            const phone = this.querySelector('input[required]:nth-child(6)').value;
-            const salesPerson = this.querySelector('select:nth-child(14)').value;
-            const stage = this.querySelector('select:nth-child(16)').value;
-            const probability = this.querySelector('input[type="number"]').value;
-            const nextFollowup = this.querySelector('input[type="datetime-local"]').value;
-            
-            // 创建新线索对象
-            const newLead = {
-                id: (mockSalesLeads.length + 1).toString(),
-                customerName: customerName,
-                contactPerson: contactPerson,
-                phone: phone,
-                salesPerson: salesPerson === '1' ? '张三' : salesPerson === '2' ? '李四' : salesPerson === '3' ? '王五' : '未分配',
-                stage: stage || 'new',
-                probability: parseInt(probability) || 10,
-                lastFollowup: null,
-                nextFollowup: nextFollowup ? nextFollowup.split('T')[0] : null
-            };
-            
-            // 添加到模拟数据中
-            mockSalesLeads.unshift(newLead);
-            
-            // 重新加载线索列表
-            loadSalesLeads();
+            // 这里可以添加表单验证和数据处理逻辑
             
             // 显示成功消息
-            alert('线索添加成功！');
+            alert('续费记录添加成功！');
             
             // 关闭模态框
-            document.getElementById('add-lead-modal').classList.add('hidden');
+            document.getElementById('add-renewal-modal').classList.add('hidden');
             
             // 重置表单
             this.reset();
