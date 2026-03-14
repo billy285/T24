@@ -11,10 +11,10 @@
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase 配置
-        const supabaseUrl = 'YOUR_SUPABASE_URL';
-        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // 使用本地存储模拟交付项目数据
+        let deliveryProjects = JSON.parse(localStorage.getItem('deliveryProjects')) || [];
+        // 使用本地存储模拟交付任务数据
+        let deliveryTasks = JSON.parse(localStorage.getItem('deliveryTasks')) || [];
 
         tailwind.config = {
             theme: {
@@ -193,16 +193,16 @@
                 <!-- Delivery Management Tabs -->
                 <div class="border-b border-gray-200">
                     <nav class="flex -mb-px">
-                        <a href="#" class="delivery-tab-active border-primary text-primary whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+                        <a href="#" class="delivery-tab-active border-primary text-primary whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm" data-tab="projects">
                             交付项目
                         </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm" data-tab="tasks">
                             交付任务
                         </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm" data-tab="progress">
                             交付进度
                         </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm" data-tab="stats">
                             交付统计
                         </a>
                     </nav>
@@ -211,191 +211,344 @@
             
             <!-- Main Content Area -->
             <main class="flex-1 overflow-y-auto p-4 bg-gray-100">
-                <!-- Action Bar -->
-                <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                        <div class="flex items-center mb-4 md:mb-0">
-                            <button id="add-delivery-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
-                                <i class="fa fa-plus mr-2"></i> 添加交付项目
-                            </button>
-                            <div class="ml-3 relative">
-                                <button id="batch-actions-btn" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
-                                    <i class="fa fa-cog mr-2"></i> 批量操作
-                                    <i class="fa fa-chevron-down ml-2 text-xs"></i>
+                <!-- Delivery Projects Tab -->
+                <div id="projects-tab" class="tab-content">
+                    <!-- Action Bar -->
+                    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <button id="add-delivery-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-plus mr-2"></i> 添加交付项目
                                 </button>
-                                <div id="batch-actions-menu" class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-10">
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fa fa-download mr-2"></i> 导出选中
-                                    </a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fa fa-print mr-2"></i> 打印选中
-                                    </a>
-                                    <div class="border-t border-gray-200"></div>
-                                    <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                                        <i class="fa fa-trash mr-2"></i> 删除选中
-                                    </a>
+                                <div class="ml-3 relative">
+                                    <button id="batch-actions-btn" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
+                                        <i class="fa fa-cog mr-2"></i> 批量操作
+                                        <i class="fa fa-chevron-down ml-2 text-xs"></i>
+                                    </button>
+                                    <div id="batch-actions-menu" class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-10">
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <i class="fa fa-download mr-2"></i> 导出选中
+                                        </a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <i class="fa fa-print mr-2"></i> 打印选中
+                                        </a>
+                                        <div class="border-t border-gray-200"></div>
+                                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                            <i class="fa fa-trash mr-2"></i> 删除选中
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="relative">
+                                    <input type="text" id="search-input" placeholder="搜索客户名称..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fa fa-search text-gray-400"></i>
+                                    </div>
+                                </div>
+                                <button id="filter-btn" class="ml-3 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
+                                    <i class="fa fa-filter mr-2"></i> 筛选
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Panel (Hidden by default) -->
+                    <div id="filter-panel" class="bg-white rounded-lg shadow-sm p-4 mb-6 hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">交付状态</label>
+                                <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="">全部状态</option>
+                                    <option value="pending">待处理</option>
+                                    <option value="in_progress">进行中</option>
+                                    <option value="completed">已完成</option>
+                                    <option value="delayed">延期</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">负责人</label>
+                                <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="">全部负责人</option>
+                                    <option value="1">张三</option>
+                                    <option value="2">李四</option>
+                                    <option value="3">王五</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">产品类型</label>
+                                <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="">全部产品</option>
+                                    <option value="ordering_system">线上点餐系统</option>
+                                    <option value="social_media">新媒体代运营</option>
+                                    <option value="advertising">广告投放代运营</option>
+                                    <option value="website">网站设计</option>
+                                    <option value="combo">组合套餐</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">开始日期</label>
+                                <div class="flex items-center space-x-2">
+                                    <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <span>至</span>
+                                    <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">预计完成日期</label>
+                                <div class="flex items-center space-x-2">
+                                    <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <span>至</span>
+                                    <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="flex items-center">
-                            <div class="relative">
-                                <input type="text" id="search-input" placeholder="搜索客户名称..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fa fa-search text-gray-400"></i>
-                                </div>
-                            </div>
-                            <button id="filter-btn" class="ml-3 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
-                                <i class="fa fa-filter mr-2"></i> 筛选
+                        <div class="mt-4 flex justify-end space-x-3">
+                            <button class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
+                                重置
+                            </button>
+                            <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
+                                应用筛选
                             </button>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Filter Panel (Hidden by default) -->
-                <div id="filter-panel" class="bg-white rounded-lg shadow-sm p-4 mb-6 hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">交付状态</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部状态</option>
-                                <option value="pending">待处理</option>
-                                <option value="in_progress">进行中</option>
-                                <option value="completed">已完成</option>
-                                <option value="delayed">延期</option>
-                            </select>
+                    
+                    <!-- Delivery Project List -->
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <div class="flex items-center">
+                                                <input id="select-all" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            客户名称
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            产品类型
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            当前阶段
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            负责人
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            状态
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            开始日期
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            预计完成
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            最近更新
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            操作
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="delivery-table-body">
+                                    <!-- Delivery rows will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
                         </div>
                         
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">负责人</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部负责人</option>
-                                <option value="1">张三</option>
-                                <option value="2">李四</option>
-                                <option value="3">王五</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">产品类型</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部产品</option>
-                                <option value="ordering_system">线上点餐系统</option>
-                                <option value="social_media">新媒体代运营</option>
-                                <option value="advertising">广告投放代运营</option>
-                                <option value="website">网站设计</option>
-                                <option value="combo">组合套餐</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">开始日期</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <span>至</span>
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <!-- Pagination -->
+                        <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                            <div class="flex-1 flex justify-between sm:hidden">
+                                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    上一页
+                                </a>
+                                <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    下一页
+                                </a>
+                            </div>
+                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-700">
+                                        显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">15</span> 条记录
+                                    </p>
+                                </div>
+                                <div>
+                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                            <span class="sr-only">上一页</span>
+                                            <i class="fa fa-chevron-left"></i>
+                                        </a>
+                                        <a href="#" aria-current="page" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                            1
+                                        </a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                            2
+                                        </a>
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                            <span class="sr-only">下一页</span>
+                                            <i class="fa fa-chevron-right"></i>
+                                        </a>
+                                    </nav>
+                                </div>
                             </div>
                         </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">预计完成日期</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <span>至</span>
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                </div>
+                
+                <!-- Delivery Tasks Tab -->
+                <div id="tasks-tab" class="tab-content hidden">
+                    <!-- Action Bar -->
+                    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <button id="add-task-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-plus mr-2"></i> 添加交付任务
+                                </button>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="relative">
+                                    <input type="text" id="task-search" placeholder="搜索任务..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fa fa-search text-gray-400"></i>
+                                    </div>
+                                </div>
+                                <button id="task-filter-btn" class="ml-3 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
+                                    <i class="fa fa-filter mr-2"></i> 筛选
+                                </button>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="mt-4 flex justify-end space-x-3">
-                        <button class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
-                            重置
-                        </button>
-                        <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
-                            应用筛选
-                        </button>
+                    <!-- Delivery Tasks List -->
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            任务名称
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            所属项目
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            负责人
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            优先级
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            状态
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            截止日期
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            完成进度
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            操作
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="tasks-table-body">
+                                    <!-- Task rows will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Delivery Project List -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        <div class="flex items-center">
-                                            <input id="select-all" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
-                                        </div>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        客户名称
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        产品类型
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        当前阶段
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        负责人
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        状态
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        开始日期
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        预计完成
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        最近更新
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        操作
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200" id="delivery-table-body">
-                                <!-- Delivery rows will be inserted here by JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- Pagination -->
-                    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-                        <div class="flex-1 flex justify-between sm:hidden">
-                            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                上一页
-                            </a>
-                            <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                下一页
-                            </a>
-                        </div>
-                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <!-- Delivery Progress Tab -->
+                <div id="progress-tab" class="tab-content hidden">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">交付进度概览</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <p class="text-sm text-gray-700">
-                                    显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">15</span> 条记录
-                                </p>
+                                <h4 class="text-md font-medium text-gray-700 mb-3">项目状态分布</h4>
+                                <div class="h-64">
+                                    <!-- Status distribution chart will be inserted here -->
+                                    <div class="flex flex-col items-center justify-center h-full">
+                                        <i class="fa fa-pie-chart text-4xl text-gray-400 mb-4"></i>
+                                        <p class="text-gray-500">项目状态分布图表</p>
+                                    </div>
+                                </div>
                             </div>
                             <div>
-                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        <span class="sr-only">上一页</span>
-                                        <i class="fa fa-chevron-left"></i>
-                                    </a>
-                                    <a href="#" aria-current="page" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        1
-                                    </a>
-                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        2
-                                    </a>
-                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        <span class="sr-only">下一页</span>
-                                        <i class="fa fa-chevron-right"></i>
-                                    </a>
-                                </nav>
+                                <h4 class="text-md font-medium text-gray-700 mb-3">进度趋势</h4>
+                                <div class="h-64">
+                                    <!-- Progress trend chart will be inserted here -->
+                                    <div class="flex flex-col items-center justify-center h-full">
+                                        <i class="fa fa-line-chart text-4xl text-gray-400 mb-4"></i>
+                                        <p class="text-gray-500">进度趋势图表</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <h4 class="text-md font-medium text-gray-700 mb-3">项目进度详情</h4>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <div id="progress-details" class="space-y-4">
+                                    <!-- Progress details will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Delivery Stats Tab -->
+                <div id="stats-tab" class="tab-content hidden">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">交付统计</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="bg-blue-50 rounded-lg p-4">
+                                <div class="text-sm text-blue-600 font-medium">总交付项目</div>
+                                <div class="text-2xl font-bold text-blue-800 mt-1">15</div>
+                                <div class="text-xs text-blue-500 mt-1">+2 本月</div>
+                            </div>
+                            <div class="bg-green-50 rounded-lg p-4">
+                                <div class="text-sm text-green-600 font-medium">已完成项目</div>
+                                <div class="text-2xl font-bold text-green-800 mt-1">8</div>
+                                <div class="text-xs text-green-500 mt-1">+1 本月</div>
+                            </div>
+                            <div class="bg-yellow-50 rounded-lg p-4">
+                                <div class="text-sm text-yellow-600 font-medium">进行中项目</div>
+                                <div class="text-2xl font-bold text-yellow-800 mt-1">5</div>
+                                <div class="text-xs text-yellow-500 mt-1">+1 本月</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-md font-medium text-gray-700 mb-3">交付周期统计</h4>
+                                <div class="h-64">
+                                    <!-- Delivery cycle chart will be inserted here -->
+                                    <div class="flex flex-col items-center justify-center h-full">
+                                        <i class="fa fa-bar-chart text-4xl text-gray-400 mb-4"></i>
+                                        <p class="text-gray-500">交付周期统计图表</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-md font-medium text-gray-700 mb-3">负责人绩效</h4>
+                                <div class="h-64">
+                                    <!-- Performance chart will be inserted here -->
+                                    <div class="flex flex-col items-center justify-center h-full">
+                                        <i class="fa fa-area-chart text-4xl text-gray-400 mb-4"></i>
+                                        <p class="text-gray-500">负责人绩效图表</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -509,6 +662,13 @@
                 
                 // 加载交付项目数据
                 loadDeliveryProjects();
+                // 加载交付任务数据
+                loadDeliveryTasks();
+                // 加载交付进度数据
+                loadDeliveryProgress();
+                
+                // 初始化标签页切换
+                initTabs();
                 
             } catch (e) {
                 console.error('登录信息解析错误', e);
@@ -516,22 +676,158 @@
             }
         });
         
+        // 初始化标签页切换
+        function initTabs() {
+            const tabLinks = document.querySelectorAll('[data-tab]');
+            
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const tab = this.getAttribute('data-tab');
+                    
+                    // 移除所有标签页的活动状态
+                    tabLinks.forEach(link => {
+                        link.classList.remove('delivery-tab-active', 'border-primary', 'text-primary');
+                        link.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                    });
+                    
+                    // 添加当前标签页的活动状态
+                    this.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                    this.classList.add('delivery-tab-active', 'border-primary', 'text-primary');
+                    
+                    // 隐藏所有标签内容
+                    const tabContents = document.querySelectorAll('.tab-content');
+                    tabContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    
+                    // 显示当前标签内容
+                    document.getElementById(`${tab}-tab`).classList.remove('hidden');
+                });
+            });
+        }
+        
+        // 加载交付任务数据
+        function loadDeliveryTasks() {
+            const tableBody = document.getElementById('tasks-table-body');
+            tableBody.innerHTML = '';
+            
+            try {
+                // 从本地存储获取交付任务数据
+                deliveryTasks = JSON.parse(localStorage.getItem('deliveryTasks')) || [];
+                
+                // 状态映射
+                const statusMap = {
+                    'pending': '待处理',
+                    'in_progress': '进行中',
+                    'completed': '已完成',
+                    'delayed': '延期'
+                };
+                
+                deliveryTasks.forEach(task => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900 font-medium">${task.taskName}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${task.projectName}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${task.responsiblePerson}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-badge priority-${task.priority}">${task.priority}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-badge status-${task.status}">${statusMap[task.status] || task.status}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '-'}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900 mb-1">${task.progress}%</div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                <div class="bg-primary h-1.5 rounded-full" style="width: ${task.progress}%"></div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewTask(${task.id})">查看</a>
+                            <a href="#" class="text-gray-600 hover:text-gray-900 mr-3" onclick="editTask(${task.id})">编辑</a>
+                            <a href="#" class="text-green-600 hover:text-green-900" onclick="updateTaskProgress(${task.id})">更新进度</a>
+                            <a href="#" class="text-red-600 hover:text-red-900 ml-3" onclick="deleteTask(${task.id})">删除</a>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('加载交付任务时出错:', error);
+            }
+        }
+        
+        // 加载交付进度数据
+        function loadDeliveryProgress() {
+            const progressDetails = document.getElementById('progress-details');
+            progressDetails.innerHTML = '';
+            
+            try {
+                // 从本地存储获取交付项目数据
+                deliveryProjects = JSON.parse(localStorage.getItem('deliveryProjects')) || [];
+                
+                deliveryProjects.forEach(project => {
+                    const progressItem = document.createElement('div');
+                    progressItem.className = 'flex items-center justify-between p-3 bg-white rounded-lg shadow-sm';
+                    
+                    progressItem.innerHTML = `
+                        <div class="flex-1">
+                            <div class="text-sm font-medium text-gray-900">${project.customerName}</div>
+                            <div class="text-xs text-gray-500 mt-1">${project.currentStage}</div>
+                        </div>
+                        <div class="flex-1 mx-4">
+                            <div class="text-sm text-gray-700 mb-1">完成进度</div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: ${getProjectProgress(project.id)}%"></div>
+                            </div>
+                            <div class="text-xs text-right text-gray-500 mt-1">${getProjectProgress(project.id)}%</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <span class="status-badge status-${project.status}">${project.status}</span>
+                        </div>
+                    `;
+                    
+                    progressDetails.appendChild(progressItem);
+                });
+            } catch (error) {
+                console.error('加载交付进度时出错:', error);
+            }
+        }
+        
+        // 获取项目进度
+        function getProjectProgress(projectId) {
+            // 简单实现：根据项目状态返回进度
+            const project = deliveryProjects.find(p => p.id === projectId);
+            if (!project) return 0;
+            
+            switch (project.status) {
+                case 'pending': return 0;
+                case 'in_progress': return 50;
+                case 'completed': return 100;
+                case 'delayed': return 30;
+                default: return 0;
+            }
+        }
+        
         // 加载交付项目数据
-        async function loadDeliveryProjects() {
+        function loadDeliveryProjects() {
             const tableBody = document.getElementById('delivery-table-body');
             tableBody.innerHTML = '';
             
             try {
-                // 从 Supabase 获取交付项目数据
-                const { data, error } = await supabase
-                    .from('delivery_projects')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
-                if (error) {
-                    console.error('加载交付项目失败:', error);
-                    return;
-                }
+                // 从本地存储获取交付项目数据
+                deliveryProjects = JSON.parse(localStorage.getItem('deliveryProjects')) || [];
                 
                 // 产品类型映射
                 const productTypeMap = {
@@ -550,7 +846,7 @@
                     'delayed': '延期'
                 };
                 
-                data.forEach(project => {
+                deliveryProjects.forEach(project => {
                     const row = document.createElement('tr');
                     
                     row.innerHTML = `
@@ -560,34 +856,34 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm text-gray-900 font-medium">${project.customer_name}</div>
+                            <div class="text-sm text-gray-900 font-medium">${project.customerName}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">${productTypeMap[project.product_type] || project.product_type}</div>
+                            <div class="text-sm text-gray-900">${productTypeMap[project.productType] || project.productType}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">${project.current_stage}</div>
+                            <div class="text-sm text-gray-900">${project.currentStage}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">${project.responsible_person}</div>
+                            <div class="text-sm text-gray-900">${project.responsiblePerson}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="status-badge status-${project.status}">${statusMap[project.status] || project.status}</span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            ${project.start_date ? new Date(project.start_date).toISOString().split('T')[0] : '-'}
+                            ${project.startDate ? new Date(project.startDate).toISOString().split('T')[0] : '-'}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            ${project.expected_completion ? new Date(project.expected_completion).toISOString().split('T')[0] : '-'}
+                            ${project.expectedCompletion ? new Date(project.expectedCompletion).toISOString().split('T')[0] : '-'}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            ${project.updated_at ? new Date(project.updated_at).toISOString().split('T')[0] : '-'}
+                            ${project.updatedAt ? new Date(project.updatedAt).toISOString().split('T')[0] : '-'}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewDelivery('${project.id}')">查看</a>
-                            <a href="#" class="text-gray-600 hover:text-gray-900 mr-3" onclick="editDelivery('${project.id}')">编辑</a>
-                            <a href="#" class="text-green-600 hover:text-green-900" onclick="updateProgress('${project.id}')">更新进度</a>
-                            <a href="#" class="text-red-600 hover:text-red-900 ml-3" onclick="deleteDelivery('${project.id}')">删除</a>
+                            <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewDelivery(${project.id})">查看</a>
+                            <a href="#" class="text-gray-600 hover:text-gray-900 mr-3" onclick="editDelivery(${project.id})">编辑</a>
+                            <a href="#" class="text-green-600 hover:text-green-900" onclick="updateProgress(${project.id})">更新进度</a>
+                            <a href="#" class="text-red-600 hover:text-red-900 ml-3" onclick="deleteDelivery(${project.id})">删除</a>
                         </td>
                     `;
                     
@@ -599,7 +895,7 @@
         }
         
         // 添加交付项目
-        async function addDelivery(deliveryData) {
+        function addDelivery(deliveryData) {
             try {
                 // 负责人映射
                 const responsiblePersonMap = {
@@ -617,27 +913,32 @@
                     '5': '时尚美容沙龙'
                 };
                 
-                const { data, error } = await supabase
-                    .from('delivery_projects')
-                    .insert({
-                        customer_id: deliveryData.customerId,
-                        customer_name: customerNameMap[deliveryData.customerId] || '未知客户',
-                        product_type: deliveryData.productType,
-                        current_stage: deliveryData.currentStage || '开始阶段',
-                        responsible_person: responsiblePersonMap[deliveryData.responsiblePerson] || '未分配',
-                        status: 'pending',
-                        start_date: deliveryData.startDate ? new Date(deliveryData.startDate).toISOString() : null,
-                        expected_completion: deliveryData.expectedCompletion ? new Date(deliveryData.expectedCompletion).toISOString() : null,
-                        pending_tasks: deliveryData.pendingTasks || null,
-                        notes: deliveryData.notes || null
-                    })
-                    .select();
+                // 生成唯一ID
+                const newId = deliveryProjects.length > 0 ? Math.max(...deliveryProjects.map(project => project.id)) + 1 : 1;
                 
-                if (error) {
-                    throw error;
-                }
+                const newProject = {
+                    id: newId,
+                    customerId: deliveryData.customerId,
+                    customerName: customerNameMap[deliveryData.customerId] || '未知客户',
+                    productType: deliveryData.productType,
+                    currentStage: deliveryData.currentStage || '开始阶段',
+                    responsiblePerson: responsiblePersonMap[deliveryData.responsiblePerson] || '未分配',
+                    status: 'pending',
+                    startDate: deliveryData.startDate ? new Date(deliveryData.startDate).toISOString() : null,
+                    expectedCompletion: deliveryData.expectedCompletion ? new Date(deliveryData.expectedCompletion).toISOString() : null,
+                    pendingTasks: deliveryData.pendingTasks || null,
+                    notes: deliveryData.notes || null,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
                 
-                return data[0];
+                // 添加到数组
+                deliveryProjects.push(newProject);
+                
+                // 保存到本地存储
+                localStorage.setItem('deliveryProjects', JSON.stringify(deliveryProjects));
+                
+                return newProject;
             } catch (error) {
                 console.error('添加交付项目失败:', error);
                 throw error;
@@ -645,63 +946,54 @@
         }
         
         // 查看交付项目
-        async function viewDelivery(id) {
+        function viewDelivery(id) {
             try {
-                const { data, error } = await supabase
-                    .from('delivery_projects')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
+                const project = deliveryProjects.find(project => project.id === id);
                 
-                if (error) {
-                    throw error;
+                if (!project) {
+                    throw new Error('交付项目不存在');
                 }
                 
                 // 显示详情模态框
-                alert('查看交付项目: ' + data.customer_name);
-                console.log('交付项目详情:', data);
+                alert('查看交付项目: ' + project.customerName);
+                console.log('交付项目详情:', project);
             } catch (error) {
                 console.error('查看交付项目失败:', error);
             }
         }
         
         // 编辑交付项目
-        async function editDelivery(id) {
+        function editDelivery(id) {
             try {
-                const { data, error } = await supabase
-                    .from('delivery_projects')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
+                const project = deliveryProjects.find(project => project.id === id);
                 
-                if (error) {
-                    throw error;
+                if (!project) {
+                    throw new Error('交付项目不存在');
                 }
                 
                 // 显示编辑模态框
-                alert('编辑交付项目: ' + data.customer_name);
-                console.log('编辑交付项目:', data);
+                alert('编辑交付项目: ' + project.customerName);
+                console.log('编辑交付项目:', project);
             } catch (error) {
                 console.error('编辑交付项目失败:', error);
             }
         }
         
         // 更新交付进度
-        async function updateProgress(id) {
+        function updateProgress(id) {
             try {
-                // 更新进度信息
-                const { data, error } = await supabase
-                    .from('delivery_projects')
-                    .update({
-                        status: 'in_progress',
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('id', id)
-                    .select();
+                const projectIndex = deliveryProjects.findIndex(project => project.id === id);
                 
-                if (error) {
-                    throw error;
+                if (projectIndex === -1) {
+                    throw new Error('交付项目不存在');
                 }
+                
+                // 更新进度信息
+                deliveryProjects[projectIndex].status = 'in_progress';
+                deliveryProjects[projectIndex].updatedAt = new Date().toISOString();
+                
+                // 保存到本地存储
+                localStorage.setItem('deliveryProjects', JSON.stringify(deliveryProjects));
                 
                 // 重新加载数据
                 loadDeliveryProjects();
@@ -712,20 +1004,23 @@
         }
         
         // 删除交付项目
-        async function deleteDelivery(id) {
+        function deleteDelivery(id) {
             if (!confirm('确定要删除这个交付项目吗？')) {
                 return;
             }
             
             try {
-                const { error } = await supabase
-                    .from('delivery_projects')
-                    .delete()
-                    .eq('id', id);
+                const projectIndex = deliveryProjects.findIndex(project => project.id === id);
                 
-                if (error) {
-                    throw error;
+                if (projectIndex === -1) {
+                    throw new Error('交付项目不存在');
                 }
+                
+                // 从数组中删除
+                deliveryProjects.splice(projectIndex, 1);
+                
+                // 保存到本地存储
+                localStorage.setItem('deliveryProjects', JSON.stringify(deliveryProjects));
                 
                 // 重新加载数据
                 loadDeliveryProjects();
@@ -803,7 +1098,7 @@
         });
         
         // 添加交付项目表单提交
-        document.getElementById('add-delivery-form').addEventListener('submit', async function(event) {
+        document.getElementById('add-delivery-form').addEventListener('submit', function(event) {
             event.preventDefault();
             
             // 获取表单数据
@@ -821,7 +1116,7 @@
             
             try {
                 // 添加交付项目
-                await addDelivery(deliveryData);
+                addDelivery(deliveryData);
                 
                 // 重新加载交付项目列表
                 loadDeliveryProjects();
@@ -858,6 +1153,125 @@
             e.preventDefault();
             logout();
         });
+        
+        // 添加交付任务
+        function addDeliveryTask(taskData) {
+            try {
+                // 生成唯一ID
+                const newId = deliveryTasks.length > 0 ? Math.max(...deliveryTasks.map(task => task.id)) + 1 : 1;
+                
+                const newTask = {
+                    id: newId,
+                    taskName: taskData.taskName,
+                    projectId: taskData.projectId,
+                    projectName: taskData.projectName,
+                    responsiblePerson: taskData.responsiblePerson,
+                    priority: taskData.priority || 'medium',
+                    status: 'pending',
+                    progress: 0,
+                    dueDate: taskData.dueDate ? new Date(taskData.dueDate).toISOString() : null,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                
+                // 添加到数组
+                deliveryTasks.push(newTask);
+                
+                // 保存到本地存储
+                localStorage.setItem('deliveryTasks', JSON.stringify(deliveryTasks));
+                
+                return newTask;
+            } catch (error) {
+                console.error('添加交付任务失败:', error);
+                throw error;
+            }
+        }
+        
+        // 查看交付任务
+        function viewTask(id) {
+            try {
+                const task = deliveryTasks.find(task => task.id === id);
+                
+                if (!task) {
+                    throw new Error('交付任务不存在');
+                }
+                
+                // 显示详情
+                alert('查看交付任务: ' + task.taskName);
+                console.log('交付任务详情:', task);
+            } catch (error) {
+                console.error('查看交付任务失败:', error);
+            }
+        }
+        
+        // 编辑交付任务
+        function editTask(id) {
+            try {
+                const task = deliveryTasks.find(task => task.id === id);
+                
+                if (!task) {
+                    throw new Error('交付任务不存在');
+                }
+                
+                // 显示编辑提示
+                alert('编辑交付任务: ' + task.taskName);
+                console.log('编辑交付任务:', task);
+            } catch (error) {
+                console.error('编辑交付任务失败:', error);
+            }
+        }
+        
+        // 更新任务进度
+        function updateTaskProgress(id) {
+            try {
+                const taskIndex = deliveryTasks.findIndex(task => task.id === id);
+                
+                if (taskIndex === -1) {
+                    throw new Error('交付任务不存在');
+                }
+                
+                // 简单实现：将进度更新为100%
+                deliveryTasks[taskIndex].progress = 100;
+                deliveryTasks[taskIndex].status = 'completed';
+                deliveryTasks[taskIndex].updatedAt = new Date().toISOString();
+                
+                // 保存到本地存储
+                localStorage.setItem('deliveryTasks', JSON.stringify(deliveryTasks));
+                
+                // 重新加载数据
+                loadDeliveryTasks();
+                alert('进度更新成功！');
+            } catch (error) {
+                console.error('更新任务进度失败:', error);
+            }
+        }
+        
+        // 删除交付任务
+        function deleteTask(id) {
+            if (!confirm('确定要删除这个交付任务吗？')) {
+                return;
+            }
+            
+            try {
+                const taskIndex = deliveryTasks.findIndex(task => task.id === id);
+                
+                if (taskIndex === -1) {
+                    throw new Error('交付任务不存在');
+                }
+                
+                // 从数组中删除
+                deliveryTasks.splice(taskIndex, 1);
+                
+                // 保存到本地存储
+                localStorage.setItem('deliveryTasks', JSON.stringify(deliveryTasks));
+                
+                // 重新加载数据
+                loadDeliveryTasks();
+                alert('删除成功！');
+            } catch (error) {
+                console.error('删除交付任务失败:', error);
+            }
+        }
         
         function logout() {
             localStorage.removeItem('userLogin');

@@ -11,10 +11,12 @@
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase 配置
-        const supabaseUrl = 'YOUR_SUPABASE_URL';
-        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // 使用本地存储模拟销售线索数据
+        let salesLeads = JSON.parse(localStorage.getItem('salesLeads')) || [];
+        // 使用本地存储模拟跟进记录数据
+        let followupRecords = JSON.parse(localStorage.getItem('followupRecords')) || [];
+        // 使用本地存储模拟成交记录数据
+        let salesDeals = JSON.parse(localStorage.getItem('salesDeals')) || [];
 
         tailwind.config = {
             theme: {
@@ -199,16 +201,16 @@
                 <!-- Sales Management Tabs -->
                 <div class="border-b border-gray-200">
                     <nav class="flex -mb-px">
-                        <a href="#" class="sales-tab-active border-primary text-primary whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+                        <a href="#" class="sales-tab-active border-primary text-primary whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm" data-tab="leads">
                             销售线索
                         </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm" data-tab="followup">
                             跟进记录
                         </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm" data-tab="deals">
                             成交管理
                         </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm" data-tab="funnel">
                             销售漏斗
                         </a>
                     </nav>
@@ -217,215 +219,353 @@
             
             <!-- Main Content Area -->
             <main class="flex-1 overflow-y-auto p-4 bg-gray-100">
-                <!-- Action Bar -->
-                <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                        <div class="flex items-center mb-4 md:mb-0">
-                            <button id="add-lead-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
-                                <i class="fa fa-plus mr-2"></i> 添加线索
-                            </button>
-                            <div class="ml-3 relative">
-                                <button id="batch-actions-btn" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
-                                    <i class="fa fa-cog mr-2"></i> 批量操作
-                                    <i class="fa fa-chevron-down ml-2 text-xs"></i>
+                <!-- Sales Leads Tab -->
+                <div id="leads-tab" class="tab-content">
+                    <!-- Action Bar -->
+                    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <button id="add-lead-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-plus mr-2"></i> 添加线索
                                 </button>
-                                <div id="batch-actions-menu" class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-10">
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fa fa-download mr-2"></i> 导出选中
-                                    </a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fa fa-print mr-2"></i> 打印选中
-                                    </a>
-                                    <div class="border-t border-gray-200"></div>
-                                    <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                                        <i class="fa fa-trash mr-2"></i> 删除选中
-                                    </a>
+                                <div class="ml-3 relative">
+                                    <button id="batch-actions-btn" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
+                                        <i class="fa fa-cog mr-2"></i> 批量操作
+                                        <i class="fa fa-chevron-down ml-2 text-xs"></i>
+                                    </button>
+                                    <div id="batch-actions-menu" class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-10">
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <i class="fa fa-download mr-2"></i> 导出选中
+                                        </a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <i class="fa fa-print mr-2"></i> 打印选中
+                                        </a>
+                                        <div class="border-t border-gray-200"></div>
+                                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                            <i class="fa fa-trash mr-2"></i> 删除选中
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="relative">
+                                    <input type="text" id="search-input" placeholder="搜索线索..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fa fa-search text-gray-400"></i>
+                                    </div>
+                                </div>
+                                <button id="filter-btn" class="ml-3 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
+                                    <i class="fa fa-filter mr-2"></i> 筛选
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Panel (Hidden by default) -->
+                    <div id="filter-panel" class="bg-white rounded-lg shadow-sm p-4 mb-6 hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">跟进阶段</label>
+                                <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="">全部阶段</option>
+                                    <option value="new">新线索</option>
+                                    <option value="contact">已联系</option>
+                                    <option value="communicate">沟通中</option>
+                                    <option value="quote">已报价</option>
+                                    <option value="consider">考虑中</option>
+                                    <option value="pending">待成交</option>
+                                    <option value="closed">已成交</option>
+                                    <option value="lost">未成交</option>
+                                    <option value="followup">后续再跟进</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">负责人</label>
+                                <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="">全部负责人</option>
+                                    <option value="1">张三</option>
+                                    <option value="2">李四</option>
+                                    <option value="3">王五</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">客户来源</label>
+                                <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="">全部来源</option>
+                                    <option value="call">电话销售</option>
+                                    <option value="referral">转介绍</option>
+                                    <option value="ad">广告</option>
+                                    <option value="private">私域</option>
+                                    <option value="old">老客户</option>
+                                    <option value="other">其他</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">成交概率</label>
+                                <div class="flex items-center space-x-2">
+                                    <input type="number" min="0" max="100" placeholder="最低" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <span>至</span>
+                                    <input type="number" min="0" max="100" placeholder="最高" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">下次跟进时间</label>
+                                <div class="flex items-center space-x-2">
+                                    <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <span>至</span>
+                                    <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">创建时间</label>
+                                <div class="flex items-center space-x-2">
+                                    <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <span>至</span>
+                                    <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="flex items-center">
-                            <div class="relative">
-                                <input type="text" id="search-input" placeholder="搜索线索..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fa fa-search text-gray-400"></i>
-                                </div>
-                            </div>
-                            <button id="filter-btn" class="ml-3 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
-                                <i class="fa fa-filter mr-2"></i> 筛选
+                        <div class="mt-4 flex justify-end space-x-3">
+                            <button class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
+                                重置
+                            </button>
+                            <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
+                                应用筛选
                             </button>
                         </div>
                     </div>
+                    
+                    <!-- Sales Lead List -->
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <div class="flex items-center">
+                                                <input id="select-all" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            客户名称
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            联系人
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            电话
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            负责人
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            跟进阶段
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            成交概率
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            最近跟进
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            下次跟进
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            操作
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="leads-table-body">
+                                    <!-- Lead rows will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                            <div class="flex-1 flex justify-between sm:hidden">
+                                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    上一页
+                                </a>
+                                <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    下一页
+                                </a>
+                            </div>
+                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-700">
+                                        显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">28</span> 条记录
+                                    </p>
+                                </div>
+                                <div>
+                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                            <span class="sr-only">上一页</span>
+                                            <i class="fa fa-chevron-left"></i>
+                                        </a>
+                                        <a href="#" aria-current="page" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                            1
+                                        </a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                            2
+                                        </a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                            3
+                                        </a>
+                                        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                                            ...
+                                        </span>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                            3
+                                        </a>
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                            <span class="sr-only">下一页</span>
+                                            <i class="fa fa-chevron-right"></i>
+                                        </a>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <!-- Filter Panel (Hidden by default) -->
-                <div id="filter-panel" class="bg-white rounded-lg shadow-sm p-4 mb-6 hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">跟进阶段</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部阶段</option>
-                                <option value="new">新线索</option>
-                                <option value="contact">已联系</option>
-                                <option value="communicate">沟通中</option>
-                                <option value="quote">已报价</option>
-                                <option value="consider">考虑中</option>
-                                <option value="pending">待成交</option>
-                                <option value="closed">已成交</option>
-                                <option value="lost">未成交</option>
-                                <option value="followup">后续再跟进</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">负责人</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部负责人</option>
-                                <option value="1">张三</option>
-                                <option value="2">李四</option>
-                                <option value="3">王五</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">客户来源</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部来源</option>
-                                <option value="call">电话销售</option>
-                                <option value="referral">转介绍</option>
-                                <option value="ad">广告</option>
-                                <option value="private">私域</option>
-                                <option value="old">老客户</option>
-                                <option value="other">其他</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">成交概率</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="number" min="0" max="100" placeholder="最低" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <span>至</span>
-                                <input type="number" min="0" max="100" placeholder="最高" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                <!-- Followup Records Tab -->
+                <div id="followup-tab" class="tab-content hidden">
+                    <!-- Action Bar -->
+                    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <button id="add-followup-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-plus mr-2"></i> 添加跟进记录
+                                </button>
                             </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">下次跟进时间</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <span>至</span>
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">创建时间</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <span>至</span>
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            
+                            <div class="flex items-center">
+                                <div class="relative">
+                                    <input type="text" id="followup-search" placeholder="搜索跟进记录..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fa fa-search text-gray-400"></i>
+                                    </div>
+                                </div>
+                                <button id="followup-filter-btn" class="ml-3 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
+                                    <i class="fa fa-filter mr-2"></i> 筛选
+                                </button>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="mt-4 flex justify-end space-x-3">
-                        <button class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
-                            重置
-                        </button>
-                        <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
-                            应用筛选
-                        </button>
+                    <!-- Followup Records List -->
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            客户名称
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            跟进人
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            跟进方式
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            跟进内容
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            跟进时间
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            下次跟进
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            操作
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="followup-table-body">
+                                    <!-- Followup rows will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Sales Lead List -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        <div class="flex items-center">
-                                            <input id="select-all" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
-                                        </div>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        客户名称
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        联系人
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        电话
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        负责人
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        跟进阶段
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        成交概率
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        最近跟进
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        下次跟进
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        操作
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200" id="leads-table-body">
-                                <!-- Lead rows will be inserted here by JavaScript -->
-                            </tbody>
-                        </table>
+                <!-- Sales Deals Tab -->
+                <div id="deals-tab" class="tab-content hidden">
+                    <!-- Action Bar -->
+                    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <button id="add-deal-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-plus mr-2"></i> 添加成交记录
+                                </button>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="relative">
+                                    <input type="text" id="deal-search" placeholder="搜索成交记录..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fa fa-search text-gray-400"></i>
+                                    </div>
+                                </div>
+                                <button id="deal-filter-btn" class="ml-3 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
+                                    <i class="fa fa-filter mr-2"></i> 筛选
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     
-                    <!-- Pagination -->
-                    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-                        <div class="flex-1 flex justify-between sm:hidden">
-                            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                上一页
-                            </a>
-                            <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                下一页
-                            </a>
+                    <!-- Sales Deals List -->
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            客户名称
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            成交金额
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            成交日期
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            销售顾问
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            付款状态
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            操作
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="deals-table-body">
+                                    <!-- Deal rows will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                            <div>
-                                <p class="text-sm text-gray-700">
-                                    显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">28</span> 条记录
-                                </p>
-                            </div>
-                            <div>
-                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        <span class="sr-only">上一页</span>
-                                        <i class="fa fa-chevron-left"></i>
-                                    </a>
-                                    <a href="#" aria-current="page" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        1
-                                    </a>
-                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        2
-                                    </a>
-                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        3
-                                    </a>
-                                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                                        ...
-                                    </span>
-                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        3
-                                    </a>
-                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        <span class="sr-only">下一页</span>
-                                        <i class="fa fa-chevron-right"></i>
-                                    </a>
-                                </nav>
+                    </div>
+                </div>
+                
+                <!-- Sales Funnel Tab -->
+                <div id="funnel-tab" class="tab-content hidden">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">销售漏斗分析</h3>
+                        <div class="h-96">
+                            <!-- Sales funnel chart will be inserted here -->
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fa fa-line-chart text-4xl text-gray-400 mb-4"></i>
+                                <p class="text-gray-500">销售漏斗图表</p>
                             </div>
                         </div>
                     </div>
@@ -573,6 +713,13 @@
                 
                 // 加载销售线索数据
                 loadSalesLeads();
+                // 加载跟进记录数据
+                loadFollowupRecords();
+                // 加载成交记录数据
+                loadSalesDeals();
+                
+                // 初始化标签页切换
+                initTabs();
                 
             } catch (e) {
                 console.error('登录信息解析错误', e);
@@ -580,22 +727,149 @@
             }
         });
         
+        // 初始化标签页切换
+        function initTabs() {
+            const tabLinks = document.querySelectorAll('[data-tab]');
+            
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const tab = this.getAttribute('data-tab');
+                    
+                    // 移除所有标签页的活动状态
+                    tabLinks.forEach(link => {
+                        link.classList.remove('sales-tab-active', 'border-primary', 'text-primary');
+                        link.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                    });
+                    
+                    // 添加当前标签页的活动状态
+                    this.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                    this.classList.add('sales-tab-active', 'border-primary', 'text-primary');
+                    
+                    // 隐藏所有标签内容
+                    const tabContents = document.querySelectorAll('.tab-content');
+                    tabContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    
+                    // 显示当前标签内容
+                    document.getElementById(`${tab}-tab`).classList.remove('hidden');
+                });
+            });
+        }
+        
+        // 加载跟进记录数据
+        function loadFollowupRecords() {
+            const tableBody = document.getElementById('followup-table-body');
+            tableBody.innerHTML = '';
+            
+            try {
+                // 从本地存储获取跟进记录数据
+                followupRecords = JSON.parse(localStorage.getItem('followupRecords')) || [];
+                
+                // 跟进方式映射
+                const methodMap = {
+                    'phone': '电话',
+                    'wechat': '微信',
+                    'sms': '短信',
+                    'email': '邮件'
+                };
+                
+                followupRecords.forEach(record => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900 font-medium">${record.customerName}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${record.followupPerson}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${methodMap[record.method] || record.method}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900">${record.content}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${new Date(record.followupTime).toISOString().split('T')[0]}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${record.nextFollowup ? new Date(record.nextFollowup).toISOString().split('T')[0] : '-'}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewFollowup(${record.id})">查看</a>
+                            <a href="#" class="text-red-600 hover:text-red-900" onclick="deleteFollowup(${record.id})">删除</a>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('加载跟进记录时出错:', error);
+            }
+        }
+        
+        // 加载成交记录数据
+        function loadSalesDeals() {
+            const tableBody = document.getElementById('deals-table-body');
+            tableBody.innerHTML = '';
+            
+            try {
+                // 从本地存储获取成交记录数据
+                salesDeals = JSON.parse(localStorage.getItem('salesDeals')) || [];
+                
+                // 付款状态映射
+                const statusMap = {
+                    'pending': '待付款',
+                    'paid': '已付款',
+                    'partial': '部分付款'
+                };
+                
+                salesDeals.forEach(deal => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900 font-medium">${deal.customerName}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900 font-medium">¥${deal.amount.toFixed(2)}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${new Date(deal.dealDate).toISOString().split('T')[0]}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${deal.salesPerson}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-badge ${deal.paymentStatus === 'paid' ? 'stage-closed' : deal.paymentStatus === 'pending' ? 'stage-pending' : 'stage-consider'}">
+                                ${statusMap[deal.paymentStatus] || deal.paymentStatus}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewDeal(${deal.id})">查看</a>
+                            <a href="#" class="text-gray-600 hover:text-gray-900 mr-3" onclick="editDeal(${deal.id})">编辑</a>
+                            <a href="#" class="text-red-600 hover:text-red-900" onclick="deleteDeal(${deal.id})">删除</a>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('加载成交记录时出错:', error);
+            }
+        }
+        
         // 加载销售线索数据
-        async function loadSalesLeads() {
+        function loadSalesLeads() {
             const tableBody = document.getElementById('leads-table-body');
             tableBody.innerHTML = '';
             
             try {
-                // 从 Supabase 获取销售线索数据
-                const { data, error } = await supabase
-                    .from('sales_leads')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
-                if (error) {
-                    console.error('加载销售线索失败:', error);
-                    return;
-                }
+                // 从本地存储获取销售线索数据
+                salesLeads = JSON.parse(localStorage.getItem('salesLeads')) || [];
                 
                 // 阶段映射
                 const stageMap = {
@@ -610,7 +884,7 @@
                     'followup': '后续再跟进'
                 };
                 
-                data.forEach(lead => {
+                salesLeads.forEach(lead => {
                     const row = document.createElement('tr');
                     
                     row.innerHTML = `
@@ -620,16 +894,16 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm text-gray-900 font-medium">${lead.customer_name}</div>
+                            <div class="text-sm text-gray-900 font-medium">${lead.customerName}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">${lead.contact_person}</div>
+                            <div class="text-sm text-gray-900">${lead.contactPerson}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-900">${lead.phone}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">${lead.sales_person}</div>
+                            <div class="text-sm text-gray-900">${lead.salesPerson}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="status-badge stage-${lead.stage}">${stageMap[lead.stage] || lead.stage}</span>
@@ -641,16 +915,16 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            ${lead.last_followup ? new Date(lead.last_followup).toISOString().split('T')[0] : '-'}
+                            ${lead.lastFollowup ? new Date(lead.lastFollowup).toISOString().split('T')[0] : '-'}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            ${lead.next_followup ? `<span class="text-${isDateApproaching(lead.next_followup) ? 'red' : 'gray'}-500">${new Date(lead.next_followup).toISOString().split('T')[0]}</span>` : '-'}
+                            ${lead.nextFollowup ? `<span class="text-${isDateApproaching(lead.nextFollowup) ? 'red' : 'gray'}-500">${new Date(lead.nextFollowup).toISOString().split('T')[0]}</span>` : '-'}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewLead('${lead.id}')">查看</a>
-                            <a href="#" class="text-gray-600 hover:text-gray-900 mr-3" onclick="editLead('${lead.id}')">编辑</a>
-                            <a href="#" class="text-green-600 hover:text-green-900" onclick="followupLead('${lead.id}')">跟进</a>
-                            <a href="#" class="text-red-600 hover:text-red-900 ml-3" onclick="deleteLead('${lead.id}')">删除</a>
+                            <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewLead(${lead.id})">查看</a>
+                            <a href="#" class="text-gray-600 hover:text-gray-900 mr-3" onclick="editLead(${lead.id})">编辑</a>
+                            <a href="#" class="text-green-600 hover:text-green-900" onclick="followupLead(${lead.id})">跟进</a>
+                            <a href="#" class="text-red-600 hover:text-red-900 ml-3" onclick="deleteLead(${lead.id})">删除</a>
                         </td>
                     `;
                     
@@ -671,7 +945,7 @@
         }
         
         // 添加销售线索
-        async function addLead(leadData) {
+        function addLead(leadData) {
             try {
                 // 负责人映射
                 const salesPersonMap = {
@@ -680,30 +954,35 @@
                     '3': '王五'
                 };
                 
-                const { data, error } = await supabase
-                    .from('sales_leads')
-                    .insert({
-                        customer_name: leadData.customerName,
-                        contact_person: leadData.contactPerson,
-                        phone: leadData.phone,
-                        email: leadData.email || null,
-                        source: leadData.source || null,
-                        sales_person: salesPersonMap[leadData.salesPerson] || '未分配',
-                        stage: leadData.stage || 'new',
-                        probability: parseInt(leadData.probability) || 10,
-                        next_followup: leadData.nextFollowup ? new Date(leadData.nextFollowup).toISOString() : null,
-                        followup_method: leadData.followupMethod || null,
-                        needs: leadData.needs || null,
-                        pain_points: leadData.painPoints || null,
-                        notes: leadData.notes || null
-                    })
-                    .select();
+                // 生成唯一ID
+                const newId = salesLeads.length > 0 ? Math.max(...salesLeads.map(lead => lead.id)) + 1 : 1;
                 
-                if (error) {
-                    throw error;
-                }
+                const newLead = {
+                    id: newId,
+                    customerName: leadData.customerName,
+                    contactPerson: leadData.contactPerson,
+                    phone: leadData.phone,
+                    email: leadData.email || null,
+                    source: leadData.source || null,
+                    salesPerson: salesPersonMap[leadData.salesPerson] || '未分配',
+                    stage: leadData.stage || 'new',
+                    probability: parseInt(leadData.probability) || 10,
+                    nextFollowup: leadData.nextFollowup ? new Date(leadData.nextFollowup).toISOString() : null,
+                    followupMethod: leadData.followupMethod || null,
+                    needs: leadData.needs || null,
+                    painPoints: leadData.painPoints || null,
+                    notes: leadData.notes || null,
+                    lastFollowup: null,
+                    createdAt: new Date().toISOString()
+                };
                 
-                return data[0];
+                // 添加到数组
+                salesLeads.push(newLead);
+                
+                // 保存到本地存储
+                localStorage.setItem('salesLeads', JSON.stringify(salesLeads));
+                
+                return newLead;
             } catch (error) {
                 console.error('添加销售线索失败:', error);
                 throw error;
@@ -711,63 +990,54 @@
         }
         
         // 查看销售线索
-        async function viewLead(id) {
+        function viewLead(id) {
             try {
-                const { data, error } = await supabase
-                    .from('sales_leads')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
+                const lead = salesLeads.find(lead => lead.id === id);
                 
-                if (error) {
-                    throw error;
+                if (!lead) {
+                    throw new Error('线索不存在');
                 }
                 
                 // 显示详情模态框
-                alert('查看线索详情: ' + data.customer_name);
-                console.log('线索详情:', data);
+                alert('查看线索详情: ' + lead.customerName);
+                console.log('线索详情:', lead);
             } catch (error) {
                 console.error('查看销售线索失败:', error);
             }
         }
         
         // 编辑销售线索
-        async function editLead(id) {
+        function editLead(id) {
             try {
-                const { data, error } = await supabase
-                    .from('sales_leads')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
+                const lead = salesLeads.find(lead => lead.id === id);
                 
-                if (error) {
-                    throw error;
+                if (!lead) {
+                    throw new Error('线索不存在');
                 }
                 
                 // 显示编辑模态框
-                alert('编辑线索: ' + data.customer_name);
-                console.log('编辑线索:', data);
+                alert('编辑线索: ' + lead.customerName);
+                console.log('编辑线索:', lead);
             } catch (error) {
                 console.error('编辑销售线索失败:', error);
             }
         }
         
         // 跟进销售线索
-        async function followupLead(id) {
+        function followupLead(id) {
             try {
-                // 记录跟进信息
-                const { data, error } = await supabase
-                    .from('sales_leads')
-                    .update({
-                        last_followup: new Date().toISOString(),
-                        stage: 'communicate'
-                    })
-                    .eq('id', id)
-                    .select();
+                const leadIndex = salesLeads.findIndex(lead => lead.id === id);
                 
-                if (error) {
-                    throw error;
+                if (leadIndex === -1) {
+                    throw new Error('线索不存在');
                 }
+                
+                // 更新跟进信息
+                salesLeads[leadIndex].lastFollowup = new Date().toISOString();
+                salesLeads[leadIndex].stage = 'communicate';
+                
+                // 保存到本地存储
+                localStorage.setItem('salesLeads', JSON.stringify(salesLeads));
                 
                 // 重新加载数据
                 loadSalesLeads();
@@ -778,20 +1048,23 @@
         }
         
         // 删除销售线索
-        async function deleteLead(id) {
+        function deleteLead(id) {
             if (!confirm('确定要删除这条线索吗？')) {
                 return;
             }
             
             try {
-                const { error } = await supabase
-                    .from('sales_leads')
-                    .delete()
-                    .eq('id', id);
+                const leadIndex = salesLeads.findIndex(lead => lead.id === id);
                 
-                if (error) {
-                    throw error;
+                if (leadIndex === -1) {
+                    throw new Error('线索不存在');
                 }
+                
+                // 从数组中删除
+                salesLeads.splice(leadIndex, 1);
+                
+                // 保存到本地存储
+                localStorage.setItem('salesLeads', JSON.stringify(salesLeads));
                 
                 // 重新加载数据
                 loadSalesLeads();
@@ -869,7 +1142,7 @@
         });
         
         // 添加线索表单提交
-        document.getElementById('add-lead-form').addEventListener('submit', async function(event) {
+        document.getElementById('add-lead-form').addEventListener('submit', function(event) {
             event.preventDefault();
             
             // 获取表单数据
@@ -892,7 +1165,7 @@
             
             try {
                 // 添加线索
-                await addLead(leadData);
+                addLead(leadData);
                 
                 // 重新加载线索列表
                 loadSalesLeads();
@@ -929,6 +1202,170 @@
             e.preventDefault();
             logout();
         });
+        
+        // 添加跟进记录
+        function addFollowupRecord(recordData) {
+            try {
+                // 生成唯一ID
+                const newId = followupRecords.length > 0 ? Math.max(...followupRecords.map(record => record.id)) + 1 : 1;
+                
+                const newRecord = {
+                    id: newId,
+                    customerName: recordData.customerName,
+                    followupPerson: recordData.followupPerson,
+                    method: recordData.method,
+                    content: recordData.content,
+                    followupTime: new Date().toISOString(),
+                    nextFollowup: recordData.nextFollowup ? new Date(recordData.nextFollowup).toISOString() : null,
+                    leadId: recordData.leadId
+                };
+                
+                // 添加到数组
+                followupRecords.push(newRecord);
+                
+                // 保存到本地存储
+                localStorage.setItem('followupRecords', JSON.stringify(followupRecords));
+                
+                return newRecord;
+            } catch (error) {
+                console.error('添加跟进记录失败:', error);
+                throw error;
+            }
+        }
+        
+        // 查看跟进记录
+        function viewFollowup(id) {
+            try {
+                const record = followupRecords.find(record => record.id === id);
+                
+                if (!record) {
+                    throw new Error('跟进记录不存在');
+                }
+                
+                // 显示详情
+                alert('查看跟进记录: ' + record.content);
+                console.log('跟进记录详情:', record);
+            } catch (error) {
+                console.error('查看跟进记录失败:', error);
+            }
+        }
+        
+        // 删除跟进记录
+        function deleteFollowup(id) {
+            if (!confirm('确定要删除这条跟进记录吗？')) {
+                return;
+            }
+            
+            try {
+                const recordIndex = followupRecords.findIndex(record => record.id === id);
+                
+                if (recordIndex === -1) {
+                    throw new Error('跟进记录不存在');
+                }
+                
+                // 从数组中删除
+                followupRecords.splice(recordIndex, 1);
+                
+                // 保存到本地存储
+                localStorage.setItem('followupRecords', JSON.stringify(followupRecords));
+                
+                // 重新加载数据
+                loadFollowupRecords();
+                alert('删除成功！');
+            } catch (error) {
+                console.error('删除跟进记录失败:', error);
+            }
+        }
+        
+        // 添加成交记录
+        function addSalesDeal(dealData) {
+            try {
+                // 生成唯一ID
+                const newId = salesDeals.length > 0 ? Math.max(...salesDeals.map(deal => deal.id)) + 1 : 1;
+                
+                const newDeal = {
+                    id: newId,
+                    customerName: dealData.customerName,
+                    amount: parseFloat(dealData.amount),
+                    dealDate: new Date(dealData.dealDate).toISOString(),
+                    salesPerson: dealData.salesPerson,
+                    paymentStatus: dealData.paymentStatus || 'pending',
+                    leadId: dealData.leadId
+                };
+                
+                // 添加到数组
+                salesDeals.push(newDeal);
+                
+                // 保存到本地存储
+                localStorage.setItem('salesDeals', JSON.stringify(salesDeals));
+                
+                return newDeal;
+            } catch (error) {
+                console.error('添加成交记录失败:', error);
+                throw error;
+            }
+        }
+        
+        // 查看成交记录
+        function viewDeal(id) {
+            try {
+                const deal = salesDeals.find(deal => deal.id === id);
+                
+                if (!deal) {
+                    throw new Error('成交记录不存在');
+                }
+                
+                // 显示详情
+                alert('查看成交记录: ' + deal.customerName + ' - ¥' + deal.amount.toFixed(2));
+                console.log('成交记录详情:', deal);
+            } catch (error) {
+                console.error('查看成交记录失败:', error);
+            }
+        }
+        
+        // 编辑成交记录
+        function editDeal(id) {
+            try {
+                const deal = salesDeals.find(deal => deal.id === id);
+                
+                if (!deal) {
+                    throw new Error('成交记录不存在');
+                }
+                
+                // 显示编辑提示
+                alert('编辑成交记录: ' + deal.customerName);
+                console.log('编辑成交记录:', deal);
+            } catch (error) {
+                console.error('编辑成交记录失败:', error);
+            }
+        }
+        
+        // 删除成交记录
+        function deleteDeal(id) {
+            if (!confirm('确定要删除这条成交记录吗？')) {
+                return;
+            }
+            
+            try {
+                const dealIndex = salesDeals.findIndex(deal => deal.id === id);
+                
+                if (dealIndex === -1) {
+                    throw new Error('成交记录不存在');
+                }
+                
+                // 从数组中删除
+                salesDeals.splice(dealIndex, 1);
+                
+                // 保存到本地存储
+                localStorage.setItem('salesDeals', JSON.stringify(salesDeals));
+                
+                // 重新加载数据
+                loadSalesDeals();
+                alert('删除成功！');
+            } catch (error) {
+                console.error('删除成交记录失败:', error);
+            }
+        }
         
         function logout() {
             localStorage.removeItem('userLogin');

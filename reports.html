@@ -301,10 +301,11 @@
     </div>
 
     <script>
-        // Supabase配置
-        const supabaseUrl = 'YOUR_SUPABASE_URL';
-        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // 使用本地存储模拟数据
+        let salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+        let customerData = JSON.parse(localStorage.getItem('customerData')) || [];
+        let renewalData = JSON.parse(localStorage.getItem('renewalData')) || [];
+        let taskData = JSON.parse(localStorage.getItem('taskData')) || [];
 
         // 检查登录状态
         document.addEventListener('DOMContentLoaded', function() {
@@ -327,6 +328,9 @@
                 
                 // 初始化报表数据
                 initializeReportData();
+                
+                // 添加导出功能
+                addExportFunctionality();
                 
             } catch (e) {
                 console.error('登录信息解析错误', e);
@@ -382,6 +386,9 @@
         
         // 初始化报表数据
         function initializeReportData() {
+            // 从本地存储加载数据
+            loadLocalStorageData();
+            
             // 销售趋势图表
             initSalesTrendChart();
             // 销售漏斗图表
@@ -400,17 +407,137 @@
             initTaskDistributionChart();
         }
         
+        // 从本地存储加载数据
+        function loadLocalStorageData() {
+            salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+            customerData = JSON.parse(localStorage.getItem('customerData')) || [];
+            renewalData = JSON.parse(localStorage.getItem('renewalData')) || [];
+            taskData = JSON.parse(localStorage.getItem('taskData')) || [];
+        }
+        
+        // 添加导出功能
+        function addExportFunctionality() {
+            // 添加导出按钮
+            const exportButton = document.createElement('button');
+            exportButton.className = 'px-4 py-2 bg-success text-white rounded-md hover:bg-green-700 transition-all-300 ml-2';
+            exportButton.innerHTML = '<i class="fa fa-download mr-2"></i> 导出报表';
+            exportButton.addEventListener('click', exportReports);
+            
+            const filterContainer = document.querySelector('.flex.flex-wrap.gap-4');
+            const applyButton = filterContainer.querySelector('button');
+            applyButton.parentNode.insertBefore(exportButton, applyButton.nextSibling);
+        }
+        
+        // 导出报表
+        function exportReports() {
+            const exportData = {
+                salesTrend: getSalesTrendData(),
+                customerGrowth: getCustomerGrowthData(),
+                revenueData: getRevenueData(),
+                taskCompletion: getTaskCompletionData(),
+                generatedAt: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `report_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // 获取销售趋势数据
+        function getSalesTrendData() {
+            // 按月份统计销售数据
+            const monthlySales = {};
+            salesData.forEach(sale => {
+                if (sale.status === 'won') {
+                    const month = new Date(sale.updatedAt || sale.createdAt).toISOString().substring(0, 7);
+                    if (!monthlySales[month]) {
+                        monthlySales[month] = 0;
+                    }
+                    monthlySales[month] += parseFloat(sale.amount) || 0;
+                }
+            });
+            return monthlySales;
+        }
+        
+        // 获取客户增长数据
+        function getCustomerGrowthData() {
+            // 按月份统计新增客户
+            const monthlyCustomers = {};
+            customerData.forEach(customer => {
+                const month = new Date(customer.createdAt).toISOString().substring(0, 7);
+                if (!monthlyCustomers[month]) {
+                    monthlyCustomers[month] = 0;
+                }
+                monthlyCustomers[month]++;
+            });
+            return monthlyCustomers;
+        }
+        
+        // 获取收入数据
+        function getRevenueData() {
+            // 按月份统计收入
+            const monthlyRevenue = {};
+            renewalData.forEach(renewal => {
+                if (renewal.renewalResult === 'success') {
+                    const month = new Date(renewal.updatedAt || renewal.createdAt).toISOString().substring(0, 7);
+                    if (!monthlyRevenue[month]) {
+                        monthlyRevenue[month] = 0;
+                    }
+                    monthlyRevenue[month] += parseFloat(renewal.price) || 0;
+                }
+            });
+            return monthlyRevenue;
+        }
+        
+        // 获取任务完成数据
+        function getTaskCompletionData() {
+            const statusCount = {
+                completed: 0,
+                in_progress: 0,
+                pending: 0,
+                overdue: 0
+            };
+            
+            taskData.forEach(task => {
+                if (statusCount.hasOwnProperty(task.status)) {
+                    statusCount[task.status]++;
+                }
+            });
+            return statusCount;
+        }
+        
         // 销售趋势图表
         function initSalesTrendChart() {
             const ctx = document.getElementById('sales-trend-chart').getContext('2d');
             
+            // 从本地存储获取销售数据
+            const monthlySales = getSalesTrendData();
+            
+            // 转换为图表所需格式
+            const labels = Object.keys(monthlySales).map(month => {
+                const [year, monthNum] = month.split('-');
+                return `${monthNum}月`;
+            });
+            const data = Object.values(monthlySales);
+            
+            // 如果没有数据，使用默认数据
+            if (labels.length === 0) {
+                labels.push('1月', '2月', '3月', '4月', '5月', '6月');
+                data.push(0, 0, 0, 0, 0, 0);
+            }
+            
             const salesTrendChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                    labels: labels,
                     datasets: [{
                         label: '销售额',
-                        data: [12000, 19000, 28500, 32000, 35000, 40000],
+                        data: data,
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         borderColor: '#3b82f6',
                         borderWidth: 2,
@@ -458,13 +585,45 @@
         function initSalesFunnelChart() {
             const ctx = document.getElementById('sales-funnel-chart').getContext('2d');
             
+            // 从本地存储获取销售数据
+            const funnelStages = {
+                '线索': 0,
+                '初步接触': 0,
+                '方案制定': 0,
+                '商务谈判': 0,
+                '成交': 0
+            };
+            
+            salesData.forEach(sale => {
+                switch (sale.status) {
+                    case 'lead':
+                        funnelStages['线索']++;
+                        break;
+                    case 'contacted':
+                        funnelStages['初步接触']++;
+                        break;
+                    case 'proposal':
+                        funnelStages['方案制定']++;
+                        break;
+                    case 'negotiation':
+                        funnelStages['商务谈判']++;
+                        break;
+                    case 'won':
+                        funnelStages['成交']++;
+                        break;
+                }
+            });
+            
+            const labels = Object.keys(funnelStages);
+            const data = Object.values(funnelStages);
+            
             const salesFunnelChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['线索', '初步接触', '方案制定', '商务谈判', '成交'],
+                    labels: labels,
                     datasets: [{
                         label: '数量',
-                        data: [100, 60, 30, 15, 8],
+                        data: data,
                         backgroundColor: [
                             'rgba(59, 130, 246, 0.6)',
                             'rgba(59, 130, 246, 0.7)',
@@ -497,13 +656,29 @@
         function initCustomerGrowthChart() {
             const ctx = document.getElementById('customer-growth-chart').getContext('2d');
             
+            // 从本地存储获取客户数据
+            const monthlyCustomers = getCustomerGrowthData();
+            
+            // 转换为图表所需格式
+            const labels = Object.keys(monthlyCustomers).map(month => {
+                const [year, monthNum] = month.split('-');
+                return `${monthNum}月`;
+            });
+            const data = Object.values(monthlyCustomers);
+            
+            // 如果没有数据，使用默认数据
+            if (labels.length === 0) {
+                labels.push('1月', '2月', '3月', '4月', '5月', '6月');
+                data.push(0, 0, 0, 0, 0, 0);
+            }
+            
             const customerGrowthChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                    labels: labels,
                     datasets: [{
                         label: '新增客户',
-                        data: [12, 15, 18, 22, 25, 30],
+                        data: data,
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         borderColor: '#10b981',
                         borderWidth: 2,
@@ -537,19 +712,44 @@
         function initCustomerDistributionChart() {
             const ctx = document.getElementById('customer-distribution-chart').getContext('2d');
             
+            // 从本地存储获取客户数据
+            const industryDistribution = {};
+            customerData.forEach(customer => {
+                const industry = customer.industry || '其他';
+                if (!industryDistribution[industry]) {
+                    industryDistribution[industry] = 0;
+                }
+                industryDistribution[industry]++;
+            });
+            
+            const labels = Object.keys(industryDistribution);
+            const data = Object.values(industryDistribution);
+            
+            // 颜色数组
+            const colors = [
+                '#3b82f6',
+                '#10b981',
+                '#f59e0b',
+                '#8b5cf6',
+                '#6b7280',
+                '#ec4899',
+                '#14b8a6',
+                '#f97316'
+            ];
+            
+            // 如果没有数据，使用默认数据
+            if (labels.length === 0) {
+                labels.push('中餐馆', '西餐厅', '快餐店', '咖啡店', '其他');
+                data.push(0, 0, 0, 0, 0);
+            }
+            
             const customerDistributionChart = new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: ['中餐馆', '西餐厅', '快餐店', '咖啡店', '其他'],
+                    labels: labels,
                     datasets: [{
-                        data: [45, 20, 15, 12, 8],
-                        backgroundColor: [
-                            '#3b82f6',
-                            '#10b981',
-                            '#f59e0b',
-                            '#8b5cf6',
-                            '#6b7280'
-                        ],
+                        data: data,
+                        backgroundColor: colors.slice(0, labels.length),
                         borderWidth: 0,
                         hoverOffset: 4
                     }]
@@ -575,13 +775,29 @@
         function initRevenueChart() {
             const ctx = document.getElementById('revenue-chart').getContext('2d');
             
+            // 从本地存储获取收入数据
+            const monthlyRevenue = getRevenueData();
+            
+            // 转换为图表所需格式
+            const labels = Object.keys(monthlyRevenue).map(month => {
+                const [year, monthNum] = month.split('-');
+                return `${monthNum}月`;
+            });
+            const data = Object.values(monthlyRevenue);
+            
+            // 如果没有数据，使用默认数据
+            if (labels.length === 0) {
+                labels.push('1月', '2月', '3月', '4月', '5月', '6月');
+                data.push(0, 0, 0, 0, 0, 0);
+            }
+            
             const revenueChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                    labels: labels,
                     datasets: [{
                         label: '收入',
-                        data: [22000, 25000, 28500, 30000, 32000, 35000],
+                        data: data,
                         backgroundColor: 'rgba(59, 130, 246, 0.6)',
                         borderWidth: 0
                     }]
@@ -617,13 +833,30 @@
         function initExpenseChart() {
             const ctx = document.getElementById('expense-chart').getContext('2d');
             
+            // 模拟支出数据（实际项目中可以从本地存储或API获取）
+            const monthlyExpenses = {
+                '2024-01': 8000,
+                '2024-02': 9500,
+                '2024-03': 10000,
+                '2024-04': 11000,
+                '2024-05': 12000,
+                '2024-06': 12500
+            };
+            
+            // 转换为图表所需格式
+            const labels = Object.keys(monthlyExpenses).map(month => {
+                const [year, monthNum] = month.split('-');
+                return `${monthNum}月`;
+            });
+            const data = Object.values(monthlyExpenses);
+            
             const expenseChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                    labels: labels,
                     datasets: [{
                         label: '支出',
-                        data: [8000, 9500, 10000, 11000, 12000, 12500],
+                        data: data,
                         backgroundColor: 'rgba(239, 68, 68, 0.6)',
                         borderWidth: 0
                     }]
@@ -659,12 +892,23 @@
         function initTaskCompletionChart() {
             const ctx = document.getElementById('task-completion-chart').getContext('2d');
             
+            // 从本地存储获取任务数据
+            const taskStatusData = getTaskCompletionData();
+            
+            const labels = ['已完成', '进行中', '待处理', '已逾期'];
+            const data = [
+                taskStatusData.completed,
+                taskStatusData.in_progress,
+                taskStatusData.pending,
+                taskStatusData.overdue
+            ];
+            
             const taskCompletionChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['已完成', '进行中', '待处理', '已逾期'],
+                    labels: labels,
                     datasets: [{
-                        data: [65, 20, 10, 5],
+                        data: data,
                         backgroundColor: [
                             '#10b981',
                             '#3b82f6',
@@ -697,13 +941,32 @@
         function initTaskDistributionChart() {
             const ctx = document.getElementById('task-distribution-chart').getContext('2d');
             
+            // 从本地存储获取任务数据
+            const taskTypes = {
+                '销售': 0,
+                '设计': 0,
+                '运营': 0,
+                '财务': 0,
+                '续费': 0
+            };
+            
+            taskData.forEach(task => {
+                const type = task.type || '其他';
+                if (taskTypes.hasOwnProperty(type)) {
+                    taskTypes[type]++;
+                }
+            });
+            
+            const labels = Object.keys(taskTypes);
+            const data = Object.values(taskTypes);
+            
             const taskDistributionChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ['销售', '设计', '运营', '财务', '续费'],
+                    labels: labels,
                     datasets: [{
                         label: '任务数量',
-                        data: [25, 18, 22, 10, 15],
+                        data: data,
                         backgroundColor: 'rgba(59, 130, 246, 0.2)',
                         borderColor: '#3b82f6',
                         borderWidth: 2,

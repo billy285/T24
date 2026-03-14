@@ -11,10 +11,10 @@
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase 配置
-        const supabaseUrl = 'YOUR_SUPABASE_URL';
-        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // 使用本地存储模拟续费数据
+        let renewalData = JSON.parse(localStorage.getItem('renewalData')) || [];
+        // 使用本地存储模拟套餐数据
+        let packages = JSON.parse(localStorage.getItem('packages')) || [];
 
         tailwind.config = {
             theme: {
@@ -205,16 +205,16 @@
                 <!-- Renewal Management Tabs -->
                 <div class="border-b border-gray-200">
                     <nav class="flex -mb-px">
-                        <a href="#" class="renewal-tab-active border-primary text-primary whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+                        <a href="#" class="renewal-tab-active border-primary text-primary whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm" data-tab="renewal">
                             续费管理
                         </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm" data-tab="reminder">
                             到期提醒
                         </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm" data-tab="records">
                             续费记录
                         </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">
+                        <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm" data-tab="packages">
                             套餐管理
                         </a>
                     </nav>
@@ -223,174 +223,296 @@
             
             <!-- Main Content Area -->
             <main class="flex-1 overflow-y-auto p-4 bg-gray-100">
-                <!-- Action Bar -->
-                <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                        <div class="flex items-center mb-4 md:mb-0">
-                            <button id="add-renewal-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
-                                <i class="fa fa-plus mr-2"></i> 记录续费
-                            </button>
-                            <div class="ml-3 relative">
-                                <button id="batch-actions-btn" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
-                                    <i class="fa fa-cog mr-2"></i> 批量操作
-                                    <i class="fa fa-chevron-down ml-2 text-xs"></i>
+                <!-- Renewal Management Tab -->
+                <div id="renewal-tab" class="tab-content">
+                    <!-- Action Bar -->
+                    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <button id="add-renewal-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-plus mr-2"></i> 记录续费
                                 </button>
-                                <div id="batch-actions-menu" class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-10">
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fa fa-download mr-2"></i> 导出选中
-                                    </a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fa fa-print mr-2"></i> 打印选中
-                                    </a>
-                                    <div class="border-t border-gray-200"></div>
-                                    <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                                        <i class="fa fa-trash mr-2"></i> 删除选中
-                                    </a>
+                                <div class="ml-3 relative">
+                                    <button id="batch-actions-btn" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
+                                        <i class="fa fa-cog mr-2"></i> 批量操作
+                                        <i class="fa fa-chevron-down ml-2 text-xs"></i>
+                                    </button>
+                                    <div id="batch-actions-menu" class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-10">
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <i class="fa fa-download mr-2"></i> 导出选中
+                                        </a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <i class="fa fa-print mr-2"></i> 打印选中
+                                        </a>
+                                        <div class="border-t border-gray-200"></div>
+                                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                            <i class="fa fa-trash mr-2"></i> 删除选中
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="relative">
+                                    <input type="text" id="search-input" placeholder="搜索客户名称..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fa fa-search text-gray-400"></i>
+                                    </div>
+                                </div>
+                                <button id="filter-btn" class="ml-3 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
+                                    <i class="fa fa-filter mr-2"></i> 筛选
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Panel (Hidden by default) -->
+                    <div id="filter-panel" class="bg-white rounded-lg shadow-sm p-4 mb-6 hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">续费状态</label>
+                                <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="">全部状态</option>
+                                    <option value="active">正常</option>
+                                    <option value="expiring">即将到期</option>
+                                    <option value="expired">已到期</option>
+                                    <option value="paused">暂停</option>
+                                    <option value="lost">流失</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">续费负责人</label>
+                                <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="">全部负责人</option>
+                                    <option value="1">张三</option>
+                                    <option value="2">李四</option>
+                                    <option value="3">王五</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">到期时间</label>
+                                <div class="flex items-center space-x-2">
+                                    <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <span>至</span>
+                                    <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="flex items-center">
-                            <div class="relative">
-                                <input type="text" id="search-input" placeholder="搜索客户名称..." class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fa fa-search text-gray-400"></i>
-                                </div>
-                            </div>
-                            <button id="filter-btn" class="ml-3 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
-                                <i class="fa fa-filter mr-2"></i> 筛选
+                        <div class="mt-4 flex justify-end space-x-3">
+                            <button class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
+                                重置
+                            </button>
+                            <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
+                                应用筛选
                             </button>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Filter Panel (Hidden by default) -->
-                <div id="filter-panel" class="bg-white rounded-lg shadow-sm p-4 mb-6 hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">续费状态</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部状态</option>
-                                <option value="active">正常</option>
-                                <option value="expiring">即将到期</option>
-                                <option value="expired">已到期</option>
-                                <option value="paused">暂停</option>
-                                <option value="lost">流失</option>
-                            </select>
+                    
+                    <!-- Renewal List -->
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <div class="flex items-center">
+                                                <input id="select-all" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                            </div>
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            客户名称
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            当前套餐
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            套餐价格
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            付款周期
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            开始日期
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            到期日期
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            状态
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            续费负责人
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            操作
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="renewal-table-body">
+                                    <!-- Renewal rows will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
                         </div>
                         
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">续费负责人</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="">全部负责人</option>
-                                <option value="1">张三</option>
-                                <option value="2">李四</option>
-                                <option value="3">王五</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">到期时间</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <span>至</span>
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <!-- Pagination -->
+                        <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                            <div class="flex-1 flex justify-between sm:hidden">
+                                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    上一页
+                                </a>
+                                <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    下一页
+                                </a>
+                            </div>
+                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-700">
+                                        显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">22</span> 条记录
+                                    </p>
+                                </div>
+                                <div>
+                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                            <span class="sr-only">上一页</span>
+                                            <i class="fa fa-chevron-left"></i>
+                                        </a>
+                                        <a href="#" aria-current="page" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                            1
+                                        </a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                            2
+                                        </a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                            3
+                                        </a>
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                            <span class="sr-only">下一页</span>
+                                            <i class="fa fa-chevron-right"></i>
+                                        </a>
+                                    </nav>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="mt-4 flex justify-end space-x-3">
-                        <button class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
-                            重置
-                        </button>
-                        <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
-                            应用筛选
-                        </button>
+                </div>
+                
+                <!-- Expiration Reminder Tab -->
+                <div id="reminder-tab" class="tab-content hidden">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">到期提醒</h3>
+                        <div class="space-y-4">
+                            <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <i class="fa fa-exclamation-circle text-red-500 text-xl"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="text-red-800 font-medium">即将到期客户</h4>
+                                        <p class="mt-1 text-red-700">以下客户的服务将在7天内到期，请及时联系续费。</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                客户名称
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                当前套餐
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                到期日期
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                剩余天数
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                负责人
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                操作
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200" id="reminder-table-body">
+                                        <!-- Reminder rows will be inserted here by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Renewal List -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        <div class="flex items-center">
-                                            <input id="select-all" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
-                                        </div>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        客户名称
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        当前套餐
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        套餐价格
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        付款周期
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        开始日期
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        到期日期
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        状态
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        续费负责人
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        操作
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200" id="renewal-table-body">
-                                <!-- Renewal rows will be inserted here by JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- Pagination -->
-                    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-                        <div class="flex-1 flex justify-between sm:hidden">
-                            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                上一页
-                            </a>
-                            <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                下一页
-                            </a>
+                <!-- Renewal Records Tab -->
+                <div id="records-tab" class="tab-content hidden">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">续费记录</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            客户名称
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            套餐名称
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            续费金额
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            续费日期
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            续费结果
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            负责人
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            操作
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="records-table-body">
+                                    <!-- Records rows will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                            <div>
-                                <p class="text-sm text-gray-700">
-                                    显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">22</span> 条记录
-                                </p>
+                    </div>
+                </div>
+                
+                <!-- Package Management Tab -->
+                <div id="packages-tab" class="tab-content hidden">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">套餐管理</h3>
+                            <button id="add-package-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                <i class="fa fa-plus mr-2"></i> 添加套餐
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h4 class="text-md font-medium text-gray-800 mb-3">现有套餐</h4>
+                                <div id="packages-list" class="space-y-3">
+                                    <!-- Package items will be inserted here by JavaScript -->
+                                </div>
                             </div>
-                            <div>
-                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        <span class="sr-only">上一页</span>
-                                        <i class="fa fa-chevron-left"></i>
-                                    </a>
-                                    <a href="#" aria-current="page" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        1
-                                    </a>
-                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        2
-                                    </a>
-                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        3
-                                    </a>
-                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        <span class="sr-only">下一页</span>
-                                        <i class="fa fa-chevron-right"></i>
-                                    </a>
-                                </nav>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h4 class="text-md font-medium text-gray-800 mb-3">套餐使用情况</h4>
+                                <div class="h-64">
+                                    <!-- Package usage chart will be inserted here -->
+                                    <div class="flex flex-col items-center justify-center h-full">
+                                        <i class="fa fa-pie-chart text-4xl text-gray-400 mb-4"></i>
+                                        <p class="text-gray-500">套餐使用情况图表</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -524,21 +646,13 @@
         });
         
         // 加载续费数据
-        async function loadRenewalData() {
+        function loadRenewalData() {
             const tableBody = document.getElementById('renewal-table-body');
             tableBody.innerHTML = '';
             
             try {
-                // 从 Supabase 获取续费数据
-                const { data, error } = await supabase
-                    .from('renewals')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
-                if (error) {
-                    console.error('加载续费数据失败:', error);
-                    return;
-                }
+                // 从本地存储获取续费数据
+                renewalData = JSON.parse(localStorage.getItem('renewalData')) || [];
                 
                 // 付款周期映射
                 const billingCycleMap = {
@@ -557,7 +671,7 @@
                     'lost': '流失'
                 };
                 
-                data.forEach(item => {
+                renewalData.forEach(item => {
                     const row = document.createElement('tr');
                     
                     row.innerHTML = `
@@ -567,34 +681,34 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm text-gray-900 font-medium">${item.customer_name}</div>
+                            <div class="text-sm text-gray-900 font-medium">${item.customerName}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">${item.package_name}</div>
+                            <div class="text-sm text-gray-900">${item.packageName}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-900">$${parseFloat(item.price).toFixed(2)}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">${billingCycleMap[item.billing_cycle] || item.billing_cycle}</div>
+                            <div class="text-sm text-gray-900">${billingCycleMap[item.billingCycle] || item.billingCycle}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            ${item.start_date ? new Date(item.start_date).toISOString().split('T')[0] : '-'}
+                            ${item.startDate ? new Date(item.startDate).toISOString().split('T')[0] : '-'}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            ${item.end_date ? new Date(item.end_date).toISOString().split('T')[0] : '-'}
+                            ${item.endDate ? new Date(item.endDate).toISOString().split('T')[0] : '-'}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="status-badge status-${item.status}">${statusMap[item.status] || item.status}</span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">${item.renewal_person}</div>
+                            <div class="text-sm text-gray-900">${item.renewalPerson}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewRenewal('${item.id}')">查看</a>
-                            <a href="#" class="text-gray-600 hover:text-gray-900 mr-3" onclick="editRenewal('${item.id}')">编辑</a>
-                            <a href="#" class="text-green-600 hover:text-green-900" onclick="renewNow('${item.id}')">续费</a>
-                            <a href="#" class="text-red-600 hover:text-red-900 ml-3" onclick="deleteRenewal('${item.id}')">删除</a>
+                            <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewRenewal(${item.id})">查看</a>
+                            <a href="#" class="text-gray-600 hover:text-gray-900 mr-3" onclick="editRenewal(${item.id})">编辑</a>
+                            <a href="#" class="text-green-600 hover:text-green-900" onclick="renewNow(${item.id})">续费</a>
+                            <a href="#" class="text-red-600 hover:text-red-900 ml-3" onclick="deleteRenewal(${item.id})">删除</a>
                         </td>
                     `;
                     
@@ -606,7 +720,7 @@
         }
         
         // 添加续费记录
-        async function addRenewal(renewalData) {
+        function addRenewal(renewalDataObj) {
             try {
                 // 负责人映射
                 const renewalPersonMap = {
@@ -625,7 +739,7 @@
                 };
                 
                 // 计算状态
-                const endDate = new Date(renewalData.endDate);
+                const endDate = new Date(renewalDataObj.endDate);
                 const today = new Date();
                 const diffTime = endDate - today;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -637,28 +751,33 @@
                     status = 'expiring';
                 }
                 
-                const { data, error } = await supabase
-                    .from('renewals')
-                    .insert({
-                        customer_id: renewalData.customerId,
-                        customer_name: customerNameMap[renewalData.customerId] || '未知客户',
-                        package_name: renewalData.packageName,
-                        price: parseFloat(renewalData.price),
-                        billing_cycle: renewalData.billingCycle,
-                        start_date: renewalData.startDate ? new Date(renewalData.startDate).toISOString() : null,
-                        end_date: renewalData.endDate ? new Date(renewalData.endDate).toISOString() : null,
-                        status: status,
-                        renewal_person: renewalPersonMap[renewalData.renewalPerson] || '未分配',
-                        renewal_result: renewalData.renewalResult,
-                        notes: renewalData.notes || null
-                    })
-                    .select();
+                // 生成唯一ID
+                const newId = renewalData.length > 0 ? Math.max(...renewalData.map(item => item.id)) + 1 : 1;
                 
-                if (error) {
-                    throw error;
-                }
+                const newRenewal = {
+                    id: newId,
+                    customerId: renewalDataObj.customerId,
+                    customerName: customerNameMap[renewalDataObj.customerId] || '未知客户',
+                    packageName: renewalDataObj.packageName,
+                    price: parseFloat(renewalDataObj.price),
+                    billingCycle: renewalDataObj.billingCycle,
+                    startDate: renewalDataObj.startDate ? new Date(renewalDataObj.startDate).toISOString() : null,
+                    endDate: renewalDataObj.endDate ? new Date(renewalDataObj.endDate).toISOString() : null,
+                    status: status,
+                    renewalPerson: renewalPersonMap[renewalDataObj.renewalPerson] || '未分配',
+                    renewalResult: renewalDataObj.renewalResult,
+                    notes: renewalDataObj.notes || null,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
                 
-                return data[0];
+                // 添加到数组
+                renewalData.push(newRenewal);
+                
+                // 保存到本地存储
+                localStorage.setItem('renewalData', JSON.stringify(renewalData));
+                
+                return newRenewal;
             } catch (error) {
                 console.error('添加续费记录失败:', error);
                 throw error;
@@ -666,64 +785,55 @@
         }
         
         // 查看续费记录
-        async function viewRenewal(id) {
+        function viewRenewal(id) {
             try {
-                const { data, error } = await supabase
-                    .from('renewals')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
+                const renewal = renewalData.find(item => item.id === id);
                 
-                if (error) {
-                    throw error;
+                if (!renewal) {
+                    throw new Error('续费记录不存在');
                 }
                 
                 // 显示详情模态框
-                alert('查看续费记录: ' + data.customer_name);
-                console.log('续费记录详情:', data);
+                alert('查看续费记录: ' + renewal.customerName);
+                console.log('续费记录详情:', renewal);
             } catch (error) {
                 console.error('查看续费记录失败:', error);
             }
         }
         
         // 编辑续费记录
-        async function editRenewal(id) {
+        function editRenewal(id) {
             try {
-                const { data, error } = await supabase
-                    .from('renewals')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
+                const renewal = renewalData.find(item => item.id === id);
                 
-                if (error) {
-                    throw error;
+                if (!renewal) {
+                    throw new Error('续费记录不存在');
                 }
                 
                 // 显示编辑模态框
-                alert('编辑续费记录: ' + data.customer_name);
-                console.log('编辑续费记录:', data);
+                alert('编辑续费记录: ' + renewal.customerName);
+                console.log('编辑续费记录:', renewal);
             } catch (error) {
                 console.error('编辑续费记录失败:', error);
             }
         }
         
         // 立即续费
-        async function renewNow(id) {
+        function renewNow(id) {
             try {
-                // 更新续费状态
-                const { data, error } = await supabase
-                    .from('renewals')
-                    .update({
-                        status: 'active',
-                        renewal_result: 'success',
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('id', id)
-                    .select();
+                const renewalIndex = renewalData.findIndex(item => item.id === id);
                 
-                if (error) {
-                    throw error;
+                if (renewalIndex === -1) {
+                    throw new Error('续费记录不存在');
                 }
+                
+                // 更新续费状态
+                renewalData[renewalIndex].status = 'active';
+                renewalData[renewalIndex].renewalResult = 'success';
+                renewalData[renewalIndex].updatedAt = new Date().toISOString();
+                
+                // 保存到本地存储
+                localStorage.setItem('renewalData', JSON.stringify(renewalData));
                 
                 // 重新加载数据
                 loadRenewalData();
@@ -734,20 +844,23 @@
         }
         
         // 删除续费记录
-        async function deleteRenewal(id) {
+        function deleteRenewal(id) {
             if (!confirm('确定要删除这条续费记录吗？')) {
                 return;
             }
             
             try {
-                const { error } = await supabase
-                    .from('renewals')
-                    .delete()
-                    .eq('id', id);
+                const renewalIndex = renewalData.findIndex(item => item.id === id);
                 
-                if (error) {
-                    throw error;
+                if (renewalIndex === -1) {
+                    throw new Error('续费记录不存在');
                 }
+                
+                // 从数组中删除
+                renewalData.splice(renewalIndex, 1);
+                
+                // 保存到本地存储
+                localStorage.setItem('renewalData', JSON.stringify(renewalData));
                 
                 // 重新加载数据
                 loadRenewalData();
@@ -825,7 +938,7 @@
         });
         
         // 添加续费记录表单提交
-        document.getElementById('add-renewal-form').addEventListener('submit', async function(event) {
+        document.getElementById('add-renewal-form').addEventListener('submit', function(event) {
             event.preventDefault();
             
             // 获取表单数据
@@ -844,7 +957,7 @@
             
             try {
                 // 添加续费记录
-                await addRenewal(renewalData);
+                addRenewal(renewalData);
                 
                 // 重新加载续费记录列表
                 loadRenewalData();
@@ -886,6 +999,496 @@
             localStorage.removeItem('userLogin');
             sessionStorage.removeItem('userLogin');
             window.location.href = 'index.html';
+        }
+        
+        // 标签页切换功能
+        document.querySelectorAll('[data-tab]').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // 移除所有标签页的活动状态
+                document.querySelectorAll('[data-tab]').forEach(t => {
+                    t.classList.remove('renewal-tab-active', 'border-primary', 'text-primary');
+                    t.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                });
+                
+                // 添加当前标签页的活动状态
+                this.classList.add('renewal-tab-active', 'border-primary', 'text-primary');
+                this.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                
+                // 隐藏所有内容
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                // 显示当前标签页内容
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId + '-tab').classList.remove('hidden');
+                
+                // 如果切换到到期提醒标签页，加载提醒数据
+                if (tabId === 'reminder') {
+                    loadReminderData();
+                }
+                
+                // 如果切换到续费记录标签页，加载记录数据
+                if (tabId === 'records') {
+                    loadRenewalRecords();
+                }
+                
+                // 如果切换到套餐管理标签页，加载套餐数据
+                if (tabId === 'packages') {
+                    loadPackages();
+                }
+            });
+        });
+        
+        // 加载到期提醒数据
+        function loadReminderData() {
+            const tableBody = document.getElementById('reminder-table-body');
+            tableBody.innerHTML = '';
+            
+            try {
+                // 从本地存储获取续费数据
+                renewalData = JSON.parse(localStorage.getItem('renewalData')) || [];
+                
+                // 过滤出即将到期的客户（7天内）
+                const today = new Date();
+                const expiringCustomers = renewalData.filter(item => {
+                    if (!item.endDate) return false;
+                    
+                    const endDate = new Date(item.endDate);
+                    const diffTime = endDate - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    return diffDays >= 0 && diffDays <= 7;
+                });
+                
+                if (expiringCustomers.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td colspan="6" class="px-6 py-10 text-center text-gray-500">
+                            暂无即将到期的客户
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                    return;
+                }
+                
+                expiringCustomers.forEach(item => {
+                    const endDate = new Date(item.endDate);
+                    const today = new Date();
+                    const diffTime = endDate - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900 font-medium">${item.customerName}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${item.packageName}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${item.endDate ? new Date(item.endDate).toISOString().split('T')[0] : '-'}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-badge ${diffDays <= 3 ? 'status-expired' : 'status-expiring'}">${diffDays}天</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${item.renewalPerson}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="#" class="text-primary hover:text-secondary mr-3" onclick="contactCustomer(${item.id})">联系客户</a>
+                            <a href="#" class="text-green-600 hover:text-green-900" onclick="renewNow(${item.id})">立即续费</a>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('加载到期提醒数据时出错:', error);
+            }
+        }
+        
+        // 联系客户
+        function contactCustomer(id) {
+            try {
+                const renewal = renewalData.find(item => item.id === id);
+                
+                if (!renewal) {
+                    throw new Error('续费记录不存在');
+                }
+                
+                alert('联系客户: ' + renewal.customerName);
+                console.log('联系客户:', renewal);
+            } catch (error) {
+                console.error('联系客户失败:', error);
+            }
+        }
+        
+        // 加载续费记录数据
+        function loadRenewalRecords() {
+            const tableBody = document.getElementById('records-table-body');
+            tableBody.innerHTML = '';
+            
+            try {
+                // 从本地存储获取续费数据
+                renewalData = JSON.parse(localStorage.getItem('renewalData')) || [];
+                
+                // 续费结果映射
+                const renewalResultMap = {
+                    'success': '已续费',
+                    'rejected': '拒绝续费',
+                    'delayed': '暂缓续费',
+                    'uncontactable': '联系不上',
+                    'downgrade': '降级续费',
+                    'upgrade': '升级套餐'
+                };
+                
+                if (renewalData.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td colspan="7" class="px-6 py-10 text-center text-gray-500">
+                            暂无续费记录
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                    return;
+                }
+                
+                renewalData.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900 font-medium">${item.customerName}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${item.packageName}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">$${parseFloat(item.price).toFixed(2)}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${item.updatedAt ? new Date(item.updatedAt).toISOString().split('T')[0] : '-'}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-badge renewal-result-${item.renewalResult}">${renewalResultMap[item.renewalResult] || item.renewalResult}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${item.renewalPerson}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="#" class="text-primary hover:text-secondary" onclick="viewRenewal(${item.id})">查看详情</a>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('加载续费记录数据时出错:', error);
+            }
+        }
+        
+        // 加载套餐数据
+        function loadPackages() {
+            const packagesList = document.getElementById('packages-list');
+            packagesList.innerHTML = '';
+            
+            try {
+                // 从本地存储获取套餐数据
+                packages = JSON.parse(localStorage.getItem('packages')) || [];
+                
+                if (packages.length === 0) {
+                    packagesList.innerHTML = `
+                        <div class="text-gray-500 text-center py-4">
+                            暂无套餐数据
+                        </div>
+                    `;
+                    return;
+                }
+                
+                packages.forEach(pkg => {
+                    const packageItem = document.createElement('div');
+                    packageItem.className = 'bg-white p-4 rounded-md shadow-sm flex justify-between items-center';
+                    packageItem.innerHTML = `
+                        <div>
+                            <h5 class="text-sm font-medium text-gray-900">${pkg.name}</h5>
+                            <p class="text-xs text-gray-500">价格: $${parseFloat(pkg.price).toFixed(2)}</p>
+                            <p class="text-xs text-gray-500">描述: ${pkg.description || '无描述'}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="text-gray-600 hover:text-gray-900" onclick="editPackage(${pkg.id})"><i class="fa fa-pencil"></i></button>
+                            <button class="text-red-600 hover:text-red-900" onclick="deletePackage(${pkg.id})"><i class="fa fa-trash"></i></button>
+                        </div>
+                    `;
+                    
+                    packagesList.appendChild(packageItem);
+                });
+            } catch (error) {
+                console.error('加载套餐数据时出错:', error);
+            }
+        }
+        
+        // 添加套餐模态框
+        document.getElementById('add-package-btn').addEventListener('click', function() {
+            // 创建添加套餐模态框
+            const modal = document.createElement('div');
+            modal.id = 'add-package-modal';
+            modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+                    <div class="flex items-center justify-between p-6 border-b">
+                        <h3 class="text-lg font-semibold text-gray-800">添加套餐</h3>
+                        <button class="text-gray-400 hover:text-gray-500 focus:outline-none close-modal">
+                            <i class="fa fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="p-6">
+                        <form id="add-package-form">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">套餐名称 <span class="text-red-500">*</span></label>
+                                <input type="text" name="name" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">套餐价格 <span class="text-red-500">*</span></label>
+                                <input type="number" name="price" step="0.01" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">套餐描述</label>
+                                <textarea name="description" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                            </div>
+                            
+                            <div class="mt-6 flex justify-end space-x-3">
+                                <button type="button" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 close-modal">
+                                    取消
+                                </button>
+                                <button type="submit" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
+                                    保存套餐
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // 添加关闭模态框事件
+            modal.querySelectorAll('.close-modal').forEach(button => {
+                button.addEventListener('click', function() {
+                    modal.remove();
+                });
+            });
+            
+            // 点击模态框外部关闭
+            modal.addEventListener('click', function(event) {
+                if (event.target === this) {
+                    this.remove();
+                }
+            });
+            
+            // 表单提交
+            modal.querySelector('#add-package-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const formData = new FormData(this);
+                const packageData = {
+                    name: formData.get('name'),
+                    price: formData.get('price'),
+                    description: formData.get('description')
+                };
+                
+                try {
+                    addPackage(packageData);
+                    modal.remove();
+                    loadPackages();
+                    alert('套餐添加成功！');
+                } catch (error) {
+                    console.error('添加套餐失败:', error);
+                    alert('添加套餐失败，请重试。');
+                }
+            });
+        });
+        
+        // 添加套餐
+        function addPackage(packageData) {
+            try {
+                // 生成唯一ID
+                const newId = packages.length > 0 ? Math.max(...packages.map(item => item.id)) + 1 : 1;
+                
+                const newPackage = {
+                    id: newId,
+                    name: packageData.name,
+                    price: parseFloat(packageData.price),
+                    description: packageData.description || null,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                
+                // 添加到数组
+                packages.push(newPackage);
+                
+                // 保存到本地存储
+                localStorage.setItem('packages', JSON.stringify(packages));
+                
+                return newPackage;
+            } catch (error) {
+                console.error('添加套餐失败:', error);
+                throw error;
+            }
+        }
+        
+        // 编辑套餐
+        function editPackage(id) {
+            try {
+                const pkg = packages.find(item => item.id === id);
+                
+                if (!pkg) {
+                    throw new Error('套餐不存在');
+                }
+                
+                // 创建编辑套餐模态框
+                const modal = document.createElement('div');
+                modal.id = 'edit-package-modal';
+                modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+                        <div class="flex items-center justify-between p-6 border-b">
+                            <h3 class="text-lg font-semibold text-gray-800">编辑套餐</h3>
+                            <button class="text-gray-400 hover:text-gray-500 focus:outline-none close-modal">
+                                <i class="fa fa-times text-xl"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="p-6">
+                            <form id="edit-package-form">
+                                <input type="hidden" name="id" value="${pkg.id}">
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">套餐名称 <span class="text-red-500">*</span></label>
+                                    <input type="text" name="name" value="${pkg.name}" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">套餐价格 <span class="text-red-500">*</span></label>
+                                    <input type="number" name="price" step="0.01" value="${pkg.price}" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">套餐描述</label>
+                                    <textarea name="description" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">${pkg.description || ''}</textarea>
+                                </div>
+                                
+                                <div class="mt-6 flex justify-end space-x-3">
+                                    <button type="button" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 close-modal">
+                                        取消
+                                    </button>
+                                    <button type="submit" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
+                                        保存修改
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // 添加关闭模态框事件
+                modal.querySelectorAll('.close-modal').forEach(button => {
+                    button.addEventListener('click', function() {
+                        modal.remove();
+                    });
+                });
+                
+                // 点击模态框外部关闭
+                modal.addEventListener('click', function(event) {
+                    if (event.target === this) {
+                        this.remove();
+                    }
+                });
+                
+                // 表单提交
+                modal.querySelector('#edit-package-form').addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    
+                    const formData = new FormData(this);
+                    const updatedPackage = {
+                        id: parseInt(formData.get('id')),
+                        name: formData.get('name'),
+                        price: formData.get('price'),
+                        description: formData.get('description')
+                    };
+                    
+                    try {
+                        updatePackage(updatedPackage);
+                        modal.remove();
+                        loadPackages();
+                        alert('套餐更新成功！');
+                    } catch (error) {
+                        console.error('更新套餐失败:', error);
+                        alert('更新套餐失败，请重试。');
+                    }
+                });
+            } catch (error) {
+                console.error('编辑套餐失败:', error);
+            }
+        }
+        
+        // 更新套餐
+        function updatePackage(updatedPackage) {
+            try {
+                const packageIndex = packages.findIndex(item => item.id === updatedPackage.id);
+                
+                if (packageIndex === -1) {
+                    throw new Error('套餐不存在');
+                }
+                
+                packages[packageIndex] = {
+                    ...packages[packageIndex],
+                    name: updatedPackage.name,
+                    price: parseFloat(updatedPackage.price),
+                    description: updatedPackage.description || null,
+                    updatedAt: new Date().toISOString()
+                };
+                
+                // 保存到本地存储
+                localStorage.setItem('packages', JSON.stringify(packages));
+                
+                return packages[packageIndex];
+            } catch (error) {
+                console.error('更新套餐失败:', error);
+                throw error;
+            }
+        }
+        
+        // 删除套餐
+        function deletePackage(id) {
+            if (!confirm('确定要删除这个套餐吗？')) {
+                return;
+            }
+            
+            try {
+                const packageIndex = packages.findIndex(item => item.id === id);
+                
+                if (packageIndex === -1) {
+                    throw new Error('套餐不存在');
+                }
+                
+                // 从数组中删除
+                packages.splice(packageIndex, 1);
+                
+                // 保存到本地存储
+                localStorage.setItem('packages', JSON.stringify(packages));
+                
+                // 重新加载数据
+                loadPackages();
+                alert('套餐删除成功！');
+            } catch (error) {
+                console.error('删除套餐失败:', error);
+            }
         }
     </script>
 </body>
