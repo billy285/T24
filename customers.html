@@ -940,13 +940,22 @@
                 // 加载客户数据
                 loadCustomers();
                 
-                // 加载语言偏好
-                const savedLang = localStorage.getItem('preferredLanguage') || 'zh';
+                // 加载保存的语言
+                const savedLang = localStorage.getItem('language') || 'zh';
                 changeLanguage(savedLang);
                 
-                // 语言切换事件
+                // 绑定语言切换事件
                 document.getElementById('lang-zh').addEventListener('click', () => changeLanguage('zh'));
                 document.getElementById('lang-en').addEventListener('click', () => changeLanguage('en'));
+                
+                // 检查URL参数，自动打开添加客户模态框
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('action') === 'add') {
+                    const modal = document.getElementById('add-customer-modal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                    }
+                }
                 
                 // 侧边栏切换
                 if (document.getElementById('sidebar-toggle')) {

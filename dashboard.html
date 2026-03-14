@@ -178,7 +178,7 @@
                             <p class="text-gray-600 mt-1" data-lang="todayInfo">今天是 <span id="current-date">2026年3月8日</span>，您有 <span class="text-primary font-medium">5</span> 个待办任务需要处理。</p>
                         </div>
                         <div class="mt-4 md:mt-0">
-                            <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
+                            <button id="add-new-customer-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300" onclick="window.location.href='customers.html?action=add'">
                                 <i class="fa fa-plus mr-2"></i> <span data-lang="addNewCustomer">添加新客户</span>
                             </button>
                         </div>
@@ -511,9 +511,9 @@
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-semibold text-gray-800" data-lang="revenueTrend">收入趋势</h3>
                             <div class="flex space-x-2">
-                                <button class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 py-1 px-2 rounded transition-all-300" data-lang="month">月</button>
-                                <button class="text-xs bg-primary text-white py-1 px-2 rounded transition-all-300" data-lang="quarter">季</button>
-                                <button class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 py-1 px-2 rounded transition-all-300" data-lang="year">年</button>
+                                <button id="month-btn" class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 py-1 px-2 rounded transition-all-300" data-lang="month" onclick="document.getElementById('month-btn').classList.remove('bg-gray-200', 'text-gray-700'); document.getElementById('month-btn').classList.add('bg-primary', 'text-white'); document.getElementById('quarter-btn').classList.remove('bg-primary', 'text-white'); document.getElementById('quarter-btn').classList.add('bg-gray-200', 'text-gray-700'); document.getElementById('year-btn').classList.remove('bg-primary', 'text-white'); document.getElementById('year-btn').classList.add('bg-gray-200', 'text-gray-700'); updateRevenueChart('月')">月</button>
+                                <button id="quarter-btn" class="text-xs bg-primary text-white py-1 px-2 rounded transition-all-300" data-lang="quarter" onclick="document.getElementById('month-btn').classList.remove('bg-primary', 'text-white'); document.getElementById('month-btn').classList.add('bg-gray-200', 'text-gray-700'); document.getElementById('quarter-btn').classList.remove('bg-gray-200', 'text-gray-700'); document.getElementById('quarter-btn').classList.add('bg-primary', 'text-white'); document.getElementById('year-btn').classList.remove('bg-primary', 'text-white'); document.getElementById('year-btn').classList.add('bg-gray-200', 'text-gray-700'); updateRevenueChart('季')">季</button>
+                                <button id="year-btn" class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 py-1 px-2 rounded transition-all-300" data-lang="year" onclick="document.getElementById('month-btn').classList.remove('bg-primary', 'text-white'); document.getElementById('month-btn').classList.add('bg-gray-200', 'text-gray-700'); document.getElementById('quarter-btn').classList.remove('bg-primary', 'text-white'); document.getElementById('quarter-btn').classList.add('bg-gray-200', 'text-gray-700'); document.getElementById('year-btn').classList.remove('bg-gray-200', 'text-gray-700'); document.getElementById('year-btn').classList.add('bg-primary', 'text-white'); updateRevenueChart('年')">年</button>
                             </div>
                         </div>
                         <div class="h-64">
@@ -642,10 +642,15 @@
     </div>
 
     <script>
-        // Supabase 配置
-        const supabaseUrl = 'https://your-project-id.supabase.co';
-        const supabaseKey = 'your-anon-key';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // Supabase 配置 (暂时注释掉，因为没有实际的Supabase项目)
+        // const supabaseUrl = 'https://your-project-id.supabase.co';
+        // const supabaseKey = 'your-anon-key';
+        // const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        const supabase = {
+            from: () => ({
+                select: () => Promise.resolve({ data: [], error: null })
+            })
+        };
         
         // 语言配置
         const langConfig = {
@@ -784,6 +789,18 @@
                 // 绑定语言切换事件
                 document.getElementById('lang-zh').addEventListener('click', () => changeLanguage('zh'));
                 document.getElementById('lang-en').addEventListener('click', () => changeLanguage('en'));
+                
+                // 添加新客户按钮点击事件
+                const addNewCustomerBtn = document.getElementById('add-new-customer-btn');
+                console.log('添加新客户按钮:', addNewCustomerBtn);
+                if (addNewCustomerBtn) {
+                    addNewCustomerBtn.addEventListener('click', function() {
+                        console.log('添加新客户按钮被点击');
+                        window.location.href = 'customers.html?action=add';
+                    });
+                } else {
+                    console.error('添加新客户按钮未找到');
+                }
                 
             } catch (e) {
                 console.error('登录信息解析错误', e);
@@ -952,6 +969,9 @@
             document.getElementById('total-revenue').textContent = totalRevenue;
             document.getElementById('task-completion-rate').textContent = taskCompletionRate;
             
+            // 添加点击跳转功能
+            addDashboardClickEvents();
+            
             // 这里可以添加更多管理员特定的统计卡片
         }
         
@@ -1052,6 +1072,9 @@
                     window.location.href = 'finance.html?filter=overdue';
                 });
             });
+            
+            // 添加待办任务点击事件
+            addTaskClickEvents();
         }
         
         // 显示财务工作台
@@ -1155,7 +1178,7 @@
         function initRevenueChart() {
             const ctx = document.getElementById('revenue-chart').getContext('2d');
             
-            const revenueChart = new Chart(ctx, {
+            window.revenueChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
@@ -1310,6 +1333,141 @@
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('hidden');
         });
+        
+        // 切换图表周期
+        function switchChartPeriod(period) {
+            // 选择按钮
+            const monthBtn = document.getElementById('month-btn');
+            const quarterBtn = document.getElementById('quarter-btn');
+            const yearBtn = document.getElementById('year-btn');
+            
+            // 移除所有按钮的选中状态
+            if (monthBtn) monthBtn.classList.remove('bg-primary', 'text-white');
+            if (monthBtn) monthBtn.classList.add('bg-gray-200', 'text-gray-700');
+            if (quarterBtn) quarterBtn.classList.remove('bg-primary', 'text-white');
+            if (quarterBtn) quarterBtn.classList.add('bg-gray-200', 'text-gray-700');
+            if (yearBtn) yearBtn.classList.remove('bg-primary', 'text-white');
+            if (yearBtn) yearBtn.classList.add('bg-gray-200', 'text-gray-700');
+            
+            // 添加当前按钮的选中状态
+            if (period === '月' && monthBtn) {
+                monthBtn.classList.remove('bg-gray-200', 'text-gray-700');
+                monthBtn.classList.add('bg-primary', 'text-white');
+            } else if (period === '季' && quarterBtn) {
+                quarterBtn.classList.remove('bg-gray-200', 'text-gray-700');
+                quarterBtn.classList.add('bg-primary', 'text-white');
+            } else if (period === '年' && yearBtn) {
+                yearBtn.classList.remove('bg-gray-200', 'text-gray-700');
+                yearBtn.classList.add('bg-primary', 'text-white');
+            }
+            
+            // 切换图表数据
+            updateRevenueChart(period);
+        }
+        
+        // 待办任务点击事件
+        function addTaskClickEvents() {
+            const taskItems = document.querySelectorAll('div[class="flex items-center p-3 bg-gray-50 rounded-lg"]');
+            taskItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // 排除复选框点击
+                    if (!e.target.type || e.target.type !== 'checkbox') {
+                        const taskText = this.querySelector('p[class="text-sm font-medium text-gray-800"]').textContent;
+                        console.log('点击了任务:', taskText);
+                        // 跳转到任务管理页面
+                        window.location.href = 'tasks.html';
+                    }
+                });
+            });
+        }
+        
+        // 在DOM加载完成后添加待办任务点击事件
+        document.addEventListener('DOMContentLoaded', function() {
+            addTaskClickEvents();
+        });
+        
+        // 更新收入趋势图表数据
+        function updateRevenueChart(period) {
+            const ctx = document.getElementById('revenue-chart').getContext('2d');
+            let labels, data, label;
+            
+            switch(period) {
+                case '月':
+                    labels = ['1月', '2月', '3月', '4月', '5月', '6月'];
+                    data = [22000, 25000, 28500, 30000, 32000, 35000];
+                    label = '月度收入';
+                    break;
+                case '季':
+                    labels = ['Q1', 'Q2', 'Q3', 'Q4'];
+                    data = [75500, 97000, 110000, 120000];
+                    label = '季度收入';
+                    break;
+                case '年':
+                    labels = ['2023', '2024', '2025', '2026'];
+                    data = [350000, 420000, 480000, 520000];
+                    label = '年度收入';
+                    break;
+                default:
+                    labels = ['1月', '2月', '3月', '4月', '5月', '6月'];
+                    data = [22000, 25000, 28500, 30000, 32000, 35000];
+                    label = '月度收入';
+            }
+            
+            // 销毁旧图表
+            if (window.revenueChart) {
+                window.revenueChart.destroy();
+            }
+            
+            // 创建新图表
+            window.revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                        borderColor: '#ec4899',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `收入: ¥${context.raw.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '¥' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
         
         // 用户菜单切换
         document.getElementById('user-menu-button').addEventListener('click', function() {
