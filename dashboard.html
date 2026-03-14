@@ -186,7 +186,7 @@
                 </div>
                 
                 <!-- Stats Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6" id="stats-cards">
                     <!-- Total Customers -->
                     <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
                         <div class="flex items-center justify-between">
@@ -247,6 +247,258 @@
                             </div>
                             <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
                                 <i class="fa fa-check-circle text-primary text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Role-specific Dashboard Sections -->
+                <div id="role-specific-content" class="mb-6">
+                    <!-- Sales Dashboard Section -->
+                    <div id="sales-dashboard" class="hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">今日待跟进</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">5</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                        <i class="fa fa-phone text-primary text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">本周待跟进</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">12</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                                        <i class="fa fa-calendar text-purple-600 text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">超过7天未跟进</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">3</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                                        <i class="fa fa-exclamation-circle text-red-600 text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">本月成交客户</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">8</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                                        <i class="fa fa-check-circle text-success text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">本月成交金额</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">¥15,200</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
+                                        <i class="fa fa-money text-warning text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">即将到期客户</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">4</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+                                        <i class="fa fa-clock-o text-orange-600 text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Operations Dashboard Section -->
+                    <div id="operations-dashboard" class="hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">我的服务客户</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">32</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                        <i class="fa fa-users text-primary text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">今日待处理任务</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">8</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                                        <i class="fa fa-tasks text-success text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">本周任务</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">24</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                                        <i class="fa fa-calendar text-purple-600 text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">逾期任务</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">2</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                                        <i class="fa fa-exclamation-circle text-red-600 text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">有问题卡点客户</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">5</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
+                                        <i class="fa fa-warning text-warning text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">最近更新客户</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">12</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                        <i class="fa fa-refresh text-primary text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Finance Dashboard Section -->
+                    <div id="finance-dashboard" class="hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">本月收入</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">¥28,500</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                                        <i class="fa fa-arrow-up text-success text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">本月支出</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">¥8,500</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                                        <i class="fa fa-arrow-down text-danger text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">本月净收入</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">¥20,000</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                        <i class="fa fa-balance-scale text-primary text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">本月管理费收入</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">¥15,000</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                                        <i class="fa fa-cogs text-purple-600 text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">本月投流费收入</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">¥10,000</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
+                                        <i class="fa fa-bullhorn text-warning text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">本月公司支出</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">¥8,500</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+                                        <i class="fa fa-building text-gray-600 text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">欠费客户</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">5</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                                        <i class="fa fa-exclamation-triangle text-danger text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">即将到期客户</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">12</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+                                        <i class="fa fa-clock-o text-orange-600 text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-6 transition-all-300 hover:shadow-md">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-600">本月续费记录</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">8</p>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                                        <i class="fa fa-refresh text-success text-xl"></i>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -390,6 +642,11 @@
     </div>
 
     <script>
+        // Supabase 配置
+        const supabaseUrl = 'https://your-project-id.supabase.co';
+        const supabaseKey = 'your-anon-key';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        
         // 语言配置
         const langConfig = {
             zh: {
@@ -538,8 +795,8 @@
         function adjustNavigationByRole(role) {
             const navLinks = document.querySelectorAll('aside nav a');
             
-            // 管理员可以看到所有菜单
-            if (role !== 'admin') {
+            // 超级管理员和管理员可以看到所有菜单
+            if (role !== 'super_admin' && role !== 'admin') {
                 // 销售看不到财务、设置等
                 if (role === 'sales') {
                     hideNavItem('finance.html');
@@ -547,14 +804,14 @@
                 }
                 
                 // 运营看不到销售、财务等
-                if (role === 'operation') {
+                if (role === 'operations') {
                     hideNavItem('sales.html');
                     hideNavItem('finance.html');
                     hideNavItem('settings.html');
                 }
                 
                 // 设计只看到交付和任务
-                if (role === 'design') {
+                if (role === 'designer') {
                     hideNavItem('sales.html');
                     hideNavItem('finance.html');
                     hideNavItem('renewal.html');
@@ -569,6 +826,16 @@
                     hideNavItem('renewal.html');
                     hideNavItem('settings.html');
                 }
+                
+                // 人事只看到员工管理相关
+                if (role === 'hr') {
+                    hideNavItem('sales.html');
+                    hideNavItem('delivery.html');
+                    hideNavItem('renewal.html');
+                    hideNavItem('finance.html');
+                    hideNavItem('tasks.html');
+                    hideNavItem('reports.html');
+                }
             }
         }
         
@@ -581,16 +848,241 @@
         }
         
         // 初始化仪表盘数据
-        function initializeDashboardData(role) {
+        async function initializeDashboardData(role) {
             // 设置当前日期
             const now = new Date();
             const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
             document.getElementById('current-date').textContent = now.toLocaleDateString('zh-CN', options);
             
+            try {
+                // 从数据库获取客户数据
+                const { data: customers, error } = await supabase
+                    .from('customers')
+                    .select('*');
+                
+                if (error) {
+                    console.error('Error fetching customers:', error);
+                    // 使用默认数据
+                    loadDefaultDashboardData(role);
+                    return;
+                }
+                
+                // 根据角色显示不同的工作台内容
+                displayRoleSpecificDashboard(role, customers);
+            } catch (error) {
+                console.error('Error initializing dashboard data:', error);
+                // 使用默认数据
+                loadDefaultDashboardData(role);
+            }
+        }
+        
+        // 根据角色显示特定的仪表盘内容
+        function displayRoleSpecificDashboard(role, customers) {
+            // 计算通用数据
+            const totalCustomers = customers.length;
+            
+            // 计算本月新增客户
+            const thisMonth = new Date();
+            thisMonth.setDate(1);
+            thisMonth.setHours(0, 0, 0, 0);
+            
+            const newCustomers = customers.filter(customer => {
+                const customerDate = new Date(customer.created_at);
+                return customerDate >= thisMonth;
+            }).length;
+            
+            // 计算跟进中客户
+            const followingCustomers = customers.filter(customer => customer.status === 'following').length;
+            
+            // 计算已成交客户
+            const closedCustomers = customers.filter(customer => customer.status === 'closed').length;
+            
+            // 计算服务中客户
+            const activeCustomers = customers.filter(customer => customer.status === 'closed' || customer.status === 'following').length;
+            
+            // 计算即将到期客户（模拟数据）
+            const expiringCustomers = 12;
+            
+            // 计算欠费客户（模拟数据）
+            const overdueCustomers = 5;
+            
+            // 模拟财务数据
+            const totalRevenue = '¥28,500';
+            const totalExpense = '¥8,500';
+            const netIncome = '¥20,000';
+            const managementFee = '¥15,000';
+            const adFee = '¥10,000';
+            const companyExpense = '¥8,500';
+            
+            // 模拟任务数据
+            const taskCompletionRate = '92%';
+            
+            // 根据角色显示不同内容
+            switch(role) {
+                case 'super_admin':
+                case 'admin':
+                    displayAdminDashboard(totalCustomers, newCustomers, followingCustomers, closedCustomers, activeCustomers, expiringCustomers, overdueCustomers, totalRevenue, totalExpense, netIncome, managementFee, adFee, companyExpense, taskCompletionRate);
+                    break;
+                case 'sales':
+                    displaySalesDashboard(totalCustomers, newCustomers, expiringCustomers);
+                    break;
+                case 'operations':
+                    displayOperationsDashboard(activeCustomers);
+                    break;
+                case 'finance':
+                    displayFinanceDashboard(totalRevenue, totalExpense, netIncome, managementFee, adFee, companyExpense, overdueCustomers, expiringCustomers);
+                    break;
+                case 'hr':
+                    displayHRDashboard();
+                    break;
+                default:
+                    displayAdminDashboard(totalCustomers, newCustomers, followingCustomers, closedCustomers, activeCustomers, expiringCustomers, overdueCustomers, totalRevenue, totalExpense, netIncome, managementFee, adFee, companyExpense, taskCompletionRate);
+            }
+            
+            // 初始化图表
+            initRevenueChart();
+            initCustomerStatusChart(customers);
+        }
+        
+        // 显示管理员仪表盘
+        function displayAdminDashboard(totalCustomers, newCustomers, followingCustomers, closedCustomers, activeCustomers, expiringCustomers, overdueCustomers, totalRevenue, totalExpense, netIncome, managementFee, adFee, companyExpense, taskCompletionRate) {
+            // 更新统计卡片数据
+            document.getElementById('total-customers').textContent = totalCustomers;
+            document.getElementById('new-customers').textContent = newCustomers;
+            document.getElementById('total-revenue').textContent = totalRevenue;
+            document.getElementById('task-completion-rate').textContent = taskCompletionRate;
+            
+            // 这里可以添加更多管理员特定的统计卡片
+        }
+        
+        // 显示销售工作台
+        function displaySalesDashboard(totalCustomers, newCustomers, expiringCustomers) {
+            // 更新统计卡片数据
+            document.getElementById('total-customers').textContent = totalCustomers;
+            document.getElementById('new-customers').textContent = newCustomers;
+            document.getElementById('total-revenue').textContent = '¥15,200';
+            document.getElementById('task-completion-rate').textContent = '88%';
+            
+            // 显示销售特定的仪表盘
+            document.getElementById('sales-dashboard').classList.remove('hidden');
+            document.getElementById('operations-dashboard').classList.add('hidden');
+            document.getElementById('finance-dashboard').classList.add('hidden');
+            
+            // 添加点击跳转功能
+            addDashboardClickEvents();
+        }
+        
+        // 显示运营工作台
+        function displayOperationsDashboard(activeCustomers) {
+            // 更新统计卡片数据
+            document.getElementById('total-customers').textContent = activeCustomers;
+            document.getElementById('new-customers').textContent = '10';
+            document.getElementById('total-revenue').textContent = '¥20,100';
+            document.getElementById('task-completion-rate').textContent = '95%';
+            
+            // 显示运营特定的仪表盘
+            document.getElementById('sales-dashboard').classList.add('hidden');
+            document.getElementById('operations-dashboard').classList.remove('hidden');
+            document.getElementById('finance-dashboard').classList.add('hidden');
+            
+            // 添加点击跳转功能
+            addDashboardClickEvents();
+        }
+        
+        // 显示财务工作台
+        function displayFinanceDashboard(totalRevenue, totalExpense, netIncome, managementFee, adFee, companyExpense, overdueCustomers, expiringCustomers) {
+            // 更新统计卡片数据
+            document.getElementById('total-customers').textContent = overdueCustomers;
+            document.getElementById('new-customers').textContent = expiringCustomers;
+            document.getElementById('total-revenue').textContent = totalRevenue;
+            document.getElementById('task-completion-rate').textContent = '98%';
+            
+            // 显示财务特定的仪表盘
+            document.getElementById('sales-dashboard').classList.add('hidden');
+            document.getElementById('operations-dashboard').classList.add('hidden');
+            document.getElementById('finance-dashboard').classList.remove('hidden');
+            
+            // 添加点击跳转功能
+            addDashboardClickEvents();
+        }
+        
+        // 显示人事工作台
+        function displayHRDashboard() {
+            // 更新统计卡片数据
+            document.getElementById('total-customers').textContent = '256';
+            document.getElementById('new-customers').textContent = '18';
+            document.getElementById('total-revenue').textContent = '¥28,500';
+            document.getElementById('task-completion-rate').textContent = '95%';
+            
+            // 隐藏所有角色特定的仪表盘
+            document.getElementById('sales-dashboard').classList.add('hidden');
+            document.getElementById('operations-dashboard').classList.add('hidden');
+            document.getElementById('finance-dashboard').classList.add('hidden');
+        }
+        
+        // 添加仪表盘点击事件
+        function addDashboardClickEvents() {
+            // 总客户数点击
+            document.getElementById('total-customers').parentElement.parentElement.addEventListener('click', function() {
+                window.location.href = 'customers.html';
+            });
+            
+            // 新增客户点击
+            document.getElementById('new-customers').parentElement.parentElement.addEventListener('click', function() {
+                window.location.href = 'customers.html?filter=month';
+            });
+            
+            // 总收入点击
+            document.getElementById('total-revenue').parentElement.parentElement.addEventListener('click', function() {
+                window.location.href = 'finance.html';
+            });
+            
+            // 即将到期客户点击
+            const expiringElements = document.querySelectorAll('p:contains("即将到期客户")');
+            expiringElements.forEach(element => {
+                element.parentElement.parentElement.addEventListener('click', function() {
+                    window.location.href = 'renewal.html?filter=30days';
+                });
+            });
+            
+            // 欠费客户点击
+            const overdueElements = document.querySelectorAll('p:contains("欠费客户")');
+            overdueElements.forEach(element => {
+                element.parentElement.parentElement.addEventListener('click', function() {
+                    window.location.href = 'finance.html?filter=overdue';
+                });
+            });
+        }
+        
+        // 显示财务工作台
+        function displayFinanceDashboard(totalRevenue, totalExpense, netIncome, managementFee, adFee, companyExpense, overdueCustomers, expiringCustomers) {
+            // 更新统计卡片数据
+            document.getElementById('total-customers').textContent = overdueCustomers;
+            document.getElementById('new-customers').textContent = expiringCustomers;
+            document.getElementById('total-revenue').textContent = totalRevenue;
+            document.getElementById('task-completion-rate').textContent = '98%';
+            
+            // 这里可以添加财务特定的统计卡片
+        }
+        
+        // 显示人事工作台
+        function displayHRDashboard() {
+            // 更新统计卡片数据
+            document.getElementById('total-customers').textContent = '256';
+            document.getElementById('new-customers').textContent = '18';
+            document.getElementById('total-revenue').textContent = '¥28,500';
+            document.getElementById('task-completion-rate').textContent = '95%';
+            
+            // 这里可以添加人事特定的统计卡片
+        }
+        
+        // 加载默认仪表盘数据
+        function loadDefaultDashboardData(role) {
             // 根据角色加载不同的模拟数据
             let dashboardData;
             
             switch(role) {
+                case 'super_admin':
                 case 'admin':
                     dashboardData = {
                         totalCustomers: 256,
@@ -607,7 +1099,7 @@
                         taskCompletionRate: '88%'
                     };
                     break;
-                case 'operation':
+                case 'operations':
                     dashboardData = {
                         totalCustomers: 200,
                         newCustomers: 10,
@@ -615,7 +1107,7 @@
                         taskCompletionRate: '95%'
                     };
                     break;
-                case 'design':
+                case 'designer':
                     dashboardData = {
                         totalCustomers: 80,
                         newCustomers: 5,
@@ -629,6 +1121,14 @@
                         newCustomers: 18,
                         totalRevenue: '¥28,500',
                         taskCompletionRate: '98%'
+                    };
+                    break;
+                case 'hr':
+                    dashboardData = {
+                        totalCustomers: 256,
+                        newCustomers: 18,
+                        totalRevenue: '¥28,500',
+                        taskCompletionRate: '95%'
                     };
                     break;
                 default:
@@ -706,15 +1206,65 @@
         }
         
         // 初始化客户状态分布图表
-        function initCustomerStatusChart() {
+        function initCustomerStatusChart(customers = []) {
             const ctx = document.getElementById('customer-status-chart').getContext('2d');
+            
+            // 计算客户状态分布
+            let statusData = {
+                'active': 0,
+                'potential': 0,
+                'dormant': 0,
+                'lost': 0,
+                'new': 0
+            };
+            
+            if (customers.length > 0) {
+                // 计算新客户（30天内）
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                
+                customers.forEach(customer => {
+                    const customerDate = new Date(customer.created_at);
+                    
+                    if (customerDate >= thirtyDaysAgo) {
+                        statusData.new++;
+                    } else {
+                        switch(customer.status) {
+                            case 'closed':
+                                statusData.active++;
+                                break;
+                            case 'following':
+                            case 'unclosed':
+                                statusData.potential++;
+                                break;
+                            case 'paused':
+                                statusData.dormant++;
+                                break;
+                            case 'lost':
+                                statusData.lost++;
+                                break;
+                            default:
+                                statusData.potential++;
+                        }
+                    }
+                });
+            } else {
+                // 使用默认数据
+                statusData = {
+                    'active': 45,
+                    'potential': 25,
+                    'dormant': 15,
+                    'lost': 8,
+                    'new': 7
+                };
+            }
             
             const customerStatusChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['活跃', '潜在', '休眠', '流失', '新客户'],
                     datasets: [{
-                        data: [45, 25, 15, 8, 7],
+                        data: [statusData.active, statusData.potential, statusData.dormant, statusData.lost, statusData.new],
                         backgroundColor: [
                             '#10b981', // 绿色 - 活跃
                             '#3b82f6', // 蓝色 - 潜在

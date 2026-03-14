@@ -10,6 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -392,7 +394,7 @@
     </div>
     
     <!-- Add Task Modal -->
-    <div id="add-task-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div id="add-task-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-800">添加任务</h3>
@@ -447,6 +449,50 @@
     </div>
 
     <script>
+        // 使用本地存储模拟任务数据
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [
+            {
+                id: 1,
+                title: '跟进新客户 "北京烤鸭"',
+                description: '与客户确认合作细节，讨论服务方案和价格',
+                assignee: '张三',
+                due_date: '2026-03-08',
+                category: '销售',
+                completed: false,
+                created_at: new Date().toISOString()
+            },
+            {
+                id: 2,
+                title: '完成 "米兰西餐厅" 网站设计',
+                description: '完成网站首页和菜单页面的设计，提交给客户审核',
+                assignee: '李四',
+                due_date: '2026-03-09',
+                category: '设计',
+                completed: false,
+                created_at: new Date().toISOString()
+            },
+            {
+                id: 3,
+                title: '联系 "东方明珠" 续费事宜',
+                description: '与客户沟通续费方案，提供优惠政策，确保客户续费率',
+                assignee: '王五',
+                due_date: '2026-03-11',
+                category: '续费',
+                completed: false,
+                created_at: new Date().toISOString()
+            },
+            {
+                id: 4,
+                title: '准备月度财务报表',
+                description: '汇总本月财务数据，生成财务报表，提交给管理层',
+                assignee: '赵六',
+                due_date: '2026-03-15',
+                category: '财务',
+                completed: false,
+                created_at: new Date().toISOString()
+            }
+        ];
+
         // 检查登录状态
         document.addEventListener('DOMContentLoaded', function() {
             const savedLogin = localStorage.getItem('userLogin') || sessionStorage.getItem('userLogin');
@@ -465,6 +511,60 @@
                 
                 // 根据角色调整导航菜单
                 adjustNavigationByRole(userData.role);
+                
+                // 加载任务数据
+                loadTasks();
+                
+                // 侧边栏切换
+                document.getElementById('sidebar-toggle').addEventListener('click', function() {
+                    const sidebar = document.getElementById('sidebar');
+                    sidebar.classList.toggle('hidden');
+                });
+                
+                // 用户菜单切换
+                document.getElementById('user-menu-button').addEventListener('click', function() {
+                    const userMenu = document.getElementById('user-menu');
+                    userMenu.classList.toggle('hidden');
+                });
+                
+                // 点击其他地方关闭用户菜单
+                document.addEventListener('click', function(event) {
+                    const userMenu = document.getElementById('user-menu');
+                    const userMenuButton = document.getElementById('user-menu-button');
+                    
+                    if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                        userMenu.classList.add('hidden');
+                    }
+                });
+                
+                // 退出登录
+                document.getElementById('logout-btn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+                
+                document.getElementById('user-menu-logout').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+                
+                // 任务模态框
+                document.getElementById('add-task-btn').addEventListener('click', function() {
+                    document.getElementById('add-task-modal').classList.remove('hidden');
+                });
+                
+                document.getElementById('close-task-modal').addEventListener('click', function() {
+                    document.getElementById('add-task-modal').classList.add('hidden');
+                });
+                
+                document.getElementById('cancel-task-btn').addEventListener('click', function() {
+                    document.getElementById('add-task-modal').classList.add('hidden');
+                });
+                
+                document.getElementById('add-task-form').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    addTask();
+                });
                 
             } catch (e) {
                 console.error('登录信息解析错误', e);
@@ -518,64 +618,160 @@
             }
         }
         
-        // 侧边栏切换
-        document.getElementById('sidebar-toggle').addEventListener('click', function() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('hidden');
-        });
-        
-        // 用户菜单切换
-        document.getElementById('user-menu-button').addEventListener('click', function() {
-            const userMenu = document.getElementById('user-menu');
-            userMenu.classList.toggle('hidden');
-        });
-        
-        // 点击其他地方关闭用户菜单
-        document.addEventListener('click', function(event) {
-            const userMenu = document.getElementById('user-menu');
-            const userMenuButton = document.getElementById('user-menu-button');
-            
-            if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
-                userMenu.classList.add('hidden');
-            }
-        });
-        
-        // 退出登录
-        document.getElementById('logout-btn').addEventListener('click', function(e) {
-            e.preventDefault();
-            logout();
-        });
-        
-        document.getElementById('user-menu-logout').addEventListener('click', function(e) {
-            e.preventDefault();
-            logout();
-        });
-        
         function logout() {
             localStorage.removeItem('userLogin');
             sessionStorage.removeItem('userLogin');
             window.location.href = 'index.html';
         }
-        
-        // 任务模态框
-        document.getElementById('add-task-btn').addEventListener('click', function() {
-            document.getElementById('add-task-modal').classList.remove('hidden');
-        });
-        
-        document.getElementById('close-task-modal').addEventListener('click', function() {
+
+        // 加载任务数据
+        function loadTasks() {
+            // 从本地存储获取最新任务数据
+            tasks = JSON.parse(localStorage.getItem('tasks')) || tasks;
+
+            // 清空任务列表
+            const taskList = document.querySelector('.space-y-4');
+            taskList.innerHTML = '';
+
+            // 添加任务项
+            tasks.forEach(task => {
+                const taskItem = createTaskItem(task);
+                taskList.appendChild(taskItem);
+            });
+        }
+
+        // 创建任务项
+        function createTaskItem(task) {
+            const div = document.createElement('div');
+            div.className = 'p-4 border border-gray-200 rounded-lg hover:shadow-md transition-all-300';
+            
+            // 计算截止日期状态
+            const today = new Date();
+            const dueDate = new Date(task.due_date);
+            let statusClass = 'bg-gray-200 text-gray-800';
+            let statusText = '未来';
+            
+            if (dueDate < today) {
+                statusClass = 'bg-red-100 text-red-800';
+                statusText = '已逾期';
+            } else if (dueDate.toDateString() === today.toDateString()) {
+                statusClass = 'bg-red-100 text-red-800';
+                statusText = '今天';
+            } else if (dueDate.getTime() - today.getTime() < 24 * 60 * 60 * 1000) {
+                statusClass = 'bg-yellow-100 text-yellow-800';
+                statusText = '明天';
+            } else if (dueDate.getTime() - today.getTime() < 3 * 24 * 60 * 60 * 1000) {
+                statusClass = 'bg-blue-100 text-blue-800';
+                statusText = '3天后';
+            }
+
+            div.innerHTML = `
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 mr-4">
+                        <input type="checkbox" class="h-5 w-5 text-primary focus:ring-primary border-gray-300 rounded" ${task.completed ? 'checked' : ''} onchange="updateTaskStatus(${task.id}, this.checked)">
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-medium text-gray-800">${task.title}</h4>
+                            <span class="text-xs ${statusClass} py-1 px-2 rounded">${statusText}</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">${task.description}</p>
+                        <div class="flex items-center mt-3 text-sm text-gray-500">
+                            <span class="flex items-center mr-4">
+                                <i class="fa fa-user mr-1"></i> ${task.assignee}
+                            </span>
+                            <span class="flex items-center mr-4">
+                                <i class="fa fa-calendar mr-1"></i> ${formatDate(task.due_date)}
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fa fa-tag mr-1"></i> ${task.category}
+                            </span>
+                        </div>
+                        <div class="mt-3 flex justify-end">
+                            <button class="text-red-500 hover:text-red-700 text-sm" onclick="deleteTask(${task.id})"><i class="fa fa-trash mr-1"></i> 删除</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return div;
+        }
+
+        // 添加任务
+        function addTask() {
+            const title = document.getElementById('task-title').value;
+            const description = document.getElementById('task-description').value;
+            const assignee = document.getElementById('task-assignee').value;
+            const dueDate = document.getElementById('task-due-date').value;
+            const category = document.getElementById('task-category').value;
+
+            if (!title || !assignee || !dueDate || !category) {
+                alert('请填写完整的任务信息');
+                return;
+            }
+
+            // 创建新任务
+            const newTask = {
+                id: tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1,
+                title,
+                description,
+                assignee,
+                due_date: dueDate,
+                category,
+                completed: false,
+                created_at: new Date().toISOString()
+            };
+
+            // 添加到任务列表
+            tasks.push(newTask);
+            
+            // 保存到本地存储
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+
+            // 重新加载任务
+            loadTasks();
+            
+            // 关闭模态框并清空表单
             document.getElementById('add-task-modal').classList.add('hidden');
-        });
-        
-        document.getElementById('cancel-task-btn').addEventListener('click', function() {
-            document.getElementById('add-task-modal').classList.add('hidden');
-        });
-        
-        document.getElementById('add-task-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            // 这里可以添加表单提交逻辑
+            document.getElementById('add-task-form').reset();
+            
             alert('任务添加成功！');
-            document.getElementById('add-task-modal').classList.add('hidden');
-        });
+        }
+
+        // 更新任务状态
+        function updateTaskStatus(taskId, completed) {
+            // 找到并更新任务
+            const taskIndex = tasks.findIndex(task => task.id === taskId);
+            if (taskIndex !== -1) {
+                tasks[taskIndex].completed = completed;
+                
+                // 保存到本地存储
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            }
+        }
+
+        // 删除任务
+        function deleteTask(taskId) {
+            if (!confirm('确定要删除这个任务吗？')) {
+                return;
+            }
+
+            // 过滤掉要删除的任务
+            tasks = tasks.filter(task => task.id !== taskId);
+            
+            // 保存到本地存储
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+
+            // 重新加载任务
+            loadTasks();
+            alert('任务删除成功！');
+        }
+
+        // 格式化日期
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toISOString().split('T')[0];
+        }
     </script>
 </body>
 </html>

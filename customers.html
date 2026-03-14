@@ -8,19 +8,21 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#f9a8d4',
-                        secondary: '#f472b6',
-                        accent: '#ec4899',
+                        primary: '#1e40af',
+                        secondary: '#3b82f6',
+                        accent: '#60a5fa',
                         success: '#10b981',
                         warning: '#f59e0b',
                         danger: '#ef4444',
-                        light: '#fdf2f8',
-                        dark: '#7e22ce'
+                        light: '#f3f4f6',
+                        dark: '#1f2937'
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif']
@@ -31,8 +33,8 @@
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
-            .bg-gradient-beauty {
-                background: linear-gradient(135deg, #f9a8d4 0%, #f472b6 100%);
+            .bg-gradient-primary {
+                background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
             }
             .card-shadow {
                 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -41,8 +43,8 @@
                 transition: all 0.3s ease;
             }
             .sidebar-active {
-                border-left: 4px solid #ec4899;
-                background-color: rgba(236, 72, 153, 0.1);
+                border-left: 4px solid #3b82f6;
+                background-color: rgba(59, 130, 246, 0.1);
             }
             .status-badge {
                 @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
@@ -83,10 +85,10 @@
         <aside id="sidebar" class="bg-white w-64 shadow-lg hidden md:block transition-all-300">
             <div class="p-4 border-b">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 rounded-full bg-gradient-beauty flex items-center justify-center text-white">
+                    <div class="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white">
                         <i class="fa fa-users"></i>
                     </div>
-                    <h1 class="ml-3 text-lg font-bold text-gray-800" data-lang="systemTitle">美业预约系统</h1>
+                    <h1 class="ml-3 text-lg font-bold text-gray-800" data-lang="systemTitle">客户管理系统</h1>
                 </div>
             </div>
             
@@ -99,29 +101,33 @@
                         <i class="fa fa-dashboard w-6 text-gray-500"></i>
                         <span data-lang="dashboard">仪表盘</span>
                     </a>
-                    <a href="appointments.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
-                        <i class="fa fa-calendar w-6 text-gray-500"></i>
-                        <span data-lang="appointmentManagement">预约管理</span>
-                    </a>
-                    <a href="services.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
-                        <i class="fa fa-scissors w-6 text-gray-500"></i>
-                        <span data-lang="serviceManagement">服务管理</span>
-                    </a>
-                    <a href="employees.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
-                        <i class="fa fa-user-md w-6 text-gray-500"></i>
-                        <span data-lang="employeeManagement">员工管理</span>
-                    </a>
                     <a href="customers.html" class="flex items-center px-4 py-3 text-gray-700 sidebar-active">
                         <i class="fa fa-users w-6 text-gray-500"></i>
                         <span data-lang="customerManagement">客户管理</span>
+                    </a>
+                    <a href="sales.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-shopping-cart w-6 text-gray-500"></i>
+                        <span data-lang="salesManagement">销售管理</span>
+                    </a>
+                    <a href="delivery.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-truck w-6 text-gray-500"></i>
+                        <span data-lang="deliveryManagement">交付管理</span>
+                    </a>
+                    <a href="renewal.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-refresh w-6 text-gray-500"></i>
+                        <span data-lang="renewalManagement">续费管理</span>
                     </a>
                     <a href="finance.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-money w-6 text-gray-500"></i>
                         <span data-lang="financeManagement">财务管理</span>
                     </a>
+                    <a href="tasks.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-tasks w-6 text-gray-500"></i>
+                        <span data-lang="taskCollaboration">任务协作</span>
+                    </a>
                     <a href="reports.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
                         <i class="fa fa-bar-chart w-6 text-gray-500"></i>
-                        <span data-lang="dataReports">数据报表</span>
+                        <span data-lang="reportCenter">报表中心</span>
                     </a>
                 </nav>
                 
@@ -428,81 +434,122 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="businessNameRequired">商家名称 <span class="text-red-500">*</span></label>
-                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                            <input type="text" name="businessName" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="contactPersonRequired">联系人 <span class="text-red-500">*</span></label>
-                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                            <input type="text" name="contactPerson" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="phoneRequired">联系电话 <span class="text-red-500">*</span></label>
-                            <input type="tel" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                            <input type="tel" name="phone" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="wechatWhatsapp">微信/WhatsApp</label>
-                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <input type="text" name="wechatWhatsapp" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="email">邮箱</label>
-                            <input type="email" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <input type="email" name="email" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="industryTypeRequired">行业类型 <span class="text-red-500">*</span></label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                            <select name="industryType" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                                 <option value="" data-lang="selectIndustry">请选择行业</option>
-                                <option value="restaurant" data-lang="restaurant">餐厅</option>
-                                <option value="nail" data-lang="nail">美甲</option>
-                                <option value="massage" data-lang="massage">按摩</option>
-                                <option value="beauty" data-lang="beauty">美容</option>
-                                <option value="supermarket" data-lang="supermarket">超市</option>
-                                <option value="other" data-lang="other">其他</option>
+                                <option value="chinese_restaurant">中餐厅</option>
+                                <option value="japanese_restaurant">日料</option>
+                                <option value="hotpot">火锅</option>
+                                <option value="milk_tea">奶茶店</option>
+                                <option value="coffee_shop">咖啡店</option>
+                                <option value="nail">美甲店</option>
+                                <option value="beauty">美容院</option>
+                                <option value="massage">按摩店</option>
+                                <option value="hair_salon">理发店</option>
+                                <option value="spa">SPA</option>
+                                <option value="supermarket">超市</option>
+                                <option value="other">其他</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="businessAddress">商家地址</label>
-                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">国家</label>
+                            <select name="country" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="country-select">
+                                <option value="">请选择国家</option>
+                                <option value="US">美国</option>
+                                <option value="CA">加拿大</option>
+                                <option value="UK">英国</option>
+                                <option value="AU">澳大利亚</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">州/省</label>
+                            <select name="state" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="state-select">
+                                <option value="">请选择州/省</option>
+                            </select>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="cityLabel">城市</label>
-                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <input type="text" name="cityLabel" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="state">州</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="" data-lang="selectState">请选择州</option>
-                                <option value="NY">纽约州 (NY)</option>
-                                <option value="CA">加利福尼亚州 (CA)</option>
-                                <option value="IL">伊利诺伊州 (IL)</option>
-                                <option value="TX">德克萨斯州 (TX)</option>
-                                <option value="FL">佛罗里达州 (FL)</option>
-                            </select>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">邮编</label>
+                            <input type="text" name="zipCode" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="businessAddress">详细地址</label>
+                            <input type="text" name="businessAddress" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="customerSource">客户来源</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="" data-lang="selectSource">请选择来源</option>
-                                <option value="call" data-lang="call">电话销售</option>
-                                <option value="referral" data-lang="referral">转介绍</option>
-                                <option value="ad" data-lang="ad">广告</option>
-                                <option value="private" data-lang="private">私域</option>
-                                <option value="old" data-lang="old">老客户</option>
-                                <option value="other" data-lang="other">其他</option>
+                            <select name="customerSource" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="">请选择来源</option>
+                                <option value="phone_sales">电话销售</option>
+                                <option value="advertisement">广告</option>
+                                <option value="facebook">Facebook</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="google">Google</option>
+                                <option value="tiktok">TikTok</option>
+                                <option value="xiaohongshu">小红书</option>
+                                <option value="website咨询">官网咨询</option>
+                                <option value="referral">老客户转介绍</option>
+                                <option value="other">其他</option>
                             </select>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="salesPersonLabel">负责人</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="" data-lang="selectSalesPerson">请选择负责人</option>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="salesPersonLabel">销售负责人</label>
+                            <select name="salesPersonLabel" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="">请选择销售负责人</option>
+                                <option value="1">张三</option>
+                                <option value="2">李四</option>
+                                <option value="3">王五</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">运营负责人</label>
+                            <select name="operationsPersonLabel" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="">请选择运营负责人</option>
+                                <option value="1">张三</option>
+                                <option value="2">李四</option>
+                                <option value="3">王五</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">设计负责人</label>
+                            <select name="designPersonLabel" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="">请选择设计负责人</option>
                                 <option value="1">张三</option>
                                 <option value="2">李四</option>
                                 <option value="3">王五</option>
@@ -511,11 +558,27 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="customerLevelLabel">客户等级</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="normal" data-lang="normal">普通</option>
-                                <option value="high" data-lang="high">高意向</option>
-                                <option value="low" data-lang="low">低意向</option>
-                                <option value="vip" data-lang="vip">VIP</option>
+                            <select name="customerLevelLabel" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="normal">普通客户</option>
+                                <option value="key">重点客户</option>
+                                <option value="vip">VIP</option>
+                                <option value="low">低意向客户</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="customerLevelLabel">客户状态</label>
+                            <select name="customerStatus" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="new">新客户</option>
+                                <option value="contacted">已联系</option>
+                                <option value="following">跟进中</option>
+                                <option value="quoted">已报价</option>
+                                <option value="considering">考虑中</option>
+                                <option value="pending">待成交</option>
+                                <option value="closed">已成交</option>
+                                <option value="serving">服务中</option>
+                                <option value="paused">暂停合作</option>
+                                <option value="lost">已流失</option>
                             </select>
                         </div>
                         
@@ -534,51 +597,65 @@
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="currentPlatform">当前使用的平台</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="" data-lang="selectPlatform">请选择平台</option>
-                                <option value="beyondmenu" data-lang="beyondmenu">BeyondMenu</option>
-                                <option value="menusifu" data-lang="menusifu">MenuSifu</option>
-                                <option value="qmenu" data-lang="qmenu">QMenu</option>
-                                <option value="honorpos" data-lang="honorpos">HonorPOS</option>
-                                <option value="custom" data-lang="custom">自建站</option>
-                                <option value="none" data-lang="none">无</option>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="currentPlatform">当前使用平台</label>
+                            <select name="currentPlatform" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="">请选择平台</option>
+                                <option value="beyondmenu">BeyondMenu</option>
+                                <option value="menusifu">MenuSifu</option>
+                                <option value="qmenu">QMenu</option>
+                                <option value="honorpos">HonorPOS</option>
+                                <option value="none">无</option>
                             </select>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="monthlyOrders">月订单量（可填写预估）</label>
-                            <input type="number" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <input type="number" name="monthlyOrders" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="website">商家官网</label>
-                            <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="website">官网链接</label>
+                            <input type="url" name="website" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="googleBusiness">Google Business 链接</label>
-                            <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <input type="url" name="googleBusiness" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="facebook">Facebook 链接</label>
-                            <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <input type="url" name="facebook" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="instagram">Instagram 链接</label>
-                            <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <input type="url" name="instagram" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="yelp">Yelp 链接</label>
-                            <input type="url" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <input type="url" name="yelp" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">TikTok 链接</label>
+                            <input type="url" name="tiktok" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">小红书链接</label>
+                            <input type="url" name="xiaohongshu" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">YouTube 链接</label>
+                            <input type="url" name="youtube" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="notes">备注</label>
-                            <textarea rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                            <textarea name="notes" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
                         </div>
                     </div>
                     
@@ -596,18 +673,22 @@
     </div>
 
     <script>
+        // 使用本地存储模拟客户数据
+        let customers = JSON.parse(localStorage.getItem('customers')) || [];
+        
         // 语言配置
         const langConfig = {
             zh: {
-                systemTitle: '美业预约系统',
+                systemTitle: '客户管理系统',
                 mainMenu: '主菜单',
                 dashboard: '仪表盘',
-                appointmentManagement: '预约管理',
-                serviceManagement: '服务管理',
-                employeeManagement: '员工管理',
                 customerManagement: '客户管理',
+                salesManagement: '销售管理',
+                deliveryManagement: '交付管理',
+                renewalManagement: '续费管理',
                 financeManagement: '财务管理',
-                dataReports: '数据报表',
+                taskCollaboration: '任务协作',
+                reportCenter: '报表中心',
                 system: '系统',
                 systemSettings: '系统设置',
                 logout: '退出登录',
@@ -707,15 +788,16 @@
                 logout: '退出登录'
             },
             en: {
-                systemTitle: 'Beauty Salon Booking System',
+                systemTitle: 'Customer Management System',
                 mainMenu: 'Main Menu',
                 dashboard: 'Dashboard',
-                appointmentManagement: 'Appointment Management',
-                serviceManagement: 'Service Management',
-                employeeManagement: 'Employee Management',
                 customerManagement: 'Customer Management',
+                salesManagement: 'Sales Management',
+                deliveryManagement: 'Delivery Management',
+                renewalManagement: 'Renewal Management',
                 financeManagement: 'Finance Management',
-                dataReports: 'Data Reports',
+                taskCollaboration: 'Task Collaboration',
+                reportCenter: 'Report Center',
                 system: 'System',
                 systemSettings: 'System Settings',
                 logout: 'Logout',
@@ -866,6 +948,289 @@
                 document.getElementById('lang-zh').addEventListener('click', () => changeLanguage('zh'));
                 document.getElementById('lang-en').addEventListener('click', () => changeLanguage('en'));
                 
+                // 侧边栏切换
+                if (document.getElementById('sidebar-toggle')) {
+                    document.getElementById('sidebar-toggle').addEventListener('click', function() {
+                        const sidebar = document.getElementById('sidebar');
+                        sidebar.classList.toggle('hidden');
+                    });
+                }
+                
+                // 用户菜单切换
+                if (document.getElementById('user-menu-button')) {
+                    document.getElementById('user-menu-button').addEventListener('click', function() {
+                        const userMenu = document.getElementById('user-menu');
+                        userMenu.classList.toggle('hidden');
+                    });
+                }
+                
+                // 点击其他地方关闭用户菜单
+                document.addEventListener('click', function(event) {
+                    const userMenu = document.getElementById('user-menu');
+                    const userMenuButton = document.getElementById('user-menu-button');
+                    
+                    if (userMenu && userMenuButton && !userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                        userMenu.classList.add('hidden');
+                    }
+                });
+                
+                // 批量操作菜单切换
+                if (document.getElementById('batch-actions-btn')) {
+                    document.getElementById('batch-actions-btn').addEventListener('click', function() {
+                        const batchActionsMenu = document.getElementById('batch-actions-menu');
+                        batchActionsMenu.classList.toggle('hidden');
+                    });
+                }
+                
+                // 点击其他地方关闭批量操作菜单
+                document.addEventListener('click', function(event) {
+                    const batchActionsMenu = document.getElementById('batch-actions-menu');
+                    const batchActionsButton = document.getElementById('batch-actions-btn');
+                    
+                    if (batchActionsMenu && batchActionsButton && !batchActionsButton.contains(event.target) && !batchActionsMenu.contains(event.target)) {
+                        batchActionsMenu.classList.add('hidden');
+                    }
+                });
+                
+                // 筛选面板切换
+                if (document.getElementById('filter-btn')) {
+                    document.getElementById('filter-btn').addEventListener('click', function() {
+                        const filterPanel = document.getElementById('filter-panel');
+                        filterPanel.classList.toggle('hidden');
+                    });
+                }
+                
+                // 添加客户模态框
+                if (document.getElementById('add-customer-btn')) {
+                    document.getElementById('add-customer-btn').addEventListener('click', function() {
+                        console.log('添加客户按钮被点击');
+                        const modal = document.getElementById('add-customer-modal');
+                        if (modal) {
+                            console.log('模态框存在，显示模态框');
+                            modal.classList.remove('hidden');
+                        } else {
+                            console.log('模态框不存在');
+                        }
+                    });
+                } else {
+                    console.log('添加客户按钮不存在');
+                }
+                
+                if (document.getElementById('close-modal-btn')) {
+                    document.getElementById('close-modal-btn').addEventListener('click', function() {
+                        const modal = document.getElementById('add-customer-modal');
+                        modal.classList.add('hidden');
+                    });
+                }
+                
+                if (document.getElementById('cancel-add-customer')) {
+                    document.getElementById('cancel-add-customer').addEventListener('click', function() {
+                        const modal = document.getElementById('add-customer-modal');
+                        modal.classList.add('hidden');
+                    });
+                }
+                
+                // 点击模态框外部关闭
+                if (document.getElementById('add-customer-modal')) {
+                    document.getElementById('add-customer-modal').addEventListener('click', function(event) {
+                        if (event.target === this) {
+                            this.classList.add('hidden');
+                        }
+                    });
+                }
+                
+                // 全选/取消全选
+                if (document.getElementById('select-all')) {
+                    document.getElementById('select-all').addEventListener('change', function() {
+                        const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = this.checked;
+                        });
+                    });
+                }
+                
+                // 国家与州联动
+                if (document.getElementById('country-select')) {
+                    document.getElementById('country-select').addEventListener('change', function() {
+                        const country = this.value;
+                        const stateSelect = document.getElementById('state-select');
+                        
+                        // 清空州/省选项
+                        stateSelect.innerHTML = '<option value="">请选择州/省</option>';
+                        
+                        // 根据国家添加对应的州/省选项
+                        if (country === 'US') {
+                            const states = [
+                                { value: 'AL', text: '阿拉巴马州 (AL)' },
+                                { value: 'AK', text: '阿拉斯加州 (AK)' },
+                                { value: 'AZ', text: '亚利桑那州 (AZ)' },
+                                { value: 'CA', text: '加利福尼亚州 (CA)' },
+                                { value: 'CO', text: '科罗拉多州 (CO)' },
+                                { value: 'CT', text: '康涅狄格州 (CT)' },
+                                { value: 'DE', text: '特拉华州 (DE)' },
+                                { value: 'FL', text: '佛罗里达州 (FL)' },
+                                { value: 'GA', text: '佐治亚州 (GA)' },
+                                { value: 'HI', text: '夏威夷州 (HI)' },
+                                { value: 'IL', text: '伊利诺伊州 (IL)' },
+                                { value: 'IN', text: '印第安纳州 (IN)' },
+                                { value: 'IA', text: '爱荷华州 (IA)' },
+                                { value: 'KS', text: '堪萨斯州 (KS)' },
+                                { value: 'KY', text: '肯塔基州 (KY)' },
+                                { value: 'LA', text: '路易斯安那州 (LA)' },
+                                { value: 'ME', text: '缅因州 (ME)' },
+                                { value: 'MD', text: '马里兰州 (MD)' },
+                                { value: 'MA', text: '马萨诸塞州 (MA)' },
+                                { value: 'MI', text: '密歇根州 (MI)' },
+                                { value: 'MN', text: '明尼苏达州 (MN)' },
+                                { value: 'MS', text: '密西西比州 (MS)' },
+                                { value: 'MO', text: '密苏里州 (MO)' },
+                                { value: 'MT', text: '蒙大拿州 (MT)' },
+                                { value: 'NE', text: '内布拉斯加州 (NE)' },
+                                { value: 'NV', text: '内华达州 (NV)' },
+                                { value: 'NH', text: '新罕布什尔州 (NH)' },
+                                { value: 'NJ', text: '新泽西州 (NJ)' },
+                                { value: 'NM', text: '新墨西哥州 (NM)' },
+                                { value: 'NY', text: '纽约州 (NY)' },
+                                { value: 'NC', text: '北卡罗来纳州 (NC)' },
+                                { value: 'ND', text: '北达科他州 (ND)' },
+                                { value: 'OH', text: '俄亥俄州 (OH)' },
+                                { value: 'OK', text: '俄克拉荷马州 (OK)' },
+                                { value: 'OR', text: '俄勒冈州 (OR)' },
+                                { value: 'PA', text: '宾夕法尼亚州 (PA)' },
+                                { value: 'RI', text: '罗得岛州 (RI)' },
+                                { value: 'SC', text: '南卡罗来纳州 (SC)' },
+                                { value: 'SD', text: '南达科他州 (SD)' },
+                                { value: 'TN', text: '田纳西州 (TN)' },
+                                { value: 'TX', text: '德克萨斯州 (TX)' },
+                                { value: 'UT', text: '犹他州 (UT)' },
+                                { value: 'VT', text: '佛蒙特州 (VT)' },
+                                { value: 'VA', text: '弗吉尼亚州 (VA)' },
+                                { value: 'WA', text: '华盛顿州 (WA)' },
+                                { value: 'WV', text: '西弗吉尼亚州 (WV)' },
+                                { value: 'WI', text: '威斯康星州 (WI)' },
+                                { value: 'WY', text: '怀俄明州 (WY)' }
+                            ];
+                            states.forEach(state => {
+                                const option = document.createElement('option');
+                                option.value = state.value;
+                                option.textContent = state.text;
+                                stateSelect.appendChild(option);
+                            });
+                        } else if (country === 'CA') {
+                            const provinces = [
+                                { value: 'AB', text: '阿尔伯塔省 (AB)' },
+                                { value: 'BC', text: '不列颠哥伦比亚省 (BC)' },
+                                { value: 'MB', text: '曼尼托巴省 (MB)' },
+                                { value: 'NB', text: '新不伦瑞克省 (NB)' },
+                                { value: 'NL', text: '纽芬兰与拉布拉多省 (NL)' },
+                                { value: 'NT', text: '西北地区 (NT)' },
+                                { value: 'NS', text: '新斯科舍省 (NS)' },
+                                { value: 'NU', text: '努纳武特地区 (NU)' },
+                                { value: 'ON', text: '安大略省 (ON)' },
+                                { value: 'PE', text: '爱德华王子岛省 (PE)' },
+                                { value: 'QC', text: '魁北克省 (QC)' },
+                                { value: 'SK', text: '萨斯喀彻温省 (SK)' },
+                                { value: 'YT', text: '育空地区 (YT)' }
+                            ];
+                            provinces.forEach(province => {
+                                const option = document.createElement('option');
+                                option.value = province.value;
+                                option.textContent = province.text;
+                                stateSelect.appendChild(option);
+                            });
+                        } else if (country === 'UK') {
+                            const regions = [
+                                { value: 'ENG', text: '英格兰' },
+                                { value: 'SCO', text: '苏格兰' },
+                                { value: 'WAL', text: '威尔士' },
+                                { value: 'NIR', text: '北爱尔兰' }
+                            ];
+                            regions.forEach(region => {
+                                const option = document.createElement('option');
+                                option.value = region.value;
+                                option.textContent = region.text;
+                                stateSelect.appendChild(option);
+                            });
+                        } else if (country === 'AU') {
+                            const states = [
+                                { value: 'NSW', text: '新南威尔士州 (NSW)' },
+                                { value: 'VIC', text: '维多利亚州 (VIC)' },
+                                { value: 'QLD', text: '昆士兰州 (QLD)' },
+                                { value: 'SA', text: '南澳大利亚州 (SA)' },
+                                { value: 'WA', text: '西澳大利亚州 (WA)' },
+                                { value: 'TAS', text: '塔斯马尼亚州 (TAS)' },
+                                { value: 'NT', text: '北领地 (NT)' },
+                                { value: 'ACT', text: '首都领地 (ACT)' }
+                            ];
+                            states.forEach(state => {
+                                const option = document.createElement('option');
+                                option.value = state.value;
+                                option.textContent = state.text;
+                                stateSelect.appendChild(option);
+                            });
+                        }
+                    });
+                }
+                
+                console.log('所有事件监听器绑定成功');
+                
+                // 添加客户表单提交
+                if (document.getElementById('add-customer-form')) {
+                    document.getElementById('add-customer-form').addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        
+                        // 获取表单数据
+                        const formData = new FormData(this);
+                        const customerData = {
+                            businessName: formData.get('businessName'),
+                            contactPerson: formData.get('contactPerson'),
+                            phone: formData.get('phone'),
+                            wechatWhatsapp: formData.get('wechatWhatsapp'),
+                            email: formData.get('email'),
+                            industryType: formData.get('industryType'),
+                            country: formData.get('country'),
+                            state: formData.get('state'),
+                            cityLabel: formData.get('cityLabel'),
+                            zipCode: formData.get('zipCode'),
+                            businessAddress: formData.get('businessAddress'),
+                            customerSource: formData.get('customerSource'),
+                            salesPersonLabel: formData.get('salesPersonLabel'),
+                            operationsPersonLabel: formData.get('operationsPersonLabel'),
+                            designPersonLabel: formData.get('designPersonLabel'),
+                            customerLevelLabel: formData.get('customerLevelLabel'),
+                            customerStatus: formData.get('customerStatus'),
+                            hasOrderingSystem: formData.get('hasOrderingSystem'),
+                            currentPlatform: formData.get('currentPlatform'),
+                            monthlyOrders: formData.get('monthlyOrders'),
+                            website: formData.get('website'),
+                            googleBusiness: formData.get('googleBusiness'),
+                            facebook: formData.get('facebook'),
+                            instagram: formData.get('instagram'),
+                            yelp: formData.get('yelp'),
+                            tiktok: formData.get('tiktok'),
+                            xiaohongshu: formData.get('xiaohongshu'),
+                            youtube: formData.get('youtube'),
+                            notes: formData.get('notes')
+                        };
+                        
+                        // 保存客户数据
+                        const success = addCustomer(customerData);
+                        if (success) {
+                            // 显示成功消息
+                            alert('客户添加成功！');
+                            
+                            // 关闭模态框
+                            document.getElementById('add-customer-modal').classList.add('hidden');
+                            
+                            // 重置表单
+                            this.reset();
+                            
+                            // 重新加载客户列表
+                            loadCustomers();
+                        }
+                    });
+                }
+                
             } catch (e) {
                 console.error('登录信息解析错误', e);
                 window.location.href = 'index.html';
@@ -998,10 +1363,19 @@
         
         // 加载客户数据
         function loadCustomers() {
+            // 从本地存储获取客户数据
+            customers = JSON.parse(localStorage.getItem('customers')) || [];
+            
+            // 如果没有客户数据，使用模拟数据
+            if (customers.length === 0) {
+                customers = mockCustomers;
+                localStorage.setItem('customers', JSON.stringify(customers));
+            }
+            
             const tableBody = document.getElementById('customer-table-body');
             tableBody.innerHTML = '';
             
-            mockCustomers.forEach(customer => {
+            customers.forEach(customer => {
                 const row = document.createElement('tr');
                 
                 // 行业类型映射
@@ -1034,7 +1408,7 @@
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center">
-                            <input type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                            <input type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" data-id="${customer.id}">
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -1065,9 +1439,9 @@
                         ${customer.createdAt}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="#" class="text-primary hover:text-secondary mr-3">查看</a>
-                        <a href="#" class="text-gray-600 hover:text-gray-900 mr-3">编辑</a>
-                        <a href="#" class="text-red-600 hover:text-red-900">删除</a>
+                        <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewCustomer(${customer.id})">查看</a>
+                        <a href="#" class="text-gray-600 hover:text-gray-900 mr-3" onclick="editCustomer(${customer.id})">编辑</a>
+                        <a href="#" class="text-red-600 hover:text-red-900" onclick="deleteCustomer(${customer.id})">删除</a>
                     </td>
                 `;
                 
@@ -1075,96 +1449,124 @@
             });
         }
         
-        // 侧边栏切换
-        document.getElementById('sidebar-toggle').addEventListener('click', function() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('hidden');
-        });
+
         
-        // 用户菜单切换
-        document.getElementById('user-menu-button').addEventListener('click', function() {
-            const userMenu = document.getElementById('user-menu');
-            userMenu.classList.toggle('hidden');
-        });
-        
-        // 点击其他地方关闭用户菜单
-        document.addEventListener('click', function(event) {
-            const userMenu = document.getElementById('user-menu');
-            const userMenuButton = document.getElementById('user-menu-button');
-            
-            if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
-                userMenu.classList.add('hidden');
+        // 添加客户
+        function addCustomer(customerData) {
+            try {
+                // 生成客户编号
+                const customerNumber = 'C' + new Date().getFullYear() + String(Date.now()).slice(-6);
+                
+                // 创建新客户对象
+                const newCustomer = {
+                    id: customers.length > 0 ? Math.max(...customers.map(c => parseInt(c.id))) + 1 : 1,
+                    customerNumber: customerNumber,
+                    businessName: customerData.businessName,
+                    contactPerson: customerData.contactPerson,
+                    phone: customerData.phone,
+                    wechatWhatsapp: customerData.wechatWhatsapp,
+                    email: customerData.email,
+                    industry: customerData.industryType,
+                    country: customerData.country,
+                    state: customerData.state,
+                    city: customerData.cityLabel,
+                    zipCode: customerData.zipCode,
+                    businessAddress: customerData.businessAddress,
+                    customerSource: customerData.customerSource,
+                    salesPerson: customerData.salesPersonLabel,
+                    operationsPerson: customerData.operationsPersonLabel,
+                    designPerson: customerData.designPersonLabel,
+                    level: customerData.customerLevelLabel,
+                    status: customerData.customerStatus || 'new', // 使用表单中的状态或默认新客户
+                    hasOrderingSystem: customerData.hasOrderingSystem === 'true',
+                    currentPlatform: customerData.currentPlatform,
+                    monthlyOrders: customerData.monthlyOrders,
+                    website: customerData.website,
+                    googleBusiness: customerData.googleBusiness,
+                    facebook: customerData.facebook,
+                    instagram: customerData.instagram,
+                    yelp: customerData.yelp,
+                    tiktok: customerData.tiktok,
+                    xiaohongshu: customerData.xiaohongshu,
+                    youtube: customerData.youtube,
+                    notes: customerData.notes,
+                    createdAt: new Date().toISOString().split('T')[0]
+                };
+                
+                // 添加到客户列表
+                customers.push(newCustomer);
+                
+                // 保存到本地存储
+                localStorage.setItem('customers', JSON.stringify(customers));
+                
+                return true;
+            } catch (error) {
+                console.error('Error adding customer:', error);
+                alert('添加客户失败: ' + error.message);
+                return false;
             }
-        });
+        }
         
-        // 批量操作菜单切换
-        document.getElementById('batch-actions-btn').addEventListener('click', function() {
-            const batchActionsMenu = document.getElementById('batch-actions-menu');
-            batchActionsMenu.classList.toggle('hidden');
-        });
-        
-        // 点击其他地方关闭批量操作菜单
-        document.addEventListener('click', function(event) {
-            const batchActionsMenu = document.getElementById('batch-actions-menu');
-            const batchActionsButton = document.getElementById('batch-actions-btn');
-            
-            if (!batchActionsButton.contains(event.target) && !batchActionsMenu.contains(event.target)) {
-                batchActionsMenu.classList.add('hidden');
+        // 查看客户
+        function viewCustomer(id) {
+            try {
+                const customer = customers.find(c => c.id === id);
+                
+                if (!customer) {
+                    alert('客户不存在');
+                    return;
+                }
+                
+                // 这里可以实现查看详情的逻辑，比如打开详情模态框
+                alert('查看客户: ' + customer.businessName);
+            } catch (error) {
+                console.error('Error viewing customer:', error);
+                alert('查看客户失败: ' + error.message);
             }
-        });
+        }
         
-        // 筛选面板切换
-        document.getElementById('filter-btn').addEventListener('click', function() {
-            const filterPanel = document.getElementById('filter-panel');
-            filterPanel.classList.toggle('hidden');
-        });
-        
-        // 添加客户模态框
-        document.getElementById('add-customer-btn').addEventListener('click', function() {
-            const modal = document.getElementById('add-customer-modal');
-            modal.classList.remove('hidden');
-        });
-        
-        document.getElementById('close-modal-btn').addEventListener('click', function() {
-            const modal = document.getElementById('add-customer-modal');
-            modal.classList.add('hidden');
-        });
-        
-        document.getElementById('cancel-add-customer').addEventListener('click', function() {
-            const modal = document.getElementById('add-customer-modal');
-            modal.classList.add('hidden');
-        });
-        
-        // 点击模态框外部关闭
-        document.getElementById('add-customer-modal').addEventListener('click', function(event) {
-            if (event.target === this) {
-                this.classList.add('hidden');
+        // 编辑客户
+        function editCustomer(id) {
+            try {
+                const customer = customers.find(c => c.id === id);
+                
+                if (!customer) {
+                    alert('客户不存在');
+                    return;
+                }
+                
+                // 这里可以实现编辑客户的逻辑，比如打开编辑模态框
+                alert('编辑客户: ' + customer.businessName);
+            } catch (error) {
+                console.error('Error editing customer:', error);
+                alert('编辑客户失败: ' + error.message);
             }
-        });
+        }
         
-        // 添加客户表单提交
-        document.getElementById('add-customer-form').addEventListener('submit', function(event) {
-            event.preventDefault();
+        // 删除客户
+        function deleteCustomer(id) {
+            if (!confirm('确定要删除这个客户吗？')) {
+                return;
+            }
             
-            // 这里可以添加表单验证和数据处理逻辑
-            
-            // 显示成功消息
-            alert('客户添加成功！');
-            
-            // 关闭模态框
-            document.getElementById('add-customer-modal').classList.add('hidden');
-            
-            // 重置表单
-            this.reset();
-        });
+            try {
+                // 从客户列表中删除
+                customers = customers.filter(c => c.id !== id);
+                
+                // 保存到本地存储
+                localStorage.setItem('customers', JSON.stringify(customers));
+                
+                alert('客户删除成功！');
+                loadCustomers();
+            } catch (error) {
+                console.error('Error deleting customer:', error);
+                alert('删除客户失败: ' + error.message);
+            }
+        }
         
-        // 全选/取消全选
-        document.getElementById('select-all').addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
-        });
+
+        
+
         
         // 退出登录
         document.getElementById('logout-btn').addEventListener('click', function(e) {

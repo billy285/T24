@@ -8,7 +8,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // Supabase 配置
+        const supabaseUrl = 'YOUR_SUPABASE_URL';
+        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
         tailwind.config = {
             theme: {
                 extend: {
@@ -442,27 +449,27 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">客户名称 <span class="text-red-500">*</span></label>
-                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                            <input type="text" name="customerName" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">联系人 <span class="text-red-500">*</span></label>
-                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                            <input type="text" name="contactPerson" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">联系电话 <span class="text-red-500">*</span></label>
-                            <input type="tel" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                            <input type="tel" name="phone" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
-                            <input type="email" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <input type="email" name="email" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">客户来源</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <select name="source" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <option value="">请选择来源</option>
                                 <option value="call">电话销售</option>
                                 <option value="referral">转介绍</option>
@@ -475,7 +482,7 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">负责人</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <select name="salesPerson" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <option value="">请选择负责人</option>
                                 <option value="1">张三</option>
                                 <option value="2">李四</option>
@@ -485,7 +492,7 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">跟进阶段</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <select name="stage" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <option value="new">新线索</option>
                                 <option value="contact">已联系</option>
                                 <option value="communicate">沟通中</option>
@@ -500,17 +507,17 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">成交概率 (%)</label>
-                            <input type="number" min="0" max="100" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <input type="number" name="probability" min="0" max="100" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">下次跟进时间</label>
-                            <input type="datetime-local" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <input type="datetime-local" name="nextFollowup" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">跟进方式</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <select name="followupMethod" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <option value="phone">电话</option>
                                 <option value="wechat">微信</option>
                                 <option value="sms">短信</option>
@@ -520,17 +527,17 @@
                         
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">客户需求</label>
-                            <textarea rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                            <textarea name="needs" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
                         </div>
                         
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">客户痛点</label>
-                            <textarea rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                            <textarea name="painPoints" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
                         </div>
                         
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">备注</label>
-                            <textarea rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                            <textarea name="notes" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
                         </div>
                     </div>
                     
@@ -573,127 +580,22 @@
             }
         });
         
-        // 模拟销售线索数据
-        const mockSalesLeads = [
-            {
-                id: '1',
-                customerName: '金龙餐厅',
-                contactPerson: '张老板',
-                phone: '+1 (212) 555-1234',
-                salesPerson: '张三',
-                stage: 'new',
-                probability: 30,
-                lastFollowup: '2026-03-01',
-                nextFollowup: '2026-03-08'
-            },
-            {
-                id: '2',
-                customerName: '美丽人生美甲',
-                contactPerson: '王女士',
-                phone: '+1 (310) 555-9012',
-                salesPerson: '李四',
-                stage: 'contact',
-                probability: 40,
-                lastFollowup: '2026-03-02',
-                nextFollowup: '2026-03-09'
-            },
-            {
-                id: '3',
-                customerName: '东方按摩SPA',
-                contactPerson: '赵总',
-                phone: '+1 (415) 555-3456',
-                salesPerson: '张三',
-                stage: 'communicate',
-                probability: 60,
-                lastFollowup: '2026-03-03',
-                nextFollowup: '2026-03-10'
-            },
-            {
-                id: '4',
-                customerName: '时尚美容沙龙',
-                contactPerson: '刘小姐',
-                phone: '+1 (312) 555-7890',
-                salesPerson: '王五',
-                stage: 'quote',
-                probability: 70,
-                lastFollowup: '2026-03-04',
-                nextFollowup: '2026-03-11'
-            },
-            {
-                id: '5',
-                customerName: '亚洲超市',
-                contactPerson: '陈老板',
-                phone: '+1 (718) 555-2345',
-                salesPerson: '李四',
-                stage: 'consider',
-                probability: 50,
-                lastFollowup: '2026-03-05',
-                nextFollowup: '2026-03-12'
-            },
-            {
-                id: '6',
-                customerName: '金色年华KTV',
-                contactPerson: '黄总',
-                phone: '+1 (626) 555-1234',
-                salesPerson: '张三',
-                stage: 'pending',
-                probability: 80,
-                lastFollowup: '2026-03-06',
-                nextFollowup: '2026-03-13'
-            },
-            {
-                id: '7',
-                customerName: '健康生活瑜伽馆',
-                contactPerson: '周教练',
-                phone: '+1 (408) 555-5678',
-                salesPerson: '王五',
-                stage: 'closed',
-                probability: 100,
-                lastFollowup: '2026-03-07',
-                nextFollowup: null
-            },
-            {
-                id: '8',
-                customerName: '米兰西餐厅',
-                contactPerson: '吴老板',
-                phone: '+1 (202) 555-9012',
-                salesPerson: '李四',
-                stage: 'lost',
-                probability: 0,
-                lastFollowup: '2026-03-01',
-                nextFollowup: null
-            },
-            {
-                id: '9',
-                customerName: '北京烤鸭',
-                contactPerson: '郑总',
-                phone: '+1 (703) 555-3456',
-                salesPerson: '张三',
-                stage: 'followup',
-                probability: 20,
-                lastFollowup: '2026-02-28',
-                nextFollowup: '2026-04-01'
-            },
-            {
-                id: '10',
-                customerName: '上海小笼包',
-                contactPerson: '孙老板',
-                phone: '+1 (510) 555-7890',
-                salesPerson: '王五',
-                stage: 'new',
-                probability: 10,
-                lastFollowup: null,
-                nextFollowup: '2026-03-15'
-            }
-        ];
-        
         // 加载销售线索数据
-        function loadSalesLeads() {
+        async function loadSalesLeads() {
             const tableBody = document.getElementById('leads-table-body');
             tableBody.innerHTML = '';
             
-            mockSalesLeads.forEach(lead => {
-                const row = document.createElement('tr');
+            try {
+                // 从 Supabase 获取销售线索数据
+                const { data, error } = await supabase
+                    .from('sales_leads')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('加载销售线索失败:', error);
+                    return;
+                }
                 
                 // 阶段映射
                 const stageMap = {
@@ -708,48 +610,55 @@
                     'followup': '后续再跟进'
                 };
                 
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <input type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
-                        </div>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="text-sm text-gray-900 font-medium">${lead.customerName}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${lead.contactPerson}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${lead.phone}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${lead.salesPerson}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="status-badge stage-${lead.stage}">${stageMap[lead.stage] || lead.stage}</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${lead.probability}%</div>
-                        <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
-                            <div class="bg-primary h-1.5 rounded-full" style="width: ${lead.probability}%"></div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${lead.lastFollowup || '-'}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${lead.nextFollowup ? `<span class="text-${isDateApproaching(lead.nextFollowup) ? 'red' : 'gray'}-500">${lead.nextFollowup}</span>` : '-'}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="#" class="text-primary hover:text-secondary mr-3">查看</a>
-                        <a href="#" class="text-gray-600 hover:text-gray-900 mr-3">编辑</a>
-                        <a href="#" class="text-green-600 hover:text-green-900">跟进</a>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
-            });
+                data.forEach(lead => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <input type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900 font-medium">${lead.customer_name}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${lead.contact_person}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${lead.phone}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${lead.sales_person}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-badge stage-${lead.stage}">${stageMap[lead.stage] || lead.stage}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${lead.probability}%</div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                                <div class="bg-primary h-1.5 rounded-full" style="width: ${lead.probability}%"></div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${lead.last_followup ? new Date(lead.last_followup).toISOString().split('T')[0] : '-'}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${lead.next_followup ? `<span class="text-${isDateApproaching(lead.next_followup) ? 'red' : 'gray'}-500">${new Date(lead.next_followup).toISOString().split('T')[0]}</span>` : '-'}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewLead('${lead.id}')">查看</a>
+                            <a href="#" class="text-gray-600 hover:text-gray-900 mr-3" onclick="editLead('${lead.id}')">编辑</a>
+                            <a href="#" class="text-green-600 hover:text-green-900" onclick="followupLead('${lead.id}')">跟进</a>
+                            <a href="#" class="text-red-600 hover:text-red-900 ml-3" onclick="deleteLead('${lead.id}')">删除</a>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('加载销售线索时出错:', error);
+            }
         }
         
         // 检查日期是否临近（7天内）
@@ -759,6 +668,137 @@
             const diffTime = targetDate - today;
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             return diffDays >= 0 && diffDays <= 7;
+        }
+        
+        // 添加销售线索
+        async function addLead(leadData) {
+            try {
+                // 负责人映射
+                const salesPersonMap = {
+                    '1': '张三',
+                    '2': '李四',
+                    '3': '王五'
+                };
+                
+                const { data, error } = await supabase
+                    .from('sales_leads')
+                    .insert({
+                        customer_name: leadData.customerName,
+                        contact_person: leadData.contactPerson,
+                        phone: leadData.phone,
+                        email: leadData.email || null,
+                        source: leadData.source || null,
+                        sales_person: salesPersonMap[leadData.salesPerson] || '未分配',
+                        stage: leadData.stage || 'new',
+                        probability: parseInt(leadData.probability) || 10,
+                        next_followup: leadData.nextFollowup ? new Date(leadData.nextFollowup).toISOString() : null,
+                        followup_method: leadData.followupMethod || null,
+                        needs: leadData.needs || null,
+                        pain_points: leadData.painPoints || null,
+                        notes: leadData.notes || null
+                    })
+                    .select();
+                
+                if (error) {
+                    throw error;
+                }
+                
+                return data[0];
+            } catch (error) {
+                console.error('添加销售线索失败:', error);
+                throw error;
+            }
+        }
+        
+        // 查看销售线索
+        async function viewLead(id) {
+            try {
+                const { data, error } = await supabase
+                    .from('sales_leads')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+                
+                if (error) {
+                    throw error;
+                }
+                
+                // 显示详情模态框
+                alert('查看线索详情: ' + data.customer_name);
+                console.log('线索详情:', data);
+            } catch (error) {
+                console.error('查看销售线索失败:', error);
+            }
+        }
+        
+        // 编辑销售线索
+        async function editLead(id) {
+            try {
+                const { data, error } = await supabase
+                    .from('sales_leads')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+                
+                if (error) {
+                    throw error;
+                }
+                
+                // 显示编辑模态框
+                alert('编辑线索: ' + data.customer_name);
+                console.log('编辑线索:', data);
+            } catch (error) {
+                console.error('编辑销售线索失败:', error);
+            }
+        }
+        
+        // 跟进销售线索
+        async function followupLead(id) {
+            try {
+                // 记录跟进信息
+                const { data, error } = await supabase
+                    .from('sales_leads')
+                    .update({
+                        last_followup: new Date().toISOString(),
+                        stage: 'communicate'
+                    })
+                    .eq('id', id)
+                    .select();
+                
+                if (error) {
+                    throw error;
+                }
+                
+                // 重新加载数据
+                loadSalesLeads();
+                alert('跟进成功！');
+            } catch (error) {
+                console.error('跟进销售线索失败:', error);
+            }
+        }
+        
+        // 删除销售线索
+        async function deleteLead(id) {
+            if (!confirm('确定要删除这条线索吗？')) {
+                return;
+            }
+            
+            try {
+                const { error } = await supabase
+                    .from('sales_leads')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) {
+                    throw error;
+                }
+                
+                // 重新加载数据
+                loadSalesLeads();
+                alert('删除成功！');
+            } catch (error) {
+                console.error('删除销售线索失败:', error);
+            }
         }
         
         // 侧边栏切换
@@ -829,46 +869,46 @@
         });
         
         // 添加线索表单提交
-        document.getElementById('add-lead-form').addEventListener('submit', function(event) {
+        document.getElementById('add-lead-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             
             // 获取表单数据
             const formData = new FormData(this);
-            const customerName = this.querySelector('input[required]:nth-child(2)').value;
-            const contactPerson = this.querySelector('input[required]:nth-child(4)').value;
-            const phone = this.querySelector('input[required]:nth-child(6)').value;
-            const salesPerson = this.querySelector('select:nth-child(14)').value;
-            const stage = this.querySelector('select:nth-child(16)').value;
-            const probability = this.querySelector('input[type="number"]').value;
-            const nextFollowup = this.querySelector('input[type="datetime-local"]').value;
-            
-            // 创建新线索对象
-            const newLead = {
-                id: (mockSalesLeads.length + 1).toString(),
-                customerName: customerName,
-                contactPerson: contactPerson,
-                phone: phone,
-                salesPerson: salesPerson === '1' ? '张三' : salesPerson === '2' ? '李四' : salesPerson === '3' ? '王五' : '未分配',
-                stage: stage || 'new',
-                probability: parseInt(probability) || 10,
-                lastFollowup: null,
-                nextFollowup: nextFollowup ? nextFollowup.split('T')[0] : null
+            const leadData = {
+                customerName: formData.get('customerName'),
+                contactPerson: formData.get('contactPerson'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                source: formData.get('source'),
+                salesPerson: formData.get('salesPerson'),
+                stage: formData.get('stage'),
+                probability: formData.get('probability'),
+                nextFollowup: formData.get('nextFollowup'),
+                followupMethod: formData.get('followupMethod'),
+                needs: formData.get('needs'),
+                painPoints: formData.get('painPoints'),
+                notes: formData.get('notes')
             };
             
-            // 添加到模拟数据中
-            mockSalesLeads.unshift(newLead);
-            
-            // 重新加载线索列表
-            loadSalesLeads();
-            
-            // 显示成功消息
-            alert('线索添加成功！');
-            
-            // 关闭模态框
-            document.getElementById('add-lead-modal').classList.add('hidden');
-            
-            // 重置表单
-            this.reset();
+            try {
+                // 添加线索
+                await addLead(leadData);
+                
+                // 重新加载线索列表
+                loadSalesLeads();
+                
+                // 显示成功消息
+                alert('线索添加成功！');
+                
+                // 关闭模态框
+                document.getElementById('add-lead-modal').classList.add('hidden');
+                
+                // 重置表单
+                this.reset();
+            } catch (error) {
+                console.error('添加线索失败:', error);
+                alert('添加线索失败，请重试。');
+            }
         });
         
         // 全选/取消全选

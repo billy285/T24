@@ -88,13 +88,15 @@
                         <i class="fa fa-id-card text-gray-400"></i>
                     </div>
                     <select id="role" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                        <option value="" data-lang="selectRole">请选择角色</option>
-                        <option value="admin" data-lang="admin">管理员</option>
-                        <option value="sales" data-lang="sales">销售</option>
-                        <option value="operation" data-lang="operation">运营</option>
-                        <option value="design" data-lang="design">设计</option>
-                        <option value="finance" data-lang="finance">财务</option>
-                    </select>
+                            <option value="" data-lang="selectRole">请选择角色</option>
+                            <option value="super_admin" data-lang="superAdmin">超级管理员</option>
+                            <option value="admin" data-lang="admin">管理员</option>
+                            <option value="sales" data-lang="sales">销售</option>
+                            <option value="operations" data-lang="operations">运营</option>
+                            <option value="designer" data-lang="designer">设计</option>
+                            <option value="finance" data-lang="finance">财务</option>
+                            <option value="hr" data-lang="hr">人事</option>
+                        </select>
                 </div>
             </div>
             
@@ -112,11 +114,13 @@
             
             <div class="mt-6 text-center text-sm text-gray-600">
                 <p data-lang="demoAccounts">演示账号：</p>
-                <p class="mt-1" data-lang="adminAccount">管理员: admin / password</p>
+                <p class="mt-1" data-lang="superAdminAccount">超级管理员: super_admin / password</p>
+                <p data-lang="adminAccount">管理员: admin / password</p>
                 <p data-lang="salesAccount">销售: sales / password</p>
-                <p data-lang="operationAccount">运营: operation / password</p>
-                <p data-lang="designAccount">设计: design / password</p>
+                <p data-lang="operationsAccount">运营: operations / password</p>
+                <p data-lang="designerAccount">设计: designer / password</p>
                 <p data-lang="financeAccount">财务: finance / password</p>
+                <p data-lang="hrAccount">人事: hr / password</p>
             </div>
         </div>
         
@@ -136,20 +140,24 @@
                 password: '密码',
                 role: '角色',
                 selectRole: '请选择角色',
+                superAdmin: '超级管理员',
                 admin: '管理员',
                 sales: '销售',
-                operation: '运营',
-                design: '设计',
+                operations: '运营',
+                designer: '设计',
                 finance: '财务',
+                hr: '人事',
                 remember: '记住我',
                 forgotPassword: '忘记密码?',
                 login: '登录系统',
                 demoAccounts: '演示账号：',
+                superAdminAccount: '超级管理员: super_admin / password',
                 adminAccount: '管理员: admin / password',
                 salesAccount: '销售: sales / password',
-                operationAccount: '运营: operation / password',
-                designAccount: '设计: design / password',
+                operationsAccount: '运营: operations / password',
+                designerAccount: '设计: designer / password',
                 financeAccount: '财务: finance / password',
+                hrAccount: '人事: hr / password',
                 copyright: '© 2026 客户管理系统 - 专为美国中餐馆和实体企业设计',
                 placeholder: {
                     username: '请输入用户名',
@@ -167,20 +175,24 @@
                 password: 'Password',
                 role: 'Role',
                 selectRole: 'Please select role',
+                superAdmin: 'Super Admin',
                 admin: 'Admin',
                 sales: 'Sales',
-                operation: 'Operation',
-                design: 'Design',
+                operations: 'Operations',
+                designer: 'Designer',
                 finance: 'Finance',
+                hr: 'HR',
                 remember: 'Remember me',
                 forgotPassword: 'Forgot password?',
                 login: 'Login',
                 demoAccounts: 'Demo Accounts:',
+                superAdminAccount: 'Super Admin: super_admin / password',
                 adminAccount: 'Admin: admin / password',
                 salesAccount: 'Sales: sales / password',
-                operationAccount: 'Operation: operation / password',
-                designAccount: 'Design: design / password',
+                operationsAccount: 'Operations: operations / password',
+                designerAccount: 'Designer: designer / password',
                 financeAccount: 'Finance: finance / password',
+                hrAccount: 'HR: hr / password',
                 copyright: '© 2026 Customer Management System - Designed for Chinese restaurants and physical businesses in the US',
                 placeholder: {
                     username: 'Please enter username',
@@ -244,11 +256,13 @@
 
         // 模拟用户数据
         const users = [
+            { username: 'super_admin', password: 'password', role: 'super_admin', name: '超级管理员' },
             { username: 'admin', password: 'password', role: 'admin', name: '管理员' },
             { username: 'sales', password: 'password', role: 'sales', name: '销售' },
-            { username: 'operation', password: 'password', role: 'operation', name: '运营' },
-            { username: 'design', password: 'password', role: 'design', name: '设计' },
-            { username: 'finance', password: 'password', role: 'finance', name: '财务' }
+            { username: 'operations', password: 'password', role: 'operations', name: '运营' },
+            { username: 'designer', password: 'password', role: 'designer', name: '设计' },
+            { username: 'finance', password: 'password', role: 'finance', name: '财务' },
+            { username: 'hr', password: 'password', role: 'hr', name: '人事' }
         ];
 
         // 登录功能
