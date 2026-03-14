@@ -207,6 +207,9 @@
                             <button id="add-customer-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
                                 <i class="fa fa-plus mr-2"></i> <span data-lang="addCustomer">添加客户</span>
                             </button>
+                            <button id="debug-btn" class="ml-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                <i class="fa fa-bug mr-2"></i> 调试
+                            </button>
                             <div class="ml-3 relative">
                                 <button id="batch-actions-btn" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
                                     <i class="fa fa-cog mr-2"></i> <span data-lang="batchActions">批量操作</span>
@@ -691,6 +694,12 @@
                     <button type="button" id="edit-customer-btn" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
                         编辑
                     </button>
+                    <button type="button" id="save-customer-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 hidden">
+                        保存
+                    </button>
+                    <button type="button" id="cancel-edit-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md transition-all-300 hidden">
+                        取消
+                    </button>
                     <button type="button" id="delete-customer-btn" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
                         删除
                     </button>
@@ -1036,6 +1045,16 @@
                     document.getElementById('filter-btn').addEventListener('click', function() {
                         const filterPanel = document.getElementById('filter-panel');
                         filterPanel.classList.toggle('hidden');
+                    });
+                }
+                
+                // 调试按钮
+                if (document.getElementById('debug-btn')) {
+                    document.getElementById('debug-btn').addEventListener('click', function() {
+                        console.log('调试信息:');
+                        console.log('客户列表:', customers);
+                        console.log('客户数量:', customers.length);
+                        alert('调试信息已输出到控制台');
                     });
                 }
                 
@@ -1402,19 +1421,27 @@
         
         // 加载客户数据
         function loadCustomers() {
+            console.log('开始加载客户数据');
             // 从本地存储获取客户数据
             customers = JSON.parse(localStorage.getItem('customers')) || [];
             
+            console.log('从本地存储获取的客户数据:', customers);
+            
             // 如果没有客户数据，使用模拟数据
             if (customers.length === 0) {
+                console.log('本地存储中没有客户数据，使用模拟数据');
                 customers = mockCustomers;
                 localStorage.setItem('customers', JSON.stringify(customers));
+                console.log('已保存模拟数据到本地存储');
             }
+            
+            console.log('最终客户数据:', customers);
             
             const tableBody = document.getElementById('customer-table-body');
             tableBody.innerHTML = '';
             
-            customers.forEach(customer => {
+            customers.forEach((customer, index) => {
+                console.log('处理客户:', customer, '索引:', index);
                 const row = document.createElement('tr');
                 
                 // 行业类型映射
@@ -1455,7 +1482,7 @@
                     </td>
                     <td class="px-6 py-4">
                         <div class="text-sm text-gray-900 font-medium">
-                            <a href="#" class="text-primary hover:text-secondary" onclick="viewCustomer(${customer.id})">${customer.businessName}</a>
+                            <a href="#" class="text-primary hover:text-secondary" onclick="viewCustomer(${index})">${customer.businessName}</a>
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -1480,14 +1507,15 @@
                         ${customer.createdAt}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewCustomer(${customer.id})">查看</a>
-                        <a href="#" class="text-gray-600 hover:text-gray-900 mr-3" onclick="editCustomer(${customer.id})">编辑</a>
-                        <a href="#" class="text-red-600 hover:text-red-900" onclick="deleteCustomer(${customer.id})">删除</a>
+                        <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewCustomer(${index})">查看</a>
+                        <a href="#" class="text-gray-600 hover:text-gray-900 mr-3" onclick="editCustomer(${index})">编辑</a>
+                        <a href="#" class="text-red-600 hover:text-red-900" onclick="deleteCustomer(${index})">删除</a>
                     </td>
                 `;
                 
                 tableBody.appendChild(row);
             });
+            console.log('客户数据加载完成');
         }
         
 
@@ -1549,35 +1577,505 @@
         }
         
         // 查看客户
-        function viewCustomer(id) {
+        function viewCustomer(index) {
             try {
-                const customer = customers.find(c => c.id === id);
+                console.log('查看客户，索引:', index, '类型:', typeof index);
+                console.log('客户列表长度:', customers.length);
+                
+                // 使用索引查找客户
+                const customer = customers[index];
                 
                 if (!customer) {
+                    console.log('未找到客户，索引:', index);
+                    console.log('客户列表:', customers);
                     alert('客户不存在');
                     return;
                 }
                 
-                // 这里可以实现查看详情的逻辑，比如打开详情模态框
-                alert('查看客户: ' + customer.businessName);
+                console.log('找到客户:', customer);
+                
+                // 填充客户详情
+                const detailContent = document.getElementById('customer-detail-content');
+                
+                // 行业类型映射
+                const industryMap = {
+                    'restaurant': '餐厅',
+                    'nail': '美甲',
+                    'massage': '按摩',
+                    'beauty': '美容',
+                    'supermarket': '超市',
+                    'other': '其他'
+                };
+                
+                // 等级映射
+                const levelMap = {
+                    'high': '高意向',
+                    'normal': '普通',
+                    'low': '低意向',
+                    'vip': 'VIP'
+                };
+                
+                // 状态映射
+                const statusMap = {
+                    'unclosed': '未成交',
+                    'following': '跟进中',
+                    'closed': '已成交',
+                    'paused': '暂停',
+                    'lost': '流失',
+                    'new': '新客户',
+                    'contacted': '已联系',
+                    'quoted': '已报价',
+                    'considering': '考虑中',
+                    'pending': '待成交',
+                    'serving': '服务中'
+                };
+                
+                // 保存原始客户数据，用于取消编辑
+                window.currentCustomer = { ...customer };
+                window.currentCustomerIndex = index;
+                
+                // 填充客户详情
+                detailContent.innerHTML = `
+                    <div>
+                        <h4 class="text-lg font-medium text-gray-900 mb-4">${customer.businessName}</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-sm text-gray-500">客户编号:</span>
+                                <span class="text-sm font-medium">${customer.customerNumber}</span>
+                            </div>
+                            <div class="flex justify-between" id="contactPerson-container">
+                                <span class="text-sm text-gray-500">联系人:</span>
+                                <span class="text-sm font-medium">${customer.contactPerson}</span>
+                            </div>
+                            <div class="flex justify-between" id="phone-container">
+                                <span class="text-sm text-gray-500">电话:</span>
+                                <span class="text-sm font-medium">${customer.phone}</span>
+                            </div>
+                            <div class="flex justify-between" id="wechatWhatsapp-container">
+                                <span class="text-sm text-gray-500">微信/WhatsApp:</span>
+                                <span class="text-sm font-medium">${customer.wechatWhatsapp || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="email-container">
+                                <span class="text-sm text-gray-500">邮箱:</span>
+                                <span class="text-sm font-medium">${customer.email || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="industry-container">
+                                <span class="text-sm text-gray-500">行业:</span>
+                                <span class="text-sm font-medium">${industryMap[customer.industry] || customer.industry || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="country-container">
+                                <span class="text-sm text-gray-500">国家:</span>
+                                <span class="text-sm font-medium">${customer.country || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="state-container">
+                                <span class="text-sm text-gray-500">州/省:</span>
+                                <span class="text-sm font-medium">${customer.state || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="city-container">
+                                <span class="text-sm text-gray-500">城市:</span>
+                                <span class="text-sm font-medium">${customer.city || customer.cityLabel || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="zipCode-container">
+                                <span class="text-sm text-gray-500">邮编:</span>
+                                <span class="text-sm font-medium">${customer.zipCode || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="businessAddress-container">
+                                <span class="text-sm text-gray-500">详细地址:</span>
+                                <span class="text-sm font-medium">${customer.businessAddress || '-'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-medium text-gray-900 mb-4">其他信息</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between" id="customerSource-container">
+                                <span class="text-sm text-gray-500">客户来源:</span>
+                                <span class="text-sm font-medium">${customer.customerSource || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="salesPerson-container">
+                                <span class="text-sm text-gray-500">销售负责人:</span>
+                                <span class="text-sm font-medium">${customer.salesPerson || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="operationsPerson-container">
+                                <span class="text-sm text-gray-500">运营负责人:</span>
+                                <span class="text-sm font-medium">${customer.operationsPerson || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="designPerson-container">
+                                <span class="text-sm text-gray-500">设计负责人:</span>
+                                <span class="text-sm font-medium">${customer.designPerson || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="level-container">
+                                <span class="text-sm text-gray-500">客户等级:</span>
+                                <span class="text-sm font-medium">${levelMap[customer.level] || customer.level || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="status-container">
+                                <span class="text-sm text-gray-500">客户状态:</span>
+                                <span class="text-sm font-medium">${statusMap[customer.status] || customer.status || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="hasOrderingSystem-container">
+                                <span class="text-sm text-gray-500">是否有线上点餐系统:</span>
+                                <span class="text-sm font-medium">${customer.hasOrderingSystem ? '是' : '否'}</span>
+                            </div>
+                            <div class="flex justify-between" id="currentPlatform-container">
+                                <span class="text-sm text-gray-500">当前使用平台:</span>
+                                <span class="text-sm font-medium">${customer.currentPlatform || '-'}</span>
+                            </div>
+                            <div class="flex justify-between" id="monthlyOrders-container">
+                                <span class="text-sm text-gray-500">月订单量:</span>
+                                <span class="text-sm font-medium">${customer.monthlyOrders || '-'}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm text-gray-500">创建时间:</span>
+                                <span class="text-sm font-medium">${customer.createdAt || '-'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <h4 class="text-lg font-medium text-gray-900 mb-4">备注</h4>
+                        <div class="bg-gray-50 p-4 rounded-md" id="notes-container">
+                            <p class="text-sm text-gray-700">${customer.notes || '无备注'}</p>
+                        </div>
+                    </div>
+                `;
+                
+                // 重置按钮状态
+                console.log('重置按钮状态');
+                const editBtn = document.getElementById('edit-customer-btn');
+                const saveBtn = document.getElementById('save-customer-btn');
+                const cancelBtn = document.getElementById('cancel-edit-btn');
+                
+                console.log('编辑按钮:', editBtn);
+                console.log('保存按钮:', saveBtn);
+                console.log('取消按钮:', cancelBtn);
+                
+                editBtn.classList.remove('hidden');
+                saveBtn.classList.add('hidden');
+                cancelBtn.classList.add('hidden');
+                
+                console.log('按钮状态重置完成');
+                
+                // 确保模态框先关闭，然后再打开
+                const modal = document.getElementById('customer-detail-modal');
+                modal.classList.add('hidden');
+                // 强制重排
+                void modal.offsetWidth;
+                // 打开客户详情模态框
+                modal.classList.remove('hidden');
+                
+                // 绑定关闭按钮事件
+                document.getElementById('close-detail-modal-btn').addEventListener('click', function() {
+                    modal.classList.add('hidden');
+                });
+                
+                document.getElementById('close-detail-btn').addEventListener('click', function() {
+                    modal.classList.add('hidden');
+                });
+                
+                // 绑定编辑按钮事件
+                const editBtn = document.getElementById('edit-customer-btn');
+                console.log('编辑按钮元素:', editBtn);
+                
+                // 移除可能存在的旧事件监听器
+                editBtn.onclick = null;
+                
+                // 添加新的事件监听器
+                editBtn.onclick = function() {
+                    console.log('编辑按钮被点击');
+                    switchToEditMode(customer);
+                };
+                
+                console.log('编辑按钮事件监听器已绑定');
+                
+                // 绑定删除按钮事件
+                document.getElementById('delete-customer-btn').addEventListener('click', function() {
+                    modal.classList.add('hidden');
+                    deleteCustomer(index);
+                });
+                
+                // 点击模态框外部关闭
+                modal.addEventListener('click', function(event) {
+                    if (event.target === this) {
+                        this.classList.add('hidden');
+                    }
+                });
+                
             } catch (error) {
                 console.error('Error viewing customer:', error);
                 alert('查看客户失败: ' + error.message);
             }
         }
         
-        // 编辑客户
-        function editCustomer(id) {
+        // 切换到编辑模式
+        function switchToEditMode(customer) {
             try {
-                const customer = customers.find(c => c.id === id);
+                console.log('切换到编辑模式');
+                // 显示保存和取消按钮，隐藏编辑按钮
+                const editBtn = document.getElementById('edit-customer-btn');
+                const saveBtn = document.getElementById('save-customer-btn');
+                const cancelBtn = document.getElementById('cancel-edit-btn');
+                
+                console.log('编辑按钮:', editBtn);
+                console.log('保存按钮:', saveBtn);
+                console.log('取消按钮:', cancelBtn);
+                
+                editBtn.classList.add('hidden');
+                saveBtn.classList.remove('hidden');
+                cancelBtn.classList.remove('hidden');
+                
+                console.log('按钮状态已切换');
+                
+                // 填充编辑表单
+                const detailContent = document.getElementById('customer-detail-content');
+                
+                detailContent.innerHTML = `
+                    <div>
+                        <h4 class="text-lg font-medium text-gray-900 mb-4">${customer.businessName}</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-sm text-gray-500">客户编号:</span>
+                                <span class="text-sm font-medium">${customer.customerNumber}</span>
+                            </div>
+                            <div class="flex justify-between" id="contactPerson-container">
+                                <span class="text-sm text-gray-500">联系人:</span>
+                                <input type="text" id="edit-contactPerson" value="${customer.contactPerson || ''}" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                            </div>
+                            <div class="flex justify-between" id="phone-container">
+                                <span class="text-sm text-gray-500">电话:</span>
+                                <input type="text" id="edit-phone" value="${customer.phone || ''}" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                            </div>
+                            <div class="flex justify-between" id="wechatWhatsapp-container">
+                                <span class="text-sm text-gray-500">微信/WhatsApp:</span>
+                                <input type="text" id="edit-wechatWhatsapp" value="${customer.wechatWhatsapp || ''}" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                            </div>
+                            <div class="flex justify-between" id="email-container">
+                                <span class="text-sm text-gray-500">邮箱:</span>
+                                <input type="email" id="edit-email" value="${customer.email || ''}" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                            </div>
+                            <div class="flex justify-between" id="industry-container">
+                                <span class="text-sm text-gray-500">行业:</span>
+                                <select id="edit-industry" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                                    <option value="restaurant" ${customer.industry === 'restaurant' ? 'selected' : ''}>餐厅</option>
+                                    <option value="nail" ${customer.industry === 'nail' ? 'selected' : ''}>美甲</option>
+                                    <option value="massage" ${customer.industry === 'massage' ? 'selected' : ''}>按摩</option>
+                                    <option value="beauty" ${customer.industry === 'beauty' ? 'selected' : ''}>美容</option>
+                                    <option value="supermarket" ${customer.industry === 'supermarket' ? 'selected' : ''}>超市</option>
+                                    <option value="other" ${customer.industry === 'other' ? 'selected' : ''}>其他</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-between" id="country-container">
+                                <span class="text-sm text-gray-500">国家:</span>
+                                <select id="edit-country" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                                    <option value="">请选择国家</option>
+                                    <option value="US" ${customer.country === 'US' ? 'selected' : ''}>美国</option>
+                                    <option value="CA" ${customer.country === 'CA' ? 'selected' : ''}>加拿大</option>
+                                    <option value="UK" ${customer.country === 'UK' ? 'selected' : ''}>英国</option>
+                                    <option value="AU" ${customer.country === 'AU' ? 'selected' : ''}>澳大利亚</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-between" id="state-container">
+                                <span class="text-sm text-gray-500">州/省:</span>
+                                <input type="text" id="edit-state" value="${customer.state || ''}" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                            </div>
+                            <div class="flex justify-between" id="city-container">
+                                <span class="text-sm text-gray-500">城市:</span>
+                                <input type="text" id="edit-city" value="${customer.city || customer.cityLabel || ''}" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                            </div>
+                            <div class="flex justify-between" id="zipCode-container">
+                                <span class="text-sm text-gray-500">邮编:</span>
+                                <input type="text" id="edit-zipCode" value="${customer.zipCode || ''}" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                            </div>
+                            <div class="flex justify-between" id="businessAddress-container">
+                                <span class="text-sm text-gray-500">详细地址:</span>
+                                <input type="text" id="edit-businessAddress" value="${customer.businessAddress || ''}" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-medium text-gray-900 mb-4">其他信息</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between" id="customerSource-container">
+                                <span class="text-sm text-gray-500">客户来源:</span>
+                                <input type="text" id="edit-customerSource" value="${customer.customerSource || ''}" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                            </div>
+                            <div class="flex justify-between" id="salesPerson-container">
+                                <span class="text-sm text-gray-500">销售负责人:</span>
+                                <select id="edit-salesPerson" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                                    <option value="">请选择销售负责人</option>
+                                    <option value="1" ${customer.salesPerson === '1' ? 'selected' : ''}>张三</option>
+                                    <option value="2" ${customer.salesPerson === '2' ? 'selected' : ''}>李四</option>
+                                    <option value="3" ${customer.salesPerson === '3' ? 'selected' : ''}>王五</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-between" id="operationsPerson-container">
+                                <span class="text-sm text-gray-500">运营负责人:</span>
+                                <select id="edit-operationsPerson" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                                    <option value="">请选择运营负责人</option>
+                                    <option value="1" ${customer.operationsPerson === '1' ? 'selected' : ''}>张三</option>
+                                    <option value="2" ${customer.operationsPerson === '2' ? 'selected' : ''}>李四</option>
+                                    <option value="3" ${customer.operationsPerson === '3' ? 'selected' : ''}>王五</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-between" id="designPerson-container">
+                                <span class="text-sm text-gray-500">设计负责人:</span>
+                                <select id="edit-designPerson" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                                    <option value="">请选择设计负责人</option>
+                                    <option value="1" ${customer.designPerson === '1' ? 'selected' : ''}>张三</option>
+                                    <option value="2" ${customer.designPerson === '2' ? 'selected' : ''}>李四</option>
+                                    <option value="3" ${customer.designPerson === '3' ? 'selected' : ''}>王五</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-between" id="level-container">
+                                <span class="text-sm text-gray-500">客户等级:</span>
+                                <select id="edit-level" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                                    <option value="high" ${customer.level === 'high' ? 'selected' : ''}>高意向</option>
+                                    <option value="normal" ${customer.level === 'normal' ? 'selected' : ''}>普通</option>
+                                    <option value="low" ${customer.level === 'low' ? 'selected' : ''}>低意向</option>
+                                    <option value="vip" ${customer.level === 'vip' ? 'selected' : ''}>VIP</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-between" id="status-container">
+                                <span class="text-sm text-gray-500">客户状态:</span>
+                                <select id="edit-status" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                                    <option value="new" ${customer.status === 'new' ? 'selected' : ''}>新客户</option>
+                                    <option value="contacted" ${customer.status === 'contacted' ? 'selected' : ''}>已联系</option>
+                                    <option value="following" ${customer.status === 'following' ? 'selected' : ''}>跟进中</option>
+                                    <option value="quoted" ${customer.status === 'quoted' ? 'selected' : ''}>已报价</option>
+                                    <option value="considering" ${customer.status === 'considering' ? 'selected' : ''}>考虑中</option>
+                                    <option value="pending" ${customer.status === 'pending' ? 'selected' : ''}>待成交</option>
+                                    <option value="closed" ${customer.status === 'closed' ? 'selected' : ''}>已成交</option>
+                                    <option value="serving" ${customer.status === 'serving' ? 'selected' : ''}>服务中</option>
+                                    <option value="paused" ${customer.status === 'paused' ? 'selected' : ''}>暂停合作</option>
+                                    <option value="lost" ${customer.status === 'lost' ? 'selected' : ''}>已流失</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-between" id="hasOrderingSystem-container">
+                                <span class="text-sm text-gray-500">是否有线上点餐系统:</span>
+                                <div class="flex space-x-4">
+                                    <label><input type="radio" name="edit-hasOrderingSystem" value="true" ${customer.hasOrderingSystem ? 'checked' : ''}> 是</label>
+                                    <label><input type="radio" name="edit-hasOrderingSystem" value="false" ${!customer.hasOrderingSystem ? 'checked' : ''}> 否</label>
+                                </div>
+                            </div>
+                            <div class="flex justify-between" id="currentPlatform-container">
+                                <span class="text-sm text-gray-500">当前使用平台:</span>
+                                <input type="text" id="edit-currentPlatform" value="${customer.currentPlatform || ''}" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                            </div>
+                            <div class="flex justify-between" id="monthlyOrders-container">
+                                <span class="text-sm text-gray-500">月订单量:</span>
+                                <input type="number" id="edit-monthlyOrders" value="${customer.monthlyOrders || ''}" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm text-gray-500">创建时间:</span>
+                                <span class="text-sm font-medium">${customer.createdAt || '-'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <h4 class="text-lg font-medium text-gray-900 mb-4">备注</h4>
+                        <div class="bg-gray-50 p-4 rounded-md" id="notes-container">
+                            <textarea id="edit-notes" rows="3" class="w-full border border-gray-300 rounded-md px-2 py-1 text-sm">${customer.notes || ''}</textarea>
+                        </div>
+                    </div>
+                `;
+                
+                // 绑定保存按钮事件
+                saveBtn.onclick = function() {
+                    console.log('保存按钮被点击');
+                    saveCustomerChanges();
+                };
+                
+                // 绑定取消按钮事件
+                cancelBtn.onclick = function() {
+                    console.log('取消按钮被点击');
+                    cancelEdit();
+                };
+                
+                console.log('编辑模式切换完成');
+                
+            } catch (error) {
+                console.error('Error switching to edit mode:', error);
+                alert('切换到编辑模式失败: ' + error.message);
+            }
+        }
+        
+        // 保存客户修改
+        function saveCustomerChanges() {
+            try {
+                console.log('开始保存客户修改');
+                const index = window.currentCustomerIndex;
+                console.log('当前客户索引:', index);
+                const customer = customers[index];
+                console.log('当前客户:', customer);
                 
                 if (!customer) {
                     alert('客户不存在');
                     return;
                 }
                 
-                // 这里可以实现编辑客户的逻辑，比如打开编辑模态框
-                alert('编辑客户: ' + customer.businessName);
+                // 获取编辑后的值
+                console.log('获取编辑后的值');
+                customer.contactPerson = document.getElementById('edit-contactPerson').value;
+                console.log('联系人:', customer.contactPerson);
+                customer.phone = document.getElementById('edit-phone').value;
+                customer.wechatWhatsapp = document.getElementById('edit-wechatWhatsapp').value;
+                customer.email = document.getElementById('edit-email').value;
+                customer.industry = document.getElementById('edit-industry').value;
+                customer.country = document.getElementById('edit-country').value;
+                customer.state = document.getElementById('edit-state').value;
+                customer.city = document.getElementById('edit-city').value;
+                customer.zipCode = document.getElementById('edit-zipCode').value;
+                customer.businessAddress = document.getElementById('edit-businessAddress').value;
+                customer.customerSource = document.getElementById('edit-customerSource').value;
+                customer.salesPerson = document.getElementById('edit-salesPerson').value;
+                customer.operationsPerson = document.getElementById('edit-operationsPerson').value;
+                customer.designPerson = document.getElementById('edit-designPerson').value;
+                customer.level = document.getElementById('edit-level').value;
+                customer.status = document.getElementById('edit-status').value;
+                customer.hasOrderingSystem = document.querySelector('input[name="edit-hasOrderingSystem"]:checked').value === 'true';
+                customer.currentPlatform = document.getElementById('edit-currentPlatform').value;
+                customer.monthlyOrders = document.getElementById('edit-monthlyOrders').value;
+                customer.notes = document.getElementById('edit-notes').value;
+                
+                // 保存到本地存储
+                console.log('保存到本地存储');
+                localStorage.setItem('customers', JSON.stringify(customers));
+                console.log('保存成功');
+                
+                alert('客户信息更新成功！');
+                
+                // 重新加载客户详情
+                console.log('重新加载客户详情');
+                viewCustomer(index);
+                
+            } catch (error) {
+                console.error('Error saving customer changes:', error);
+                alert('保存客户信息失败: ' + error.message);
+            }
+        }
+        
+        // 取消编辑
+        function cancelEdit() {
+            try {
+                const index = window.currentCustomerIndex;
+                viewCustomer(index);
+            } catch (error) {
+                console.error('Error canceling edit:', error);
+                alert('取消编辑失败: ' + error.message);
+            }
+        }
+        
+        // 编辑客户
+        function editCustomer(index) {
+            try {
+                const customer = customers[index];
+                
+                if (!customer) {
+                    alert('客户不存在');
+                    return;
+                }
+                
+                // 打开客户详情模态框并切换到编辑模式
+                viewCustomer(index);
+                // 这里可以添加额外的编辑逻辑
             } catch (error) {
                 console.error('Error editing customer:', error);
                 alert('编辑客户失败: ' + error.message);
@@ -1585,14 +2083,14 @@
         }
         
         // 删除客户
-        function deleteCustomer(id) {
+        function deleteCustomer(index) {
             if (!confirm('确定要删除这个客户吗？')) {
                 return;
             }
             
             try {
                 // 从客户列表中删除
-                customers = customers.filter(c => c.id !== id);
+                customers.splice(index, 1);
                 
                 // 保存到本地存储
                 localStorage.setItem('customers', JSON.stringify(customers));
