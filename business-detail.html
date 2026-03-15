@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客户管理系统 - 商家详情</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#3b82f6',
+                        accent: '#60a5fa',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                        light: '#f3f4f6',
+                        dark: '#1f2937'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-gradient-primary {
+                background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            }
+            .card-shadow {
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+            .sidebar-active {
+                border-left: 4px solid #3b82f6;
+                background-color: rgba(59, 130, 246, 0.1);
+            }
+            .status-badge {
+                @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+            }
+            .status-active {
+                @apply bg-green-100 text-green-800;
+            }
+            .status-paused {
+                @apply bg-yellow-100 text-yellow-800;
+            }
+            .status-ended {
+                @apply bg-red-100 text-red-800;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="bg-white w-64 shadow-lg hidden md:block transition-all-300">
+            <div class="p-4 border-b">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white">
+                        <i class="fa fa-users"></i>
+                    </div>
+                    <h1 class="ml-3 text-lg font-bold text-gray-800" data-lang="systemTitle">客户管理系统</h1>
+                </div>
+            </div>
+            
+            <div class="py-4">
+                <div class="px-4 py-2 text-xs text-gray-600 uppercase tracking-wider" data-lang="mainMenu">
+                    主菜单
+                </div>
+                <nav>
+                    <a href="dashboard.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-dashboard w-6 text-gray-500"></i>
+                        <span data-lang="dashboard">仪表盘</span>
+                    </a>
+                    <a href="customers.html" class="flex items-center px-4 py-3 text-gray-700 sidebar-active">
+                        <i class="fa fa-users w-6 text-gray-500"></i>
+                        <span data-lang="customerManagement">客户管理</span>
+                    </a>
+                    <a href="sales.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-shopping-cart w-6 text-gray-500"></i>
+                        <span data-lang="salesManagement">销售管理</span>
+                    </a>
+                    <a href="delivery.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-truck w-6 text-gray-500"></i>
+                        <span data-lang="deliveryManagement">交付管理</span>
+                    </a>
+                    <a href="renewal.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-refresh w-6 text-gray-500"></i>
+                        <span data-lang="renewalManagement">续费管理</span>
+                    </a>
+                    <a href="finance.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-money w-6 text-gray-500"></i>
+                        <span data-lang="financeManagement">财务管理</span>
+                    </a>
+                    <a href="tasks.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-tasks w-6 text-gray-500"></i>
+                        <span data-lang="taskCollaboration">任务协作</span>
+                    </a>
+                    <a href="reports.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-bar-chart w-6 text-gray-500"></i>
+                        <span data-lang="reportCenter">报表中心</span>
+                    </a>
+                </nav>
+                
+                <div class="px-4 py-2 mt-4 text-xs text-gray-600 uppercase tracking-wider" data-lang="system">
+                    系统
+                </div>
+                <nav>
+                    <a href="settings.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-cog w-6 text-gray-500"></i>
+                        <span data-lang="systemSettings">系统设置</span>
+                    </a>
+                    <a href="#" id="logout-btn" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition-all-300">
+                        <i class="fa fa-sign-out w-6 text-gray-500"></i>
+                        <span data-lang="logout">退出登录</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between p-4">
+                    <div class="flex items-center">
+                            <button id="sidebar-toggle" class="text-gray-500 focus:outline-none md:hidden">
+                                <i class="fa fa-bars text-xl"></i>
+                            </button>
+                            <h2 class="ml-2 text-xl font-semibold text-gray-800" data-lang="customerManagement">商家详情</h2>
+                        </div>
+                        
+                        <div class="flex items-center ml-4">
+                            <button id="lang-zh" class="px-3 py-1 rounded-l-md bg-primary text-white">中文</button>
+                            <button id="lang-en" class="px-3 py-1 rounded-r-md bg-gray-200 text-gray-700">English</button>
+                        </div>
+                    
+                    <div class="flex items-center">
+                        <div class="relative mr-4">
+                            <button class="text-gray-500 focus:outline-none">
+                                <i class="fa fa-bell text-xl"></i>
+                                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                            </button>
+                        </div>
+                        
+                        <div class="relative">
+                            <button id="user-menu-button" class="flex items-center text-gray-700 focus:outline-none">
+                                <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                                    <span id="user-initial">管</span>
+                                </div>
+                                <span class="ml-2 text-sm font-medium" id="user-name">管理员</span>
+                                <i class="fa fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            
+                            <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fa fa-user mr-2"></i> <span data-lang="personalProfile">个人资料</span>
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fa fa-cog mr-2"></i> <span data-lang="accountSettings">账户设置</span>
+                                </a>
+                                <div class="border-t border-gray-200"></div>
+                                <a href="#" id="user-menu-logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fa fa-sign-out mr-2"></i> <span data-lang="logout">退出登录</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto p-4 bg-gray-100">
+                <!-- Business Header -->
+                <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div class="flex items-center mb-4 md:mb-0">
+                            <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
+                                <i class="fa fa-building text-4xl text-gray-400"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h1 class="text-2xl font-bold text-gray-900" id="business-name">金龙餐厅</h1>
+                                <div class="flex items-center mt-1">
+                                    <span class="status-badge status-active mr-3">合作中</span>
+                                    <span class="text-sm text-gray-500">创建于: 2026-01-15</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button id="edit-business-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                <i class="fa fa-edit mr-2"></i> 编辑
+                            </button>
+                            <button id="delete-business-btn" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                <i class="fa fa-trash mr-2"></i> 删除
+                            </button>
+                            <button id="export-business-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                <i class="fa fa-download mr-2"></i> 导出
+                            </button>
+                            <button id="visit-business-btn" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                <i class="fa fa-phone mr-2"></i> 回访
+                            </button>
+                            <button id="add-opportunity-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                <i class="fa fa-plus mr-2"></i> 新增商机
+                            </button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+                        <div class="bg-gray-50 p-4 rounded-md">
+                            <h3 class="text-sm font-medium text-gray-500">负责人</h3>
+                            <p class="text-lg font-semibold text-gray-900">张三</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-md">
+                            <h3 class="text-sm font-medium text-gray-500">创建时间</h3>
+                            <p class="text-lg font-semibold text-gray-900">2026-01-15</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-md">
+                            <h3 class="text-sm font-medium text-gray-500">最后更新</h3>
+                            <p class="text-lg font-semibold text-gray-900">2026-03-15</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-md">
+                            <h3 class="text-sm font-medium text-gray-500">客户编号</h3>
+                            <p class="text-lg font-semibold text-gray-900">C20260001</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab Navigation -->
+                <div class="bg-white rounded-lg shadow-sm mb-6">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex space-x-8 overflow-x-auto">
+                            <button class="px-4 py-3 text-sm font-medium text-primary border-b-2 border-primary whitespace-nowrap" data-tab="activity">
+                                <i class="fa fa-calendar mr-1"></i> 活动详细资料
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="customer-relation">
+                                <i class="fa fa-handshake-o mr-1"></i> 客户关系
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="team">
+                                <i class="fa fa-users mr-1"></i> 团队成员
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="expense">
+                                <i class="fa fa-money mr-1"></i> 费用
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="payment">
+                                <i class="fa fa-credit-card mr-1"></i> 回款记录
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="contact">
+                                <i class="fa fa-address-book mr-1"></i> 联系人
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="visit">
+                                <i class="fa fa-comments mr-1"></i> 回访记录
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="opportunity">
+                                <i class="fa fa-lightbulb-o mr-1"></i> 商机
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+                
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Activity Tab -->
+                    <div id="activity-content" class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-lg font-medium text-gray-900">活动详细资料</h3>
+                                <button id="add-activity-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-plus mr-2"></i> 新增活动
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-700 mb-3">活动信息</h4>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">活动名称</label>
+                                            <input type="text" value="春节促销活动" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">活动类型</label>
+                                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                                <option value="promotion">促销活动</option>
+                                                <option value="launch">新品发布</option>
+                                                <option value="cooperation">合作活动</option>
+                                            </select>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">开始时间</label>
+                                                <input type="date" value="2026-02-01" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">结束时间</label>
+                                                <input type="date" value="2026-02-15" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">活动状态</label>
+                                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                                <option value="planning">策划中</option>
+                                                <option value="ongoing" selected>进行中</option>
+                                                <option value="completed">已完成</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">活动目标</label>
+                                            <input type="text" value="提升春节期间销售额20%" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-700 mb-3">活动详情</h4>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">活动描述</label>
+                                            <textarea rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">春节期间推出满减活动，消费满100减20，满200减50，满300减100。同时推出春节特色菜品，吸引更多顾客。</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">活动方案</label>
+                                            <textarea rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">1. 线上宣传：微信公众号、朋友圈广告
+2. 线下宣传：店内海报、传单
+3. 员工培训：确保所有员工了解活动详情
+4. 库存准备：提前备货，确保活动期间供应充足</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">执行进度</label>
+                                            <div class="flex items-center">
+                                                <input type="range" min="0" max="100" value="75" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                                <span class="ml-3 text-sm font-medium text-gray-700">75%</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">活动成果数据</label>
+                                            <input type="text" value="销售额提升25%，新增客户150人" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6">
+                                <h4 class="text-sm font-medium text-gray-700 mb-3">附件上传</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    <div class="border-2 border-dashed border-gray-300 rounded-md p-4 text-center hover:border-primary transition-all-300">
+                                        <i class="fa fa-file-pdf-o text-4xl text-gray-400 mb-2"></i>
+                                        <p class="text-sm text-gray-500">方案文件</p>
+                                        <input type="file" class="mt-2">
+                                    </div>
+                                    <div class="border-2 border-dashed border-gray-300 rounded-md p-4 text-center hover:border-primary transition-all-300">
+                                        <i class="fa fa-file-image-o text-4xl text-gray-400 mb-2"></i>
+                                        <p class="text-sm text-gray-500">海报</p>
+                                        <input type="file" class="mt-2">
+                                    </div>
+                                    <div class="border-2 border-dashed border-gray-300 rounded-md p-4 text-center hover:border-primary transition-all-300">
+                                        <i class="fa fa-file-text-o text-4xl text-gray-400 mb-2"></i>
+                                        <p class="text-sm text-gray-500">合同</p>
+                                        <input type="file" class="mt-2">
+                                    </div>
+                                    <div class="border-2 border-dashed border-gray-300 rounded-md p-4 text-center hover:border-primary transition-all-300">
+                                        <i class="fa fa-file-o text-4xl text-gray-400 mb-2"></i>
+                                        <p class="text-sm text-gray-500">结案报告</p>
+                                        <input type="file" class="mt-2">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 flex justify-end space-x-3">
+                                <button class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
+                                    取消
+                                </button>
+                                <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
+                                    保存
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Customer Relation Tab -->
+                    <div id="customer-relation-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-lg font-medium text-gray-900">客户关系</h3>
+                                <button id="edit-relation-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-edit mr-2"></i> 编辑
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-700 mb-3">客户信息</h4>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">客户等级</label>
+                                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                                <option value="A" selected>A级</option>
+                                                <option value="B">B级</option>
+                                                <option value="C">C级</option>
+                                                <option value="D">D级</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">合作类型</label>
+                                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                                <option value="direct" selected>直营</option>
+                                                <option value="agent">代理</option>
+                                                <option value="channel">渠道</option>
+                                                <option value="temporary">临时合作</option>
+                                            </select>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">合作开始</label>
+                                                <input type="date" value="2026-01-01" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">合作结束</label>
+                                                <input type="date" value="2027-01-01" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">合作状态</label>
+                                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                                <option value="active" selected>活跃</option>
+                                                <option value="paused">暂停</option>
+                                                <option value="ended">已结束</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-700 mb-3">客户标签</h4>
+                                    <div class="flex flex-wrap gap-2 mb-4">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                            重点维护
+                                        </span>
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                            高潜力
+                                        </span>
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                            需关注
+                                        </span>
+                                        <button class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 hover:bg-gray-200">
+                                            <i class="fa fa-plus mr-1"></i> 添加标签
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">关系备注</label>
+                                        <textarea rows="4" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">该客户为重点维护对象，具有较高的发展潜力。目前合作良好，需要定期跟进，确保客户满意度。</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 flex justify-end space-x-3">
+                                <button class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
+                                    取消
+                                </button>
+                                <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
+                                    保存
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Team Tab -->
+                    <div id="team-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-lg font-medium text-gray-900">团队成员</h3>
+                                <button id="add-team-member-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-plus mr-2"></i> 新增成员
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                姓名
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                角色
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                负责板块
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                权限
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                跟进记录
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                操作
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                                        <span>张</span>
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">张三</div>
+                                                        <div class="text-sm text-gray-500">zhangsan@example.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    项目经理
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">整体项目</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">全部权限</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                5次
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <a href="#" class="text-primary hover:text-secondary mr-3">编辑</a>
+                                                <a href="#" class="text-red-600 hover:text-red-900">删除</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                                        <span>李</span>
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">李四</div>
+                                                        <div class="text-sm text-gray-500">lisi@example.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    销售
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">销售跟进</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">销售权限</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                3次
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <a href="#" class="text-primary hover:text-secondary mr-
