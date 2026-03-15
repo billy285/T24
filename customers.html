@@ -710,6 +710,59 @@
             </div>
         </div>
     </div>
+    
+    <!-- Add Follow-up Modal (Hidden by default) -->
+    <div id="add-followup-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+            <div class="flex items-center justify-between p-6 border-b">
+                <h3 class="text-lg font-semibold text-gray-800">添加跟进记录</h3>
+                <button id="close-followup-modal-btn" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="p-6">
+                <form id="add-followup-form">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">跟进标题</label>
+                        <input type="text" id="followup-title" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">跟进日期</label>
+                        <input type="date" id="followup-date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">跟进内容</label>
+                        <textarea id="followup-content" rows="4" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">跟进状态</label>
+                        <select id="followup-status" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="in_progress">进行中</option>
+                            <option value="completed">已完成</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">下次跟进时间</label>
+                        <input type="date" id="next-followup-date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end space-x-3">
+                        <button type="button" id="cancel-followup-btn" class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300">
+                            取消
+                        </button>
+                        <button type="submit" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300">
+                            保存跟进记录
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <script>
         // 使用本地存储模拟客户数据
@@ -1559,7 +1612,12 @@
                     xiaohongshu: customerData.xiaohongshu,
                     youtube: customerData.youtube,
                     notes: customerData.notes,
-                    createdAt: new Date().toISOString().split('T')[0]
+                    createdAt: new Date().toISOString().split('T')[0],
+                    // 跟进相关字段
+                    followUps: [], // 跟进记录数组
+                    nextFollowUpDate: null, // 下次跟进时间
+                    lastFollowUpDate: null, // 上次跟进时间
+                    followUpStatus: 'pending' // 跟进状态：pending, in_progress, completed
                 };
                 
                 // 添加到客户列表
@@ -1736,6 +1794,52 @@
                             <p class="text-sm text-gray-700">${customer.notes || '无备注'}</p>
                         </div>
                     </div>
+                    
+                    <!-- 跟进记录 -->
+                    <div class="md:col-span-2">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="text-lg font-medium text-gray-900">跟进记录</h4>
+                            <button type="button" id="add-followup-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-1 px-3 rounded-md transition-all-300 text-sm flex items-center">
+                                <i class="fa fa-plus mr-1"></i> 添加跟进
+                            </button>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-md mb-4">
+                            <div class="flex flex-wrap gap-4 mb-3">
+                                <div class="flex items-center">
+                                    <span class="text-sm text-gray-500 mr-2">下次跟进时间:</span>
+                                    <span class="text-sm font-medium">${customer.nextFollowUpDate || '未设置'}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="text-sm text-gray-500 mr-2">上次跟进时间:</span>
+                                    <span class="text-sm font-medium">${customer.lastFollowUpDate || '从未跟进'}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="text-sm text-gray-500 mr-2">跟进状态:</span>
+                                    <span class="text-sm font-medium">${customer.followUpStatus === 'pending' ? '待跟进' : customer.followUpStatus === 'in_progress' ? '跟进中' : '已完成'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-3" id="followup-records">
+                            ${customer.followUps && customer.followUps.length > 0 ? customer.followUps.map((followUp, index) => `
+                                <div class="border border-gray-200 rounded-md p-3">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div>
+                                            <h5 class="font-medium text-gray-900">${followUp.title || '未命名跟进'}</h5>
+                                            <p class="text-sm text-gray-500">${followUp.date}</p>
+                                        </div>
+                                        <div>
+                                            <span class="status-badge ${followUp.status === 'completed' ? 'status-normal' : 'status-high'}">${followUp.status === 'completed' ? '已完成' : '进行中'}</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-gray-700 mb-2">${followUp.content || '无内容'}</p>
+                                    <div class="flex justify-end space-x-2">
+                                        <button type="button" class="text-sm text-primary hover:text-secondary" onclick="editFollowUp(${index})">编辑</button>
+                                        <button type="button" class="text-sm text-red-600 hover:text-red-900" onclick="deleteFollowUp(${index})">删除</button>
+                                    </div>
+                                </div>
+                            `).join('') : '<div class="text-center text-gray-500 py-4">暂无跟进记录</div>'}
+                        </div>
+                    </div>
                 `;
                 
                 // 重置按钮状态
@@ -1791,12 +1895,57 @@
                     deleteCustomer(index);
                 });
                 
+                // 绑定添加跟进按钮事件
+                const addFollowUpBtn = document.getElementById('add-followup-btn');
+                if (addFollowUpBtn) {
+                    addFollowUpBtn.addEventListener('click', function() {
+                        console.log('添加跟进按钮被点击');
+                        const followUpModal = document.getElementById('add-followup-modal');
+                        followUpModal.classList.remove('hidden');
+                    });
+                }
+                
+                // 绑定关闭跟进模态框按钮事件
+                const closeFollowUpModalBtn = document.getElementById('close-followup-modal-btn');
+                if (closeFollowUpModalBtn) {
+                    closeFollowUpModalBtn.addEventListener('click', function() {
+                        document.getElementById('add-followup-modal').classList.add('hidden');
+                    });
+                }
+                
+                // 绑定取消跟进按钮事件
+                const cancelFollowUpBtn = document.getElementById('cancel-followup-btn');
+                if (cancelFollowUpBtn) {
+                    cancelFollowUpBtn.addEventListener('click', function() {
+                        document.getElementById('add-followup-modal').classList.add('hidden');
+                    });
+                }
+                
+                // 绑定添加跟进表单提交事件
+                const addFollowUpForm = document.getElementById('add-followup-form');
+                if (addFollowUpForm) {
+                    addFollowUpForm.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        addFollowUp();
+                    });
+                }
+                
                 // 点击模态框外部关闭
                 modal.addEventListener('click', function(event) {
                     if (event.target === this) {
                         this.classList.add('hidden');
                     }
                 });
+                
+                // 点击跟进模态框外部关闭
+                const followUpModal = document.getElementById('add-followup-modal');
+                if (followUpModal) {
+                    followUpModal.addEventListener('click', function(event) {
+                        if (event.target === this) {
+                            this.classList.add('hidden');
+                        }
+                    });
+                }
                 
             } catch (error) {
                 console.error('Error viewing customer:', error);
@@ -2121,6 +2270,140 @@
             localStorage.removeItem('userLogin');
             sessionStorage.removeItem('userLogin');
             window.location.href = 'index.html';
+        }
+        
+        // 添加跟进记录
+        function addFollowUp() {
+            try {
+                const index = window.currentCustomerIndex;
+                const customer = customers[index];
+                
+                if (!customer) {
+                    alert('客户不存在');
+                    return;
+                }
+                
+                // 获取表单数据
+                const title = document.getElementById('followup-title').value;
+                const date = document.getElementById('followup-date').value;
+                const content = document.getElementById('followup-content').value;
+                const status = document.getElementById('followup-status').value;
+                const nextFollowUpDate = document.getElementById('next-followup-date').value;
+                
+                // 创建跟进记录
+                const followUp = {
+                    id: Date.now(),
+                    title: title,
+                    date: date,
+                    content: content,
+                    status: status
+                };
+                
+                // 添加到客户的跟进记录数组
+                if (!customer.followUps) {
+                    customer.followUps = [];
+                }
+                customer.followUps.push(followUp);
+                
+                // 更新跟进相关字段
+                customer.lastFollowUpDate = date;
+                if (nextFollowUpDate) {
+                    customer.nextFollowUpDate = nextFollowUpDate;
+                }
+                customer.followUpStatus = status;
+                
+                // 保存到本地存储
+                localStorage.setItem('customers', JSON.stringify(customers));
+                
+                // 关闭模态框
+                document.getElementById('add-followup-modal').classList.add('hidden');
+                
+                // 重置表单
+                document.getElementById('add-followup-form').reset();
+                
+                // 重新加载客户详情
+                viewCustomer(index);
+                
+                alert('跟进记录添加成功！');
+                
+            } catch (error) {
+                console.error('Error adding follow-up:', error);
+                alert('添加跟进记录失败: ' + error.message);
+            }
+        }
+        
+        // 编辑跟进记录
+        function editFollowUp(followUpIndex) {
+            try {
+                const customerIndex = window.currentCustomerIndex;
+                const customer = customers[customerIndex];
+                
+                if (!customer || !customer.followUps || !customer.followUps[followUpIndex]) {
+                    alert('跟进记录不存在');
+                    return;
+                }
+                
+                const followUp = customer.followUps[followUpIndex];
+                
+                // 填充表单
+                document.getElementById('followup-title').value = followUp.title;
+                document.getElementById('followup-date').value = followUp.date;
+                document.getElementById('followup-content').value = followUp.content;
+                document.getElementById('followup-status').value = followUp.status;
+                
+                // 打开模态框
+                document.getElementById('add-followup-modal').classList.remove('hidden');
+                
+                // 保存当前编辑的跟进记录索引
+                window.currentFollowUpIndex = followUpIndex;
+                
+            } catch (error) {
+                console.error('Error editing follow-up:', error);
+                alert('编辑跟进记录失败: ' + error.message);
+            }
+        }
+        
+        // 删除跟进记录
+        function deleteFollowUp(followUpIndex) {
+            try {
+                if (!confirm('确定要删除这个跟进记录吗？')) {
+                    return;
+                }
+                
+                const customerIndex = window.currentCustomerIndex;
+                const customer = customers[customerIndex];
+                
+                if (!customer || !customer.followUps || !customer.followUps[followUpIndex]) {
+                    alert('跟进记录不存在');
+                    return;
+                }
+                
+                // 删除跟进记录
+                customer.followUps.splice(followUpIndex, 1);
+                
+                // 更新跟进相关字段
+                if (customer.followUps.length > 0) {
+                    // 按日期排序，取最新的
+                    customer.followUps.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    customer.lastFollowUpDate = customer.followUps[0].date;
+                    customer.followUpStatus = customer.followUps[0].status;
+                } else {
+                    customer.lastFollowUpDate = null;
+                    customer.followUpStatus = 'pending';
+                }
+                
+                // 保存到本地存储
+                localStorage.setItem('customers', JSON.stringify(customers));
+                
+                // 重新加载客户详情
+                viewCustomer(customerIndex);
+                
+                alert('跟进记录删除成功！');
+                
+            } catch (error) {
+                console.error('Error deleting follow-up:', error);
+                alert('删除跟进记录失败: ' + error.message);
+            }
         }
     </script>
 </body>
