@@ -244,176 +244,476 @@
                     </div>
                 </div>
                 
-                <!-- Filter Panel (Hidden by default) -->
-                <div id="filter-panel" class="bg-white rounded-lg shadow-sm p-4 mb-6 hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="customerStatus">客户状态</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="" data-lang="allStatus">全部状态</option>
-                                <option value="unclosed" data-lang="unclosed">未成交</option>
-                                <option value="following" data-lang="following">跟进中</option>
-                                <option value="closed" data-lang="closed">已成交</option>
-                                <option value="paused" data-lang="paused">暂停</option>
-                                <option value="lost" data-lang="lost">流失</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="salesPerson">负责人</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="" data-lang="allSalesPersons">全部负责人</option>
-                                <option value="1">张三</option>
-                                <option value="2">李四</option>
-                                <option value="3">王五</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="industryType">行业类型</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="" data-lang="allIndustries">全部行业</option>
-                                <option value="restaurant" data-lang="restaurant">餐厅</option>
-                                <option value="nail" data-lang="nail">美甲</option>
-                                <option value="massage" data-lang="massage">按摩</option>
-                                <option value="beauty" data-lang="beauty">美容</option>
-                                <option value="supermarket" data-lang="supermarket">超市</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="customerLevel">客户等级</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="" data-lang="allLevels">全部等级</option>
-                                <option value="high" data-lang="high">高意向</option>
-                                <option value="normal" data-lang="normal">普通</option>
-                                <option value="low" data-lang="low">低意向</option>
-                                <option value="vip" data-lang="vip">VIP</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="city">城市</label>
-                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <option value="" data-lang="allCities">全部城市</option>
-                                <option value="ny">纽约</option>
-                                <option value="la">洛杉矶</option>
-                                <option value="sf">旧金山</option>
-                                <option value="chicago">芝加哥</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="createdAt">创建时间</label>
-                            <div class="flex items-center space-x-2">
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <span>至</span>
-                                <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-4 flex justify-end space-x-3">
-                        <button class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300" data-lang="reset">
-                            重置
-                        </button>
-                        <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300" data-lang="applyFilter">
-                            应用筛选
-                        </button>
+                <!-- Tab Navigation -->
+                <div class="bg-white rounded-lg shadow-sm mb-6">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex space-x-8">
+                            <button class="px-4 py-3 text-sm font-medium text-primary border-b-2 border-primary" data-tab="customer-leads">
+                                <i class="fa fa-user-plus mr-1"></i> 客户线索
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700" data-tab="customer-profile">
+                                <i class="fa fa-user mr-1"></i> 客户档案
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700" data-tab="service-management">
+                                <i class="fa fa-cogs mr-1"></i> 服务管理
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700" data-tab="operation-records">
+                                <i class="fa fa-file-text mr-1"></i> 运营记录
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700" data-tab="renewal-management">
+                                <i class="fa fa-refresh mr-1"></i> 续费管理
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700" data-tab="finance-relation">
+                                <i class="fa fa-money mr-1"></i> 财务关联
+                            </button>
+                        </nav>
                     </div>
                 </div>
                 
-                <!-- Customer List -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        <div class="flex items-center">
-                                            <input id="select-all" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
-                                        </div>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="customerNumber">
-                                        客户编号
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="businessName">
-                                        商家名称
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="contactPerson">
-                                        联系人
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="phone">
-                                        电话
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="industry">
-                                        行业
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="salesPerson">
-                                        负责人
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="level">
-                                        等级
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="status">
-                                        状态
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="createdAt">
-                                        创建时间
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider" data-lang="action">
-                                        操作
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200" id="customer-table-body">
-                                <!-- Customer rows will be inserted here by JavaScript -->
-                            </tbody>
-                        </table>
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Customer Leads Tab -->
+                    <div id="customer-leads-content" class="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-medium text-gray-900">客户线索管理</h3>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-end mb-4">
+                                <button id="add-lead-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-plus mr-2"></i> 添加线索
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                                </div>
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                线索编号
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                客户名称
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                联系人
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                电话
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                来源
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                状态
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                创建时间
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                操作
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200" id="leads-table-body">
+                                        <!-- Lead rows will be inserted here by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     
-                    <!-- Pagination -->
-                    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-                        <div class="flex-1 flex justify-between sm:hidden">
-                            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" data-lang="previousPage">
-                                上一页
-                            </a>
-                            <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" data-lang="nextPage">
-                                下一页
-                            </a>
+                    <!-- Customer Profile Tab -->
+                    <div id="customer-profile-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-medium text-gray-900">客户档案管理</h3>
                         </div>
-                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                            <div>
-                                <p class="text-sm text-gray-700" data-lang="showingRecords">
-                                    显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">42</span> 条记录
-                                </p>
+                        <div class="p-4">
+                            <!-- Filter Panel (Hidden by default) -->
+                            <div id="filter-panel" class="bg-white rounded-lg shadow-sm p-4 mb-6 hidden">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="customerStatus">客户状态</label>
+                                        <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="status-filter">
+                                            <option value="" data-lang="allStatus">全部状态</option>
+                                            <option value="new">新客户</option>
+                                            <option value="contacted">已联系</option>
+                                            <option value="following">跟进中</option>
+                                            <option value="quoted">已报价</option>
+                                            <option value="considering">考虑中</option>
+                                            <option value="pending">待成交</option>
+                                            <option value="closed">已成交</option>
+                                            <option value="serving">服务中</option>
+                                            <option value="paused">暂停合作</option>
+                                            <option value="lost">已流失</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="salesPerson">负责人</label>
+                                        <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="sales-filter">
+                                            <option value="" data-lang="allSalesPersons">全部负责人</option>
+                                            <option value="1">张三</option>
+                                            <option value="2">李四</option>
+                                            <option value="3">王五</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="industryType">行业类型</label>
+                                        <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="industry-filter">
+                                            <option value="" data-lang="allIndustries">全部行业</option>
+                                            <option value="restaurant">餐厅</option>
+                                            <option value="nail">美甲</option>
+                                            <option value="massage">按摩</option>
+                                            <option value="beauty">美容</option>
+                                            <option value="supermarket">超市</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="customerLevel">客户等级</label>
+                                        <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="level-filter">
+                                            <option value="" data-lang="allLevels">全部等级</option>
+                                            <option value="high">高意向</option>
+                                            <option value="normal">普通</option>
+                                            <option value="low">低意向</option>
+                                            <option value="vip">VIP</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="city">城市</label>
+                                        <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="city-filter">
+                                            <option value="" data-lang="allCities">全部城市</option>
+                                            <option value="ny">纽约</option>
+                                            <option value="la">洛杉矶</option>
+                                            <option value="sf">旧金山</option>
+                                            <option value="chicago">芝加哥</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1" data-lang="createdAt">创建时间</label>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="start-date">
+                                            <span>至</span>
+                                            <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="end-date">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 flex justify-end space-x-3">
+                                    <button class="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-all-300" data-lang="reset" id="reset-filter">
+                                        重置
+                                    </button>
+                                    <button class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300" data-lang="applyFilter" id="apply-filter">
+                                        应用筛选
+                                    </button>
+                                </div>
                             </div>
-                            <div>
-                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        <span class="sr-only" data-lang="previousPage">上一页</span>
-                                        <i class="fa fa-chevron-left"></i>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <div class="flex items-center">
+                                                    <input id="select-all" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                                </div>
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                客户编号
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                商家名称
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                联系人
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                电话
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                行业
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                负责人
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                状态
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                创建时间
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                操作
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200" id="customer-table-body">
+                                        <!-- Customer rows will be inserted here by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Pagination -->
+                            <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                                <div class="flex-1 flex justify-between sm:hidden">
+                                    <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                        上一页
                                     </a>
-                                    <a href="#" aria-current="page" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        1
+                                    <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                        下一页
                                     </a>
-                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        2
-                                    </a>
-                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        3
-                                    </a>
-                                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                                        ...
-                                    </span>
-                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                        5
-                                    </a>
-                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        <span class="sr-only" data-lang="nextPage">下一页</span>
-                                        <i class="fa fa-chevron-right"></i>
-                                    </a>
-                                </nav>
+                                </div>
+                                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-700">
+                                            显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">42</span> 条记录
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                            <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                                <span class="sr-only">上一页</span>
+                                                <i class="fa fa-chevron-left"></i>
+                                            </a>
+                                            <a href="#" aria-current="page" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                                1
+                                            </a>
+                                            <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                                2
+                                            </a>
+                                            <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                                3
+                                            </a>
+                                            <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                                                ...
+                                            </span>
+                                            <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                                5
+                                            </a>
+                                            <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                                <span class="sr-only">下一页</span>
+                                                <i class="fa fa-chevron-right"></i>
+                                            </a>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service Management Tab -->
+                    <div id="service-management-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-medium text-gray-900">服务管理</h3>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-end mb-4">
+                                <button id="add-service-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-plus mr-2"></i> 添加服务
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                                </div>
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                服务编号
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                客户名称
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                服务类型
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                服务状态
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                开始时间
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                结束时间
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                负责人
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                操作
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200" id="services-table-body">
+                                        <!-- Service rows will be inserted here by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Operation Records Tab -->
+                    <div id="operation-records-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-medium text-gray-900">运营记录</h3>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-end mb-4">
+                                <button id="add-operation-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-plus mr-2"></i> 添加记录
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                                </div>
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                记录编号
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                客户名称
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                操作类型
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                操作内容
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                操作时间
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                操作人
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                操作
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200" id="operations-table-body">
+                                        <!-- Operation rows will be inserted here by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Renewal Management Tab -->
+                    <div id="renewal-management-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-medium text-gray-900">续费管理</h3>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-end mb-4">
+                                <button id="add-renewal-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-plus mr-2"></i> 添加续费
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                                </div>
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                续费编号
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                客户名称
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                续费项目
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                续费金额
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                续费日期
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                到期日期
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                状态
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                操作
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200" id="renewals-table-body">
+                                        <!-- Renewal rows will be inserted here by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Finance Relation Tab -->
+                    <div id="finance-relation-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-medium text-gray-900">财务关联</h3>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-end mb-4">
+                                <button id="add-finance-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                    <i class="fa fa-plus mr-2"></i> 添加财务记录
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                                </div>
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                记录编号
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                客户名称
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                交易类型
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                金额
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                交易日期
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                状态
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                操作
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200" id="finance-table-body">
+                                        <!-- Finance rows will be inserted here by JavaScript -->
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -1098,6 +1398,46 @@
                     document.getElementById('filter-btn').addEventListener('click', function() {
                         const filterPanel = document.getElementById('filter-panel');
                         filterPanel.classList.toggle('hidden');
+                    });
+                }
+                
+                // 绑定选项卡切换
+                const tabButtons = document.querySelectorAll('[data-tab]');
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const tabName = this.getAttribute('data-tab');
+                        
+                        // 隐藏所有选项卡内容
+                        document.querySelectorAll('.tab-content > div').forEach(content => {
+                            content.classList.add('hidden');
+                        });
+                        
+                        // 显示选中的选项卡内容
+                        const selectedContent = document.getElementById(`${tabName}-content`);
+                        if (selectedContent) {
+                            selectedContent.classList.remove('hidden');
+                        }
+                        
+                        // 更新选项卡按钮状态
+                        tabButtons.forEach(btn => {
+                            btn.classList.remove('text-primary', 'border-b-2', 'border-primary');
+                            btn.classList.add('text-gray-500', 'hover:text-gray-700');
+                        });
+                        this.classList.remove('text-gray-500', 'hover:text-gray-700');
+                        this.classList.add('text-primary', 'border-b-2', 'border-primary');
+                    });
+                });
+                
+                // 绑定筛选按钮事件
+                if (document.getElementById('apply-filter')) {
+                    document.getElementById('apply-filter').addEventListener('click', function() {
+                        applyFilters();
+                    });
+                }
+                
+                if (document.getElementById('reset-filter')) {
+                    document.getElementById('reset-filter').addEventListener('click', function() {
+                        resetFilters();
                     });
                 }
                 
@@ -2270,6 +2610,189 @@
             localStorage.removeItem('userLogin');
             sessionStorage.removeItem('userLogin');
             window.location.href = 'index.html';
+        }
+        
+        // 应用筛选
+        function applyFilters() {
+            try {
+                const statusFilter = document.getElementById('status-filter').value;
+                const salesFilter = document.getElementById('sales-filter').value;
+                const industryFilter = document.getElementById('industry-filter').value;
+                const levelFilter = document.getElementById('level-filter').value;
+                const cityFilter = document.getElementById('city-filter').value;
+                const startDate = document.getElementById('start-date').value;
+                const endDate = document.getElementById('end-date').value;
+                
+                console.log('应用筛选:', {
+                    status: statusFilter,
+                    sales: salesFilter,
+                    industry: industryFilter,
+                    level: levelFilter,
+                    city: cityFilter,
+                    startDate: startDate,
+                    endDate: endDate
+                });
+                
+                // 过滤客户数据
+                const filteredCustomers = customers.filter(customer => {
+                    // 状态筛选
+                    if (statusFilter && customer.status !== statusFilter) {
+                        return false;
+                    }
+                    
+                    // 负责人筛选
+                    if (salesFilter && customer.salesPerson !== salesFilter) {
+                        return false;
+                    }
+                    
+                    // 行业筛选
+                    if (industryFilter && customer.industry !== industryFilter) {
+                        return false;
+                    }
+                    
+                    // 等级筛选
+                    if (levelFilter && customer.level !== levelFilter) {
+                        return false;
+                    }
+                    
+                    // 城市筛选
+                    if (cityFilter && customer.city !== cityFilter) {
+                        return false;
+                    }
+                    
+                    // 日期筛选
+                    if (startDate && new Date(customer.createdAt) < new Date(startDate)) {
+                        return false;
+                    }
+                    
+                    if (endDate && new Date(customer.createdAt) > new Date(endDate)) {
+                        return false;
+                    }
+                    
+                    return true;
+                });
+                
+                console.log('筛选后的客户数量:', filteredCustomers.length);
+                
+                // 更新客户表格
+                updateCustomerTable(filteredCustomers);
+                
+            } catch (error) {
+                console.error('Error applying filters:', error);
+                alert('筛选失败: ' + error.message);
+            }
+        }
+        
+        // 重置筛选
+        function resetFilters() {
+            try {
+                document.getElementById('status-filter').value = '';
+                document.getElementById('sales-filter').value = '';
+                document.getElementById('industry-filter').value = '';
+                document.getElementById('level-filter').value = '';
+                document.getElementById('city-filter').value = '';
+                document.getElementById('start-date').value = '';
+                document.getElementById('end-date').value = '';
+                
+                // 重新加载所有客户
+                loadCustomers();
+                
+            } catch (error) {
+                console.error('Error resetting filters:', error);
+                alert('重置筛选失败: ' + error.message);
+            }
+        }
+        
+        // 更新客户表格
+        function updateCustomerTable(customerList) {
+            try {
+                const tableBody = document.getElementById('customer-table-body');
+                tableBody.innerHTML = '';
+                
+                customerList.forEach((customer, index) => {
+                    // 行业类型映射
+                    const industryMap = {
+                        'restaurant': '餐厅',
+                        'nail': '美甲',
+                        'massage': '按摩',
+                        'beauty': '美容',
+                        'supermarket': '超市',
+                        'other': '其他'
+                    };
+                    
+                    // 等级映射
+                    const levelMap = {
+                        'high': '高意向',
+                        'normal': '普通',
+                        'low': '低意向',
+                        'vip': 'VIP'
+                    };
+                    
+                    // 状态映射
+                    const statusMap = {
+                        'unclosed': '未成交',
+                        'following': '跟进中',
+                        'closed': '已成交',
+                        'paused': '暂停',
+                        'lost': '流失',
+                        'new': '新客户',
+                        'contacted': '已联系',
+                        'quoted': '已报价',
+                        'considering': '考虑中',
+                        'pending': '待成交',
+                        'serving': '服务中'
+                    };
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <input type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" data-id="${customer.id}">
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${customer.customerNumber}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900 font-medium">
+                                <a href="#" class="text-primary hover:text-secondary" onclick="viewCustomer(${index})">${customer.businessName}</a>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${customer.contactPerson}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${customer.phone}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${industryMap[customer.industry] || customer.industry}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${customer.salesPerson}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-badge status-${customer.level}">${levelMap[customer.level] || customer.level}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-badge customer-status-${customer.status}">${statusMap[customer.status] || customer.status}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${customer.createdAt}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="#" class="text-primary hover:text-secondary mr-3" onclick="viewCustomer(${index})">查看</a>
+                            <a href="#" class="text-gray-600 hover:text-gray-900 mr-3" onclick="editCustomer(${index})">编辑</a>
+                            <a href="#" class="text-red-600 hover:text-red-900" onclick="deleteCustomer(${index})">删除</a>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+                
+            } catch (error) {
+                console.error('Error updating customer table:', error);
+                alert('更新客户表格失败: ' + error.message);
+            }
         }
         
         // 添加跟进记录
