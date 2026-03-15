@@ -265,24 +265,30 @@
                 <!-- Tab Navigation -->
                 <div class="bg-white rounded-lg shadow-sm mb-6">
                     <div class="border-b border-gray-200">
-                        <nav class="flex space-x-8">
-                            <button class="px-4 py-3 text-sm font-medium text-primary border-b-2 border-primary" data-tab="customer-leads">
-                                <i class="fa fa-user-plus mr-1"></i> 客户线索
+                        <nav class="flex space-x-8 overflow-x-auto">
+                            <button class="px-4 py-3 text-sm font-medium text-primary border-b-2 border-primary whitespace-nowrap" data-tab="customer-profile">
+                                <i class="fa fa-list mr-1"></i> 客户列表
                             </button>
-                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700" data-tab="customer-profile">
-                                <i class="fa fa-user mr-1"></i> 客户档案
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="customer-leads">
+                                <i class="fa fa-id-card-o mr-1"></i> 客户基础信息
                             </button>
-                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700" data-tab="service-management">
-                                <i class="fa fa-cogs mr-1"></i> 服务管理
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="service-management">
+                                <i class="fa fa-building-o mr-1"></i> 店铺信息
                             </button>
-                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700" data-tab="operation-records">
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="renewal-management">
+                                <i class="fa fa-address-book-o mr-1"></i> 联系人管理
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="finance-relation">
+                                <i class="fa fa-calendar-check-o mr-1"></i> 服务订阅
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="platform-accounts">
+                                <i class="fa fa-key mr-1"></i> 平台账号信息
+                            </button>
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="operation-records">
                                 <i class="fa fa-file-text mr-1"></i> 运营记录
                             </button>
-                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700" data-tab="renewal-management">
-                                <i class="fa fa-refresh mr-1"></i> 续费管理
-                            </button>
-                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700" data-tab="finance-relation">
-                                <i class="fa fa-money mr-1"></i> 财务关联
+                            <button class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-tab="customer-status">
+                                <i class="fa fa-flag mr-1"></i> 客户状态管理
                             </button>
                         </nav>
                     </div>
@@ -291,14 +297,14 @@
                 <!-- Tab Content -->
                 <div class="tab-content">
                     <!-- Customer Leads Tab -->
-                    <div id="customer-leads-content" class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div id="customer-leads-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
                         <div class="p-4 border-b">
-                            <h3 class="text-lg font-medium text-gray-900">客户线索管理</h3>
+                            <h3 class="text-lg font-medium text-gray-900">客户基础信息</h3>
                         </div>
                         <div class="p-4">
                             <div class="flex justify-end mb-4">
                                 <button id="add-lead-btn" class="bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
-                                    <i class="fa fa-plus mr-2"></i> 添加线索
+                                    <i class="fa fa-plus mr-2"></i> 新增基础信息
                                 </button>
                             </div>
                             <div class="overflow-x-auto">
@@ -345,9 +351,9 @@
                     </div>
                     
                     <!-- Customer Profile Tab -->
-                    <div id="customer-profile-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
+                    <div id="customer-profile-content" class="bg-white rounded-lg shadow-sm overflow-hidden">
                         <div class="p-4 border-b">
-                            <h3 class="text-lg font-medium text-gray-900">客户档案管理</h3>
+                            <h3 class="text-lg font-medium text-gray-900">客户列表</h3>
                         </div>
                         <div class="p-4">
                             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
@@ -547,7 +553,7 @@
                     <!-- Service Management Tab -->
                     <div id="service-management-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
                         <div class="p-4 border-b">
-                            <h3 class="text-lg font-medium text-gray-900">服务管理</h3>
+                            <h3 class="text-lg font-medium text-gray-900">店铺信息</h3>
                         </div>
                         <div class="p-4">
                             <div class="flex justify-end mb-4">
@@ -652,7 +658,7 @@
                     <!-- Renewal Management Tab -->
                     <div id="renewal-management-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
                         <div class="p-4 border-b">
-                            <h3 class="text-lg font-medium text-gray-900">续费管理</h3>
+                            <h3 class="text-lg font-medium text-gray-900">联系人管理</h3>
                         </div>
                         <div class="p-4">
                             <div class="flex justify-end mb-4">
@@ -706,7 +712,7 @@
                     <!-- Finance Relation Tab -->
                     <div id="finance-relation-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
                         <div class="p-4 border-b">
-                            <h3 class="text-lg font-medium text-gray-900">财务关联</h3>
+                            <h3 class="text-lg font-medium text-gray-900">服务订阅</h3>
                         </div>
                         <div class="p-4">
                             <div class="flex justify-end mb-4">
@@ -752,6 +758,40 @@
                                 </table>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Platform Accounts Tab -->
+                    <div id="platform-accounts-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-medium text-gray-900">平台账号信息</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-600">
+                                可在此维护客户的平台登录账号、API Key、角色权限与最近更新时间。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customer Status Management Tab -->
+                    <div id="customer-status-content" class="bg-white rounded-lg shadow-sm overflow-hidden hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-medium text-gray-900">客户状态管理</h3>
+                        </div>
+                        <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="rounded-lg border border-blue-100 bg-blue-50 p-4">
+                                <p class="text-sm text-blue-600">可配置状态</p>
+                                <p class="text-xl font-semibold text-blue-900 mt-1">线索 / 跟进 / 成交</p>
+                            </div>
+                            <div class="rounded-lg border border-amber-100 bg-amber-50 p-4">
+                                <p class="text-sm text-amber-600">状态流转建议</p>
+                                <p class="text-sm text-amber-900 mt-1">新客户 → 已联系 → 已报价 → 待成交/已成交</p>
+                            </div>
+                            <div class="rounded-lg border border-emerald-100 bg-emerald-50 p-4">
+                                <p class="text-sm text-emerald-600">风险客户提示</p>
+                                <p class="text-sm text-emerald-900 mt-1">持续 30 天未跟进客户建议自动提醒。</p>
+                            </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
             </main>
@@ -1479,7 +1519,7 @@
                     });
                 });
 
-                updateLeadDeletePolicy('customer-leads');
+                updateLeadDeletePolicy('customer-profile');
                 
                 // 绑定筛选按钮事件
                 if (document.getElementById('apply-filter')) {
